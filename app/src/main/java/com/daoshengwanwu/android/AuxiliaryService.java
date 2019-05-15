@@ -2,6 +2,8 @@ package com.daoshengwanwu.android;
 
 
 import android.accessibilityservice.AccessibilityService;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -112,8 +114,9 @@ public class AuxiliaryService extends AccessibilityService {
             if (rst != null && rst.size() > 0) {
                 AccessibilityNodeInfo etNode = rst.get(0);
                 Bundle arguments = new Bundle();
-                arguments.putCharSequence(AccessibilityNodeInfo.ACTION_ARGUMENT_SET_TEXT_CHARSEQUENCE, "android sendmessage test");
-                boolean success = etNode.performAction(AccessibilityNodeInfo.ACTION_SET_TEXT, arguments);
+                String clipboardMessage = getClipboardMessage();
+                arguments.putCharSequence(AccessibilityNodeInfo.ACTION_ARGUMENT_SET_TEXT_CHARSEQUENCE, mCurTarget.charAt(0) + "老师，" + clipboardMessage);
+                boolean success = clipboardMessage.length() > 0 && etNode.performAction(AccessibilityNodeInfo.ACTION_SET_TEXT, arguments);
                 if (success) {
                     rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/amp");
                     if (rst != null && rst.size() > 0) {
@@ -136,5 +139,12 @@ public class AuxiliaryService extends AccessibilityService {
     @Override
     public void onInterrupt() {
 
+    }
+
+    public String getClipboardMessage() {
+        ClipboardManager cm = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+        ClipData data = cm.getPrimaryClip();
+        ClipData.Item item = data.getItemAt(0);
+        return item.getText().toString();
     }
 }
