@@ -3,6 +3,7 @@ package com.daoshengwanwu.android;
 
 import android.accessibilityservice.AccessibilityService;
 import android.content.Intent;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
@@ -16,6 +17,7 @@ import java.util.Set;
 public class AuxiliaryService extends AccessibilityService {
     private static final String TAG = "AuxiliaryService";
 
+    private String mCurTarget = null;
     private final Set<String> mAlreadySendMsgSet = new HashSet<>();
 
 
@@ -69,6 +71,7 @@ public class AuxiliaryService extends AccessibilityService {
                 return;
             }
 
+            mCurTarget = null;
             rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/ld");
             for (AccessibilityNodeInfo info : rst) {
                 if ("标签: 群发".equals(info.getText().toString())) {
@@ -82,16 +85,51 @@ public class AuxiliaryService extends AccessibilityService {
                     Log.d(TAG, "发现要群发的对象: " + nickName + ",尝试点击的结果： " + success);
 
                     if (success) {
+                        mCurTarget = nickName;
                         mAlreadySendMsgSet.add(nickName);
                         return;
                     }
                 }
             }
-        } else {
-            rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/bq");
-            if (rst != null && rst.size() > 0) {
-                mAlreadySendMsgSet.clear();
+
+            return;
+        }
+
+        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/bq");
+        if (rst != null && rst.size() > 0) {
+            mAlreadySendMsgSet.clear();
+        }
+
+        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/ko");
+        boolean isNameMatch = false;
+        for (AccessibilityNodeInfo info : rst) {
+            if (mCurTarget != null && mCurTarget.equals(info.getText().toString())) {
+                isNameMatch = true;
             }
+        }
+        if (isNameMatch) {
+            rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/ami");
+            if (rst != null && rst.size() > 0) {
+                AccessibilityNodeInfo etNode = rst.get(0);
+                Bundle arguments = new Bundle();
+                arguments.putCharSequence(AccessibilityNodeInfo.ACTION_ARGUMENT_SET_TEXT_CHARSEQUENCE, "android sendmessage test");
+                boolean success = etNode.performAction(AccessibilityNodeInfo.ACTION_SET_TEXT, arguments);
+                if (success) {
+                    rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/amp");
+                    if (rst != null && rst.size() > 0) {
+                        AccessibilityNodeInfo sendBtn = rst.get(0);
+                        success = sendBtn.performAction(AccessibilityNodeInfo.ACTION_CLICK);
+                        if (success) {
+                            rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/km");
+                            if (rst != null && rst.size() > 0) {
+                                AccessibilityNodeInfo backBtn = rst.get(0);
+                                backBtn.performAction(AccessibilityNodeInfo.ACTION_CLICK);
+                            }
+                        }
+                    }
+                }
+            }
+
         }
     }
 
