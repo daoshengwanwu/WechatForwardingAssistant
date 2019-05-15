@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">WechatForwardingAssistant</string>
+    <string name="app_name">微信群发助手</string>
+    <string name="auxiliary_service_description">方便用户实现消息带名称群发消息的微信辅助插件</string>
 </resources>
