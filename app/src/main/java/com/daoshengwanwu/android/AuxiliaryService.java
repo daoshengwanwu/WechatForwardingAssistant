@@ -7,6 +7,7 @@ import android.content.ClipboardManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.Toast;
@@ -17,6 +18,8 @@ import java.util.Set;
 
 
 public class AuxiliaryService extends AccessibilityService {
+    private static final String TAG = "AuxiliaryService";
+
     // 标志着当前正在进行着的任务
     private int mRunningTask = Task.NONE;
 
@@ -52,8 +55,10 @@ public class AuxiliaryService extends AccessibilityService {
 
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
+        Log.d(TAG, "onAccessibilityEvent: eventType" + event.getEventType());
         if (event.getEventType() != AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED &&
-            event.getEventType() != AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
+            event.getEventType() != AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED &&
+            event.getEventType() != AccessibilityEvent.TYPE_VIEW_CLICKED) {
 
             return;
         }
@@ -68,6 +73,11 @@ public class AuxiliaryService extends AccessibilityService {
         int curPage = whereAmI(rootInfo);
         if (curPage == Page.PAGE_UNKNOWN) {
             return;
+        }
+
+        if (mRunningTask == Task.TASK_FORWARDING && (curPage == Page.PAGE_WECHAT || curPage == Page.PAGE_CONTACT)) {
+            mRunningTask = Task.NONE;
+            mAlreadySendMsgSet.clear();
         }
 
         switch (mRunningTask) {
@@ -135,7 +145,7 @@ public class AuxiliaryService extends AccessibilityService {
                         }
                     }
 
-                    List<AccessibilityNodeInfo> moreRst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/qj");
+                    List<AccessibilityNodeInfo> moreRst = rootInfo.findAccessibilityNodeInfosByText("更多联系人");
                     if (isListEmpty(moreRst)) {
                         boolean success = listviewInfo.performAction(AccessibilityNodeInfo.ACTION_SCROLL_FORWARD);
                         if (success) {
@@ -149,7 +159,7 @@ public class AuxiliaryService extends AccessibilityService {
                         return;
                     }
 
-                    AccessibilityNodeInfo moreInfo = moreRst.get(0);
+                    AccessibilityNodeInfo moreInfo = moreRst.get(0).getParent();
                     if (!mIsMoreEverClicked) {
                         boolean success = moreInfo.performAction(AccessibilityNodeInfo.ACTION_CLICK);
                         if (success) {
@@ -184,7 +194,7 @@ public class AuxiliaryService extends AccessibilityService {
 
 
 
-                    rst = rootInfo.findAccessibilityNodeInfosByText("com.tencent.mm:id/ami");
+                    rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/ami");
                     if (rst == null || rst.size() <= 0) {
                         backInfo.performAction(AccessibilityNodeInfo.ACTION_CLICK);
                         return;
@@ -236,7 +246,7 @@ public class AuxiliaryService extends AccessibilityService {
         ClipboardManager cm = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
         ClipData data = cm.getPrimaryClip();
 
-        return data == null ? "" : data.getItemAt(0).toString();
+        return data == null ? "" : data.getItemAt(0).getText().toString();
     }
 
     private int whereAmI(AccessibilityNodeInfo rootInfo) {
@@ -359,7 +369,18 @@ public class AuxiliaryService extends AccessibilityService {
     }
 
     private boolean isChatPage(AccessibilityNodeInfo rootInfo) {
-        return false;
+        List<AccessibilityNodeInfo> rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/ev2");
+        if (isListEmpty(rst)) {
+            return false;
+        }
+
+        AccessibilityNodeInfo desInfo = rst.get(0).getParent();
+        if (desInfo == null) {
+            return false;
+        }
+
+        String description = String.valueOf(desInfo.getContentDescription());
+        return description.startsWith("当前所在页面,与") && description.endsWith("的聊天");
     }
 
     private boolean isChatWithCheckboxPage(AccessibilityNodeInfo rootInfo) {
