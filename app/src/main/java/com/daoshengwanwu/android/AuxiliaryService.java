@@ -307,7 +307,7 @@ public class AuxiliaryService extends AccessibilityService {
 
         String title = titleInfo.getText().toString();
 
-        return "微信".equals(title);
+        return title.startsWith("微信");
     }
 
     private boolean isContactPage(AccessibilityNodeInfo rootInfo) {
@@ -323,7 +323,7 @@ public class AuxiliaryService extends AccessibilityService {
 
         String title = titleInfo.getText().toString();
 
-        return "通讯录".equals(title);
+        return title.startsWith("通讯录");
     }
 
     private boolean isExplorePage(AccessibilityNodeInfo rootInfo) {
@@ -339,7 +339,7 @@ public class AuxiliaryService extends AccessibilityService {
 
         String title = titleInfo.getText().toString();
 
-        return "发现".equals(title);
+        return title.startsWith("发现");
     }
 
     private boolean isSelfPage(AccessibilityNodeInfo rootInfo) {
