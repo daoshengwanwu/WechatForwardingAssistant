@@ -23,6 +23,7 @@ public class AuxiliaryService extends AccessibilityService {
     // 群发相关
     private String mCurSendingTarget = null;
     private final Set<String> mAlreadySendMsgSet = new HashSet<>();
+    private boolean mIsMoreEverClicked = false;
 
     // 记录清理相关
 
@@ -134,16 +135,34 @@ public class AuxiliaryService extends AccessibilityService {
                         }
                     }
 
-                    boolean success = listviewInfo.performAction(AccessibilityNodeInfo.ACTION_SCROLL_FORWARD);
-                    if (success) {
+                    List<AccessibilityNodeInfo> moreRst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/qj");
+                    if (isListEmpty(moreRst)) {
+                        boolean success = listviewInfo.performAction(AccessibilityNodeInfo.ACTION_SCROLL_FORWARD);
+                        if (success) {
+                            return;
+                        }
+
+                        mAlreadySendMsgSet.clear();
+                        mRunningTask = Task.NONE;
+                        backInfo.performAction(AccessibilityNodeInfo.ACTION_CLICK);
+                        Toast.makeText(this, "已完成转发任务.", Toast.LENGTH_SHORT).show();
                         return;
                     }
 
-                    mAlreadySendMsgSet.clear();
-                    mRunningTask = Task.NONE;
-                    backInfo.performAction(AccessibilityNodeInfo.ACTION_CLICK);
-                    Toast.makeText(this, "转发任务已完成.", Toast.LENGTH_SHORT).show();
+                    AccessibilityNodeInfo moreInfo = moreRst.get(0);
+                    if (!mIsMoreEverClicked) {
+                        boolean success = moreInfo.performAction(AccessibilityNodeInfo.ACTION_CLICK);
+                        if (success) {
+                            mIsMoreEverClicked = true;
+                            return;
+                        }
+                    } else {
+                        backInfo.performAction(AccessibilityNodeInfo.ACTION_CLICK);
+                        Toast.makeText(this, "已完成转发任务.", Toast.LENGTH_SHORT).show();
+                    }
+
                 } else if (curPage == Page.PAGE_CHAT) {
+
                     List<AccessibilityNodeInfo> rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/km");
                     if (rst == null || rst.size() <= 0) {
                         Toast.makeText(this, "请手动返回上一个页面.", Toast.LENGTH_SHORT).show();
