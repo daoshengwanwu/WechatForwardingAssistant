@@ -21,14 +21,20 @@ public class AuxiliaryService extends AccessibilityService {
     private static final String TAG = "AuxiliaryService";
 
     // 标志着当前正在进行着的任务
-    private int mRunningTask = Task.NONE;
+    private int mRunningTask = ShareData.Task.NONE;
 
     // 群发相关
+    private boolean mIsLabelVerification = false;
+    private boolean mIsToForwardingSetLoaded = false;
     private String mCurSendingTarget = null;
     private final Set<String> mAlreadySendMsgSet = new HashSet<>();
+    private final Set<String> mToForwardingSet = new HashSet<>();
+    private int mCurLoadIndex = 0;
 
     // 记录清理相关
 
+    // 与UI共享的数据
+    private ShareData mShareData = ShareData.getInstance();
 
     @Override
     protected void onServiceConnected() {
@@ -54,6 +60,11 @@ public class AuxiliaryService extends AccessibilityService {
 
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
+        mRunningTask = mShareData.getActiveTask();
+        if (mRunningTask == ShareData.Task.NONE) {
+            return;
+        }
+
         if (event.getEventType() != AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED &&
             event.getEventType() != AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED &&
             event.getEventType() != AccessibilityEvent.TYPE_VIEW_CLICKED) {
@@ -74,27 +85,67 @@ public class AuxiliaryService extends AccessibilityService {
         }
 
         switch (mRunningTask) {
-            case Task.NONE: {
-
+            case ShareData.Task.TASK_CLEAN: {
+                performClean(event, rootInfo, source, curPage);
             } return;
 
-            case Task.TASK_CLEAN: {
-
-            } return;
-
-            case Task.TASK_FORWARDING: {
-
+            case ShareData.Task.TASK_FORWARDING: {
+                performForwarding(event, rootInfo, source, curPage);
             } return;
 
             default: break;
         }
     }
 
-    private String getClipboardMessage() {
-        ClipboardManager cm = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
-        ClipData data = cm.getPrimaryClip();
+    private void performForwarding(AccessibilityEvent event, AccessibilityNodeInfo rootInfo,
+                                   AccessibilityNodeInfo sourceInfo, int curPage) {
 
-        return data == null ? "" : data.getItemAt(0).getText().toString();
+        if (!mIsToForwardingSetLoaded) {
+            performLoadForwardingSet(event, rootInfo, sourceInfo, curPage);
+            return;
+        }
+
+
+    }
+
+    private void performLoadForwardingSet(AccessibilityEvent event, AccessibilityNodeInfo rootInfo,
+                                          AccessibilityNodeInfo sourceInfo, int curPage) {
+
+        if (curPage != Page.PAGE_LABEL_MEMBERS) {
+            mIsLabelVerification = false;
+            return;
+        }
+
+        List<AccessibilityNodeInfo> rst;
+        if (!mIsLabelVerification) {
+            // 验证下标签是否和界面中指定的相同
+            rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/l3");
+            if (isListEmpty(rst)) {
+                return;
+            }
+            AccessibilityNodeInfo labelInfo = rst.get(0);
+            String labelText = labelInfo.getText().toString();
+            if (!mShareData.getLabel().equals(labelText)) {
+                Toast.makeText(this, "当前标签页面与群发指定的不符，请切换到：" +
+                        mShareData.getLabel() + "：标签页面", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            mIsLabelVerification = true;
+        }
+
+        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/kw");
+        if (isListEmpty(rst)) {
+            return;
+        }
+
+        AccessibilityNodeInfo backInfo = rst.get(0);
+
+    }
+
+    private void performClean(AccessibilityEvent event, AccessibilityNodeInfo rootInfo,
+                              AccessibilityNodeInfo sourceInfo, int curPage) {
+
     }
 
     private int whereAmI(AccessibilityNodeInfo rootInfo) {
@@ -124,6 +175,10 @@ public class AuxiliaryService extends AccessibilityService {
 
         if (isChatWithCheckboxPage(rootInfo)) {
             return Page.PAGE_CHAT_WITH_CHECKBOX;
+        }
+
+        if (isLabelMembersPage(rootInfo)) {
+            return Page.PAGE_LABEL_MEMBERS;
         }
 
         return Page.PAGE_UNKNOWN;
@@ -231,15 +286,12 @@ public class AuxiliaryService extends AccessibilityService {
         return description.startsWith("当前所在页面,与") && description.endsWith("的聊天");
     }
 
-    private boolean isChatWithCheckboxPage(AccessibilityNodeInfo rootInfo) {
+    // TODO:: 完成这个方法
+    private boolean isLabelMembersPage(AccessibilityNodeInfo rootInfo) {
         return false;
     }
 
-    private boolean isForwardingTaskFuse(AccessibilityNodeInfo rootInfo) {
-        return isSearchForwardingPage(rootInfo);
-    }
-
-    private boolean isCleanTaskFuse(AccessibilityNodeInfo rootInfo) {
+    private boolean isChatWithCheckboxPage(AccessibilityNodeInfo rootInfo) {
         return false;
     }
 
@@ -250,6 +302,8 @@ public class AuxiliaryService extends AccessibilityService {
     private void clearForwardingState() {
         mAlreadySendMsgSet.clear();
         mCurSendingTarget = null;
+        mIsToForwardingSetLoaded = false;
+        mToForwardingSet.clear();
     }
 
     private static final class Page {
@@ -261,11 +315,6 @@ public class AuxiliaryService extends AccessibilityService {
         public static final int PAGE_SEARCH_FORWARDING = 4;
         public static final int PAGE_CHAT = 5;
         public static final int PAGE_CHAT_WITH_CHECKBOX = 6;
-    }
-
-    private static final class Task {
-        public static final int NONE = -1;
-        public static final int TASK_FORWARDING = 0;
-        public static final int TASK_CLEAN = 1;
+        public static final int PAGE_LABEL_MEMBERS = 7;
     }
 }
