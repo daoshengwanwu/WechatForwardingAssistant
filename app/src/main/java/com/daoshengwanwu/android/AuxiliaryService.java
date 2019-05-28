@@ -26,7 +26,6 @@ public class AuxiliaryService extends AccessibilityService {
     // 群发相关
     private String mCurSendingTarget = null;
     private final Set<String> mAlreadySendMsgSet = new HashSet<>();
-    private boolean mIsMoreEverClicked = false;
 
     // 记录清理相关
 
@@ -55,7 +54,6 @@ public class AuxiliaryService extends AccessibilityService {
 
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
-        Log.d(TAG, "onAccessibilityEvent: eventType" + event.getEventType());
         if (event.getEventType() != AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED &&
             event.getEventType() != AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED &&
             event.getEventType() != AccessibilityEvent.TYPE_VIEW_CLICKED) {
@@ -75,22 +73,9 @@ public class AuxiliaryService extends AccessibilityService {
             return;
         }
 
-        if (mRunningTask == Task.TASK_FORWARDING &&
-                curPage != Page.PAGE_SEARCH_FORWARDING && curPage != Page.PAGE_CHAT) {
-
-            mRunningTask = Task.NONE;
-        }
-
         switch (mRunningTask) {
             case Task.NONE: {
-                if (isForwardingTaskFuse(rootInfo)) {
-                    mRunningTask = Task.TASK_FORWARDING;
-                    clearForwardingState();
-                    onAccessibilityEvent(event);
-                } else if (isCleanTaskFuse(rootInfo)) {
-                    mRunningTask = Task.TASK_CLEAN;
-                    onAccessibilityEvent(event);
-                }
+
             } return;
 
             case Task.TASK_CLEAN: {
@@ -98,157 +83,7 @@ public class AuxiliaryService extends AccessibilityService {
             } return;
 
             case Task.TASK_FORWARDING: {
-                if (curPage == Page.PAGE_SEARCH_FORWARDING) {
-                    List<AccessibilityNodeInfo> backRst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/l0");
-                    if (backRst == null || backRst.size() != 1) {
-                        mRunningTask = Task.NONE;
-                        clearForwardingState();
-                        return;
-                    }
 
-                    List<AccessibilityNodeInfo> labelRst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/ld");
-                    if (labelRst == null || labelRst.size() <= 0) {
-                        mRunningTask = Task.NONE;
-                        clearForwardingState();
-                        return;
-                    }
-
-                    List<AccessibilityNodeInfo> listviewRst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/bxr");
-                    if (listviewRst == null || listviewRst.size() != 1) {
-                        mRunningTask = Task.NONE;
-                        clearForwardingState();
-                        return;
-                    }
-
-                    AccessibilityNodeInfo backInfo = backRst.get(0);
-                    AccessibilityNodeInfo listviewInfo = listviewRst.get(0);
-
-                    for (AccessibilityNodeInfo info : labelRst) {
-                        if (!"标签: 群发".equals(String.valueOf(info.getText()))) {
-                            continue;
-                        }
-
-                        AccessibilityNodeInfo parent = info.getParent();
-                        if (parent == null) {
-                            continue;
-                        }
-
-                        AccessibilityNodeInfo nickNameInfo = parent.getChild(0);
-                        if (nickNameInfo.getText() == null){
-                            continue;
-                        }
-
-                        String nickName = nickNameInfo.getText().toString();
-                        if (TextUtils.isEmpty(nickName) || mAlreadySendMsgSet.contains(nickName)) {
-                            continue;
-                        }
-
-                        boolean success = parent.performAction(AccessibilityNodeInfo.ACTION_CLICK);
-                        if (success) {
-                            mCurSendingTarget = nickName;
-                            return;
-                        }
-                    }
-
-                    List<AccessibilityNodeInfo> moreRst = rootInfo.findAccessibilityNodeInfosByText("更多联系人");
-                    if (isListEmpty(moreRst)) {
-                        boolean success = listviewInfo.performAction(AccessibilityNodeInfo.ACTION_SCROLL_FORWARD);
-                        if (success) {
-                            return;
-                        }
-
-                        mRunningTask = Task.NONE;
-                        clearForwardingState();
-                        backInfo.performAction(AccessibilityNodeInfo.ACTION_CLICK);
-                        Toast.makeText(this, "已完成转发任务.", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-
-                    AccessibilityNodeInfo moreInfo = moreRst.get(0).getParent();
-                    if (!mIsMoreEverClicked) {
-                        boolean success = moreInfo.performAction(AccessibilityNodeInfo.ACTION_CLICK);
-                        if (success) {
-                            mIsMoreEverClicked = true;
-                        } else {
-                            Toast.makeText(this, "请尝试手动滑动一下屏幕.", Toast.LENGTH_SHORT).show();
-                        }
-
-                        return;
-                    } else {
-                        backInfo.performAction(AccessibilityNodeInfo.ACTION_CLICK);
-                        Toast.makeText(this, "已完成转发任务.", Toast.LENGTH_SHORT).show();
-                    }
-
-                } else {
-                    List<AccessibilityNodeInfo> rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/km");
-                    if (rst == null || rst.size() <= 0) {
-                        Toast.makeText(this, "请手动返回上一个页面.", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                    AccessibilityNodeInfo backInfo = rst.get(0);
-
-                    rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/ko");
-                    if (rst == null || rst.size() <= 0) {
-                        if (!backInfo.performAction(AccessibilityNodeInfo.ACTION_CLICK)) {
-                            Toast.makeText(this, "请手动返回上一个页面.", Toast.LENGTH_SHORT).show();
-                        }
-                        return;
-                    }
-
-                    AccessibilityNodeInfo nickNameInfo = rst.get(0);
-                    if (!mCurSendingTarget.equals(String.valueOf(nickNameInfo.getText()))) {
-                        if (!backInfo.performAction(AccessibilityNodeInfo.ACTION_CLICK)) {
-                            Toast.makeText(this, "请手动返回上一个页面.", Toast.LENGTH_SHORT).show();
-                        }
-                        return;
-                    }
-
-                    rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/ami");
-                    if (rst == null || rst.size() <= 0) {
-                        if (!backInfo.performAction(AccessibilityNodeInfo.ACTION_CLICK)) {
-                            Toast.makeText(this, "请手动返回上一个页面.", Toast.LENGTH_SHORT).show();
-                        }
-                        return;
-                    }
-
-                    AccessibilityNodeInfo edittextInfo = rst.get(0);
-
-                    String clipboardMsg = getClipboardMessage();
-                    if (TextUtils.isEmpty(clipboardMsg)) {
-                        if (!backInfo.performAction(AccessibilityNodeInfo.ACTION_CLICK)) {
-                            Toast.makeText(this, "请手动返回上一个页面.", Toast.LENGTH_SHORT).show();
-                        }
-                        return;
-                    }
-
-                    Bundle data = new Bundle();
-                    data.putCharSequence(AccessibilityNodeInfo.ACTION_ARGUMENT_SET_TEXT_CHARSEQUENCE,
-                            mCurSendingTarget.charAt(0) + "老师，" + clipboardMsg);
-                    boolean success = edittextInfo.performAction(AccessibilityNodeInfo.ACTION_SET_TEXT, data);
-                    if (!success) {
-                        if (!backInfo.performAction(AccessibilityNodeInfo.ACTION_CLICK)) {
-                            Toast.makeText(this, "请手动返回上一个页面.", Toast.LENGTH_SHORT).show();
-                        }
-                        return;
-                    }
-
-                    rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/amp");
-                    if (rst == null || rst.size() <= 0) {
-                        if (!backInfo.performAction(AccessibilityNodeInfo.ACTION_CLICK)) {
-                            Toast.makeText(this, "请手动返回上一个页面.", Toast.LENGTH_SHORT).show();
-                        }
-                        return;
-                    }
-
-                    AccessibilityNodeInfo sendbtnInfo = rst.get(0);
-                    success = sendbtnInfo.performAction(AccessibilityNodeInfo.ACTION_CLICK);
-                    if (success) {
-                        mAlreadySendMsgSet.add(mCurSendingTarget);
-                    }
-                    if (!backInfo.performAction(AccessibilityNodeInfo.ACTION_CLICK)) {
-                        Toast.makeText(this, "请手动返回上一个页面.", Toast.LENGTH_SHORT).show();
-                    }
-                }
             } return;
 
             default: break;
@@ -414,7 +249,6 @@ public class AuxiliaryService extends AccessibilityService {
 
     private void clearForwardingState() {
         mAlreadySendMsgSet.clear();
-        mIsMoreEverClicked = false;
         mCurSendingTarget = null;
     }
 
