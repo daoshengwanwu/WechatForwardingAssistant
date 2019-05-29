@@ -149,6 +149,11 @@ public class AuxiliaryService extends AccessibilityService {
             for (AccessibilityNodeInfo info : rst) {
                 String title = String.valueOf(info.getText());
                 if (mToForwardingSet.contains(title)) {
+                    try {
+                        Thread.sleep(50);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                     info.getParent().performAction(AccessibilityNodeInfo.ACTION_CLICK);
                     mCurSendingTarget = title;
                     return;
@@ -162,6 +167,11 @@ public class AuxiliaryService extends AccessibilityService {
             }
 
             if (mCurScrollDirection == Direction.FORWARD) {
+                try {
+                    Thread.sleep(50);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 if (rst.get(0).performAction(AccessibilityNodeInfo.ACTION_SCROLL_FORWARD)) {
                     return;
                 }
@@ -169,6 +179,11 @@ public class AuxiliaryService extends AccessibilityService {
                 mCurScrollDirection = Direction.BACKWARD;
                 forwardingMessage(event, rootInfo, sourceInfo, curPage);
             } else {
+                try {
+                    Thread.sleep(50);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 if (rst.get(0).performAction(AccessibilityNodeInfo.ACTION_SCROLL_BACKWARD)) {
                     return;
                 }
@@ -187,11 +202,80 @@ public class AuxiliaryService extends AccessibilityService {
         }
 
         if (curPage == Page.PAGE_PERSONAL_INTRODUCTION) {
+            rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/kw");
+            if (isListEmpty(rst)) {
+                Toast.makeText(this, "请手动返回微信通讯录界面", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            AccessibilityNodeInfo backInfo = rst.get(0);
+
+            rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/dq7");
+            if (isListEmpty(rst)) {
+                backInfo.performAction(AccessibilityNodeInfo.ACTION_CLICK);
+                return;
+            }
+            String labelText = String.valueOf(rst.get(0).getText());
+            if (!labelText.contains(mShareData.getLabel())) {
+                mToForwardingSet.remove(mCurSendingTarget);
+                backInfo.performAction(AccessibilityNodeInfo.ACTION_CLICK);
+                return;
+            }
+
+            rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/ct");
+            if (isListEmpty(rst)) {
+                backInfo.performAction(AccessibilityNodeInfo.ACTION_CLICK);
+                return;
+            }
+            rst.get(0).getParent().performAction(AccessibilityNodeInfo.ACTION_CLICK);
+
             return;
         }
 
         if (curPage == Page.PAGE_CHAT) {
-            return;
+            rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/km");
+            if (isListEmpty(rst)) {
+                Toast.makeText(this, "请手动返回微信通讯录页面", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            AccessibilityNodeInfo backInfo = rst.get(0);
+
+            rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/ko");
+            if (isListEmpty(rst)) {
+                backInfo.performAction(AccessibilityNodeInfo.ACTION_CLICK);
+                return;
+            }
+            String title = String.valueOf(rst.get(0).getText());
+            if (!title.equals(mCurSendingTarget)) {
+                backInfo.performAction(AccessibilityNodeInfo.ACTION_CLICK);
+                return;
+            }
+
+            rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/ami");
+            if (isListEmpty(rst)) {
+                backInfo.performAction(AccessibilityNodeInfo.ACTION_CLICK);
+                return;
+            }
+            AccessibilityNodeInfo etInfo = rst.get(0);
+
+            Bundle arguments = new Bundle();
+            arguments.putCharSequence(AccessibilityNodeInfo.ACTION_ARGUMENT_SET_TEXT_CHARSEQUENCE,
+                    mCurSendingTarget.charAt(0) + "老师, " + mShareData.getContent());
+
+            if (!etInfo.performAction(AccessibilityNodeInfo.ACTION_SET_TEXT, arguments)) {
+                backInfo.performAction(AccessibilityNodeInfo.ACTION_CLICK);
+                return;
+            }
+
+            rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/amp");
+            if (isListEmpty(rst)) {
+                backInfo.performAction(AccessibilityNodeInfo.ACTION_CLICK);
+                return;
+            }
+            if (rst.get(0).performAction(AccessibilityNodeInfo.ACTION_CLICK)) {
+                mToForwardingSet.remove(mCurSendingTarget);
+            }
+
+            backInfo.performAction(AccessibilityNodeInfo.ACTION_CLICK);
         }
     }
 
