@@ -168,7 +168,7 @@ public class AuxiliaryService extends AccessibilityService {
                 return;
             }
             AccessibilityNodeInfo labelInfo = rst.get(0);
-            String labelText = labelInfo.getText().toString();
+            String labelText = String.valueOf(labelInfo.getText());
             if (!mShareData.getLabel().equals(labelText)) {
                 Toast.makeText(this, "当前标签页面与群发指定的不符，请切换到：" +
                         mShareData.getLabel() + "：标签页面", Toast.LENGTH_SHORT).show();
@@ -193,7 +193,7 @@ public class AuxiliaryService extends AccessibilityService {
 
         rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/e42");
         for (AccessibilityNodeInfo textInfo : rst) {
-            String title = textInfo.getText().toString();
+            String title = String.valueOf(textInfo.getText());
             if (!TextUtils.isEmpty(title)) {
                 mToForwardingSet.add(title);
             }
@@ -271,11 +271,7 @@ public class AuxiliaryService extends AccessibilityService {
         }
 
         AccessibilityNodeInfo titleInfo = rst.get(0);
-        if (titleInfo.getText() == null) {
-            return false;
-        }
-
-        String title = titleInfo.getText().toString();
+        String title = String.valueOf(titleInfo.getText());
 
         return title.startsWith("微信");
     }
@@ -287,11 +283,7 @@ public class AuxiliaryService extends AccessibilityService {
         }
 
         AccessibilityNodeInfo titleInfo = rst.get(0);
-        if (titleInfo.getText() == null) {
-            return false;
-        }
-
-        String title = titleInfo.getText().toString();
+        String title = String.valueOf(titleInfo.getText());
 
         return title.startsWith("通讯录");
     }
@@ -303,11 +295,7 @@ public class AuxiliaryService extends AccessibilityService {
         }
 
         AccessibilityNodeInfo titleInfo = rst.get(0);
-        if (titleInfo.getText() == null) {
-            return false;
-        }
-
-        String title = titleInfo.getText().toString();
+        String title = String.valueOf(titleInfo.getText());
 
         return title.startsWith("发现");
     }
@@ -323,11 +311,7 @@ public class AuxiliaryService extends AccessibilityService {
         }
 
         AccessibilityNodeInfo edittextInfo = rst.get(0);
-        if (edittextInfo.getText() == null) {
-            return false;
-        }
-
-        String searchContent = edittextInfo.getText().toString();
+        String searchContent = String.valueOf(edittextInfo.getText());
         if (!"群发".equals(searchContent)) {
             return false;
         }
@@ -338,11 +322,7 @@ public class AuxiliaryService extends AccessibilityService {
         }
 
         for (AccessibilityNodeInfo info : rst) {
-            if (info.getText() == null) {
-                continue;
-            }
-
-            String title = info.getText().toString();
+            String title = String.valueOf(info.getText());
             if ("联系人".equals(title) || "最常使用".equals(title)) {
                 return true;
             }
@@ -372,7 +352,7 @@ public class AuxiliaryService extends AccessibilityService {
             return false;
         }
         AccessibilityNodeInfo titleInfo = rst.get(0);
-        String title = titleInfo.getText().toString();
+        String title = String.valueOf(titleInfo.getText());
         if (!"编辑标签".equals(title)) {
             return false;
         }
@@ -382,7 +362,7 @@ public class AuxiliaryService extends AccessibilityService {
             return false;
         }
         AccessibilityNodeInfo saveBtnInfo = rst.get(0);
-        title = saveBtnInfo.getText().toString();
+        title = String.valueOf(saveBtnInfo.getText());
         if (!"保存".equals(title) || !saveBtnInfo.isClickable()) {
             return false;
         }
@@ -405,7 +385,7 @@ public class AuxiliaryService extends AccessibilityService {
         if (isListEmpty(rst)) {
             return false;
         }
-        String nickName = rst.get(0).getText().toString();
+        String nickName = String.valueOf(rst.get(0).getText());
         if (TextUtils.isEmpty(nickName) || !nickName.startsWith("昵称:")) {
             return false;
         }
@@ -414,7 +394,7 @@ public class AuxiliaryService extends AccessibilityService {
         if (isListEmpty(rst)) {
             return false;
         }
-        String wxidText = rst.get(0).getText().toString();
+        String wxidText = String.valueOf(rst.get(0).getText());
         if (TextUtils.isEmpty(wxidText) || !wxidText.startsWith("微信号:")) {
             return false;
         }
