@@ -126,7 +126,16 @@ public class AuxiliaryService extends AccessibilityService {
     private void forwardingMessage(AccessibilityEvent event, AccessibilityNodeInfo rootInfo,
                                    AccessibilityNodeInfo sourceInfo, int curPage) {
 
+        List<AccessibilityNodeInfo> rst;
+
         if (curPage == Page.PAGE_WECHAT || curPage == Page.PAGE_EXPLORE) {
+            rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/d99");
+            if (isListEmpty(rst)) {
+                return;
+            }
+
+            rst.get(1).getParent().performAction(AccessibilityNodeInfo.ACTION_CLICK);
+
             return;
         }
 
