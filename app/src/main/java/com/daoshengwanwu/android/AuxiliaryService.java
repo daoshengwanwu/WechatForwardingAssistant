@@ -126,7 +126,21 @@ public class AuxiliaryService extends AccessibilityService {
     private void forwardingMessage(AccessibilityEvent event, AccessibilityNodeInfo rootInfo,
                                    AccessibilityNodeInfo sourceInfo, int curPage) {
 
+        if (curPage == Page.PAGE_WECHAT || curPage == Page.PAGE_EXPLORE) {
+            return;
+        }
 
+        if (curPage == Page.PAGE_CONTACT) {
+            return;
+        }
+
+        if (curPage == Page.PAGE_PERSONAL_INTRODUCTION) {
+            return;
+        }
+
+        if (curPage == Page.PAGE_CHAT) {
+            return;
+        }
     }
 
     private void performLoadForwardingSet(AccessibilityEvent event, AccessibilityNodeInfo rootInfo,
