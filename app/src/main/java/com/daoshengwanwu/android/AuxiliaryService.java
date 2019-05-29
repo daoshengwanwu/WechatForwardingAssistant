@@ -2,10 +2,9 @@ package com.daoshengwanwu.android;
 
 
 import android.accessibilityservice.AccessibilityService;
-import android.content.ClipData;
-import android.content.ClipboardManager;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.accessibility.AccessibilityEvent;
@@ -20,16 +19,19 @@ import java.util.Set;
 public class AuxiliaryService extends AccessibilityService {
     private static final String TAG = "AuxiliaryService";
 
+    private Handler mHandler = new Handler();
+
     // 标志着当前正在进行着的任务
     private int mRunningTask = ShareData.Task.NONE;
 
     // 群发相关
+    private boolean mIsForwrdingAlreadyStarted = false;
+    private boolean mIsAlreadyDelayed3Seconds = false;
     private boolean mIsLabelVerification = false;
     private boolean mIsToForwardingSetLoaded = false;
     private String mCurSendingTarget = null;
     private final Set<String> mAlreadySendMsgSet = new HashSet<>();
     private final Set<String> mToForwardingSet = new HashSet<>();
-    private int mCurLoadIndex = 0;
 
     // 记录清理相关
 
@@ -97,13 +99,32 @@ public class AuxiliaryService extends AccessibilityService {
         }
     }
 
-    private void performForwarding(AccessibilityEvent event, AccessibilityNodeInfo rootInfo,
-                                   AccessibilityNodeInfo sourceInfo, int curPage) {
+    private void performForwarding(final AccessibilityEvent event, final AccessibilityNodeInfo rootInfo,
+                                   final AccessibilityNodeInfo sourceInfo, final int curPage) {
 
         if (!mIsToForwardingSetLoaded) {
             performLoadForwardingSet(event, rootInfo, sourceInfo, curPage);
             return;
         }
+
+        if (!mIsForwrdingAlreadyStarted) {
+            mIsForwrdingAlreadyStarted = true;
+            Toast.makeText(this, "将在3秒后开始执行群发任务，如想撤销请返回桌面", Toast.LENGTH_SHORT).show();
+
+            mHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    mIsAlreadyDelayed3Seconds = true;
+                    forwardingMessage(event, rootInfo, sourceInfo, curPage);
+                }
+            }, 3000);
+        } else if (mIsAlreadyDelayed3Seconds) {
+            forwardingMessage(event, rootInfo, sourceInfo, curPage);
+        }
+    }
+
+    private void forwardingMessage(AccessibilityEvent event, AccessibilityNodeInfo rootInfo,
+                                   AccessibilityNodeInfo sourceInfo, int curPage) {
 
 
     }
@@ -132,15 +153,47 @@ public class AuxiliaryService extends AccessibilityService {
             }
 
             mIsLabelVerification = true;
+            mToForwardingSet.clear();
         }
 
         rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/kw");
         if (isListEmpty(rst)) {
             return;
         }
-
         AccessibilityNodeInfo backInfo = rst.get(0);
 
+        rst = rootInfo.findAccessibilityNodeInfosByViewId("android:id/list");
+        if (isListEmpty(rst)) {
+            return;
+        }
+        AccessibilityNodeInfo listInfo = rst.get(0);
+
+        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/e42");
+        for (AccessibilityNodeInfo textInfo : rst) {
+            String title = textInfo.getText().toString();
+            if (!TextUtils.isEmpty(title)) {
+                mToForwardingSet.add(title);
+            }
+        }
+
+        boolean success = listInfo.performAction(AccessibilityNodeInfo.ACTION_SCROLL_FORWARD);
+        if (!success) {
+            mIsLabelVerification = false;
+            mIsToForwardingSetLoaded = true;
+            backInfo.performAction(AccessibilityNodeInfo.ACTION_CLICK);
+            Toast.makeText(this, "目标信息已读取完毕", Toast.LENGTH_SHORT).show();
+            mHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(AuxiliaryService.this,
+                            "目标信息：\n" + mToForwardingSet  +
+                                    "\n 共 " + mToForwardingSet.size() + " 人", Toast.LENGTH_LONG).show();
+                }
+            }, 2000);
+
+            Log.d(TAG, "performLoadForwardingSet: toSet: " +
+                    mToForwardingSet + "\n 共 " + mToForwardingSet.size() + " 人");
+        }
     }
 
     private void performClean(AccessibilityEvent event, AccessibilityNodeInfo rootInfo,
@@ -179,6 +232,10 @@ public class AuxiliaryService extends AccessibilityService {
 
         if (isLabelMembersPage(rootInfo)) {
             return Page.PAGE_LABEL_MEMBERS;
+        }
+
+        if (isPersonalIntroductionPage(rootInfo)) {
+            return Page.PAGE_PERSONAL_INTRODUCTION;
         }
 
         return Page.PAGE_UNKNOWN;
@@ -286,9 +343,60 @@ public class AuxiliaryService extends AccessibilityService {
         return description.startsWith("当前所在页面,与") && description.endsWith("的聊天");
     }
 
-    // TODO:: 完成这个方法
     private boolean isLabelMembersPage(AccessibilityNodeInfo rootInfo) {
-        return false;
+        List<AccessibilityNodeInfo> rst = rootInfo.findAccessibilityNodeInfosByViewId("android:id/text1");
+        if (isListEmpty(rst)) {
+            return false;
+        }
+        AccessibilityNodeInfo titleInfo = rst.get(0);
+        String title = titleInfo.getText().toString();
+        if (!"编辑标签".equals(title)) {
+            return false;
+        }
+
+        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/ki");
+        if (isListEmpty(rst)) {
+            return false;
+        }
+        AccessibilityNodeInfo saveBtnInfo = rst.get(0);
+        title = saveBtnInfo.getText().toString();
+        if (!"保存".equals(title) || !saveBtnInfo.isClickable()) {
+            return false;
+        }
+
+        return true;
+    }
+
+    private boolean isPersonalIntroductionPage(AccessibilityNodeInfo rootInfo) {
+        List<AccessibilityNodeInfo> rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/b4m");
+        if (isListEmpty(rst)) {
+            return false;
+        }
+
+        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/b4n");
+        if (isListEmpty(rst)) {
+            return false;
+        }
+
+        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/b4t");
+        if (isListEmpty(rst)) {
+            return false;
+        }
+        String nickName = rst.get(0).getText().toString();
+        if (TextUtils.isEmpty(nickName) || !nickName.startsWith("昵称:")) {
+            return false;
+        }
+
+        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/b4v");
+        if (isListEmpty(rst)) {
+            return false;
+        }
+        String wxidText = rst.get(0).getText().toString();
+        if (TextUtils.isEmpty(wxidText) || !wxidText.startsWith("微信号:")) {
+            return false;
+        }
+
+        return true;
     }
 
     private boolean isChatWithCheckboxPage(AccessibilityNodeInfo rootInfo) {
@@ -316,5 +424,6 @@ public class AuxiliaryService extends AccessibilityService {
         public static final int PAGE_CHAT = 5;
         public static final int PAGE_CHAT_WITH_CHECKBOX = 6;
         public static final int PAGE_LABEL_MEMBERS = 7;
+        public static final int PAGE_PERSONAL_INTRODUCTION = 8;
     }
 }
