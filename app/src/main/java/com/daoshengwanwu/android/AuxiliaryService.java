@@ -152,7 +152,12 @@ public class AuxiliaryService extends AccessibilityService {
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-                    info.getParent().performAction(AccessibilityNodeInfo.ACTION_CLICK);
+
+                    if (!info.getParent().performAction(AccessibilityNodeInfo.ACTION_CLICK)) {
+                        onAccessibilityEvent(event);
+                        return;
+                    }
+
                     mCurSendingTarget = title;
                     return;
                 }
