@@ -147,12 +147,6 @@ public class AuxiliaryService extends AccessibilityService {
             for (AccessibilityNodeInfo info : rst) {
                 String title = String.valueOf(info.getText());
                 if (mToForwardingSet.contains(title)) {
-                    try {
-                        Thread.sleep(100);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-
                     if (!info.getParent().performAction(AccessibilityNodeInfo.ACTION_CLICK)) {
                         Log.d(TAG, "forwardingMessage: 点击通讯录item：" + title + " 失败");
                         break;
