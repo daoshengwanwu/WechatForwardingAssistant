@@ -154,8 +154,8 @@ public class AuxiliaryService extends AccessibilityService {
                     }
 
                     if (!info.getParent().performAction(AccessibilityNodeInfo.ACTION_CLICK)) {
-                        onAccessibilityEvent(event);
-                        return;
+                        Log.d(TAG, "forwardingMessage: 点击通讯录item：" + title + " 失败");
+                        break;
                     }
 
                     mCurSendingTarget = title;
@@ -163,9 +163,22 @@ public class AuxiliaryService extends AccessibilityService {
                 }
             }
 
+            if (mToForwardingSet.isEmpty()) {
+                Toast.makeText(this, "群发任务完成", Toast.LENGTH_SHORT).show();
+                mToForwardingSet.clear();
+                mIsForwrdingAlreadyStarted = false;
+                mIsAlreadyDelayed3Seconds = false;
+                mIsToForwardingSetLoaded = false;
+                mIsLabelVerification = false;
+                mRunningTask = ShareData.Task.NONE;
+                mShareData.clearData();
+                return;
+            }
+
             rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/n3");
             if (isListEmpty(rst)) {
                 Toast.makeText(this, "请手动滑动列表以再次触发群发", Toast.LENGTH_SHORT).show();
+                Log.d(TAG, "forwardingMessage: 没有找到通讯录页面的ListView");
                 return;
             }
 
@@ -191,14 +204,8 @@ public class AuxiliaryService extends AccessibilityService {
                     return;
                 }
 
-                Toast.makeText(this, "群发任务完成", Toast.LENGTH_SHORT).show();
-                mToForwardingSet.clear();
-                mIsForwrdingAlreadyStarted = false;
-                mIsAlreadyDelayed3Seconds = false;
-                mIsToForwardingSetLoaded = false;
-                mIsLabelVerification = false;
-                mRunningTask = ShareData.Task.NONE;
-                mShareData.clearData();
+                mCurScrollDirection = Direction.FORWARD;
+                forwardingMessage(event, rootInfo, sourceInfo, curPage);
             }
 
             return;
