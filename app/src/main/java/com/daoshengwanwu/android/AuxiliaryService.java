@@ -347,6 +347,12 @@ public class AuxiliaryService extends AccessibilityService {
             Log.d(TAG, "performLoadForwardingSet: toSet: " +
                     mToForwardingSet + "\n 共 " + mToForwardingSet.size() + " 人");
         }
+
+        try {
+            Thread.sleep(200);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     private void performClean(AccessibilityEvent event, AccessibilityNodeInfo rootInfo,
