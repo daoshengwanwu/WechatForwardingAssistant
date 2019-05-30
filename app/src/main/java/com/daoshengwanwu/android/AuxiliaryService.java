@@ -31,7 +31,6 @@ public class AuxiliaryService extends AccessibilityService {
     private boolean mIsToForwardingSetLoaded = false;
     private String mCurSendingTarget = null;
     private int mCurScrollDirection = Direction.FORWARD;
-    private final Set<String> mAlreadySendMsgSet = new HashSet<>();
     private final Set<String> mToForwardingSet = new HashSet<>();
 
     // 记录清理相关
@@ -119,7 +118,6 @@ public class AuxiliaryService extends AccessibilityService {
                 public void run() {
                     mIsAlreadyDelayed3Seconds = true;
                     mCurScrollDirection = Direction.FORWARD;
-                    mAlreadySendMsgSet.clear();
                     forwardingMessage(event, rootInfo, sourceInfo, curPage);
                 }
             }, 3000);
@@ -150,7 +148,7 @@ public class AuxiliaryService extends AccessibilityService {
                 String title = String.valueOf(info.getText());
                 if (mToForwardingSet.contains(title)) {
                     try {
-                        Thread.sleep(50);
+                        Thread.sleep(100);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -538,7 +536,6 @@ public class AuxiliaryService extends AccessibilityService {
     }
 
     private void clearForwardingState() {
-        mAlreadySendMsgSet.clear();
         mCurSendingTarget = null;
         mIsToForwardingSetLoaded = false;
         mToForwardingSet.clear();
