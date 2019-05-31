@@ -5,6 +5,7 @@ import android.accessibilityservice.AccessibilityService;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.HandlerThread;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.accessibility.AccessibilityEvent;
@@ -19,7 +20,8 @@ import java.util.Set;
 public class AuxiliaryService extends AccessibilityService {
     private static final String TAG = "AuxiliaryService";
 
-    private Handler mHandler = new Handler();
+    private Handler mHandler;
+    private HandlerThread mHandlerThread = new HandlerThread("HandlerThread");
 
     // 群发相关
     private boolean mIsForwrdingAlreadyStarted = false;
@@ -38,18 +40,21 @@ public class AuxiliaryService extends AccessibilityService {
     protected void onServiceConnected() {
         super.onServiceConnected();
 
-        Toast.makeText(this, "成功启动 " +
-                getResources().getString(R.string.app_name) + ".", Toast.LENGTH_LONG).show();
+        mHandlerThread.start();
+        mHandler = new Handler(mHandlerThread.getLooper());
+        showToast("成功启动 " + getResources().getString(R.string.app_name) + ".", Toast.LENGTH_SHORT);
     }
 
     @Override
     public boolean onUnbind(Intent intent) {
-        Toast.makeText(this, getResources().getString(R.string.app_name) +
-                " 已关闭，如需再次使用请在设置中重新开启本插件.", Toast.LENGTH_LONG).show();
+        showToast(getResources().getString(R.string.app_name) +
+                " 已关闭，如需再次使用请在设置中重新开启本插件.", Toast.LENGTH_SHORT);
+
+        mHandler = null;
+        mHandlerThread.quitSafely();
 
         return super.onUnbind(intent);
     }
-
 
     @Override
     public void onInterrupt() {
@@ -112,7 +117,7 @@ public class AuxiliaryService extends AccessibilityService {
         if (!mIsForwrdingAlreadyStarted &&
                 (curPage == Page.PAGE_WECHAT || curPage == Page.PAGE_CONTACT || curPage == Page.PAGE_EXPLORE)) {
 
-            // TODO:: 在此弹出Toast提示3s后开始执行群发操作
+            showToast("将在3秒后执行群发任务，如想撤销请离开微信界面并在设置中关闭群发工具", Toast.LENGTH_LONG);
             try {
                 Thread.sleep(3000);
             } catch (InterruptedException e) {
@@ -153,7 +158,7 @@ public class AuxiliaryService extends AccessibilityService {
             }
 
             if (mToForwardingSet.isEmpty()) {
-                Toast.makeText(this, "群发任务完成", Toast.LENGTH_SHORT).show();
+                showToast("群发任务完成", Toast.LENGTH_SHORT);
                 mToForwardingSet.clear();
                 mIsForwrdingAlreadyStarted = false;
                 mIsToForwardingSetLoaded = false;
@@ -293,8 +298,8 @@ public class AuxiliaryService extends AccessibilityService {
             AccessibilityNodeInfo labelInfo = rst.get(0);
             String labelText = String.valueOf(labelInfo.getText());
             if (!mShareData.getLabel().equals(labelText)) {
-                Toast.makeText(this, "当前标签页面与群发指定的不符，请切换到：" +
-                        mShareData.getLabel() + "：标签页面", Toast.LENGTH_SHORT).show();
+                showToast("当前标签页面与群发指定的不符，请切换到：" +
+                        mShareData.getLabel() + "：标签页面", Toast.LENGTH_SHORT);
                 Log.d(TAG, "performLoadForwardingSet: 当前标签页面与指定的标签：" + mShareData.getLabel() + " :不一致");
                 return;
             }
@@ -328,15 +333,9 @@ public class AuxiliaryService extends AccessibilityService {
             mIsLabelVerification = false;
             mIsToForwardingSetLoaded = true;
             backInfo.performAction(AccessibilityNodeInfo.ACTION_CLICK);
-            Toast.makeText(this, "目标信息已读取完毕", Toast.LENGTH_SHORT).show();
-            mHandler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    Toast.makeText(AuxiliaryService.this,
-                            "目标信息：\n" + mToForwardingSet  +
-                                    "\n 共 " + mToForwardingSet.size() + " 人", Toast.LENGTH_LONG).show();
-                }
-            }, 2000);
+            showToast("目标信息已读取完毕", Toast.LENGTH_SHORT);
+            showToast("目标信息：\n" + mToForwardingSet  + "\n 共 " +
+                    mToForwardingSet.size() + " 人", 2000, Toast.LENGTH_SHORT);
 
             Log.d(TAG, "performLoadForwardingSet: toSet: " +
                     mToForwardingSet + "\n 共 " + mToForwardingSet.size() + " 人");
@@ -538,6 +537,23 @@ public class AuxiliaryService extends AccessibilityService {
 
     private boolean isListEmpty(List lst) {
         return lst == null || lst.size() <= 0;
+    }
+
+    private void showToast(final String text, long delay, final int length) {
+        if (mHandler == null) {
+            return;
+        }
+
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(AuxiliaryService.this, text, length).show();
+            }
+        }, delay);
+    }
+
+    private void showToast(String text, int length) {
+        showToast(text, 0, length);
     }
 
     private void clearForwardingState() {
