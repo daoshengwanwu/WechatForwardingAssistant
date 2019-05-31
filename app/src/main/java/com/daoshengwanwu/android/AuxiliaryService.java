@@ -556,12 +556,6 @@ public class AuxiliaryService extends AccessibilityService {
         showToast(text, 0, length);
     }
 
-    private void clearForwardingState() {
-        mCurSendingTarget = null;
-        mIsToForwardingSetLoaded = false;
-        mToForwardingSet.clear();
-    }
-
     private static final class Page {
         public static final int PAGE_UNKNOWN = -1;
         public static final int PAGE_WECHAT = 0;
