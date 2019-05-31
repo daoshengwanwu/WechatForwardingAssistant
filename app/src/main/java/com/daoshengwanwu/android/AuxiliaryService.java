@@ -21,12 +21,8 @@ public class AuxiliaryService extends AccessibilityService {
 
     private Handler mHandler = new Handler();
 
-    // 标志着当前正在进行着的任务
-    private int mRunningTask = ShareData.Task.NONE;
-
     // 群发相关
     private boolean mIsForwrdingAlreadyStarted = false;
-    private boolean mIsAlreadyDelayed3Seconds = false;
     private boolean mIsLabelVerification = false;
     private boolean mIsToForwardingSetLoaded = false;
     private String mCurSendingTarget = null;
@@ -62,8 +58,8 @@ public class AuxiliaryService extends AccessibilityService {
 
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
-        mRunningTask = mShareData.getActiveTask();
-        if (mRunningTask == ShareData.Task.NONE) {
+        int activeTask = mShareData.getActiveTask();
+        if (activeTask == ShareData.Task.NONE) {
             return;
         }
 
@@ -86,7 +82,7 @@ public class AuxiliaryService extends AccessibilityService {
             return;
         }
 
-        switch (mRunningTask) {
+        switch (activeTask) {
             case ShareData.Task.TASK_CLEAN: {
                 performClean(event, rootInfo, source, curPage);
             } return;
@@ -107,27 +103,26 @@ public class AuxiliaryService extends AccessibilityService {
             return;
         }
 
-        if (!mIsForwrdingAlreadyStarted &&
-                (curPage == Page.PAGE_WECHAT || curPage == Page.PAGE_CONTACT || curPage == Page.PAGE_EXPLORE)) {
-
-            mIsForwrdingAlreadyStarted = true;
-            Toast.makeText(this, "将在3秒后开始执行群发任务，如想撤销请返回桌面", Toast.LENGTH_SHORT).show();
-
-            mHandler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    mIsAlreadyDelayed3Seconds = true;
-                    mCurScrollDirection = Direction.FORWARD;
-                    forwardingMessage(event, rootInfo, sourceInfo, curPage);
-                }
-            }, 3000);
-        } else if (mIsAlreadyDelayed3Seconds) {
-            forwardingMessage(event, rootInfo, sourceInfo, curPage);
-        }
+        forwardingMessage(event, rootInfo, sourceInfo, curPage);
     }
 
     private void forwardingMessage(AccessibilityEvent event, AccessibilityNodeInfo rootInfo,
                                    AccessibilityNodeInfo sourceInfo, int curPage) {
+
+        if (!mIsForwrdingAlreadyStarted &&
+                (curPage == Page.PAGE_WECHAT || curPage == Page.PAGE_CONTACT || curPage == Page.PAGE_EXPLORE)) {
+
+            // TODO:: 在此弹出Toast提示3s后开始执行群发操作
+            try {
+                Thread.sleep(3000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+                Log.d(TAG, "forwardingMessage: 线程sleep失败");
+            }
+
+            mIsForwrdingAlreadyStarted = true;
+            onAccessibilityEvent(event);
+        }
 
         List<AccessibilityNodeInfo> rst;
 
@@ -161,17 +156,14 @@ public class AuxiliaryService extends AccessibilityService {
                 Toast.makeText(this, "群发任务完成", Toast.LENGTH_SHORT).show();
                 mToForwardingSet.clear();
                 mIsForwrdingAlreadyStarted = false;
-                mIsAlreadyDelayed3Seconds = false;
                 mIsToForwardingSetLoaded = false;
                 mIsLabelVerification = false;
-                mRunningTask = ShareData.Task.NONE;
                 mShareData.clearData();
                 return;
             }
 
             rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/n3");
             if (isListEmpty(rst)) {
-                Toast.makeText(this, "请手动滑动列表以再次触发群发", Toast.LENGTH_SHORT).show();
                 Log.d(TAG, "forwardingMessage: 没有找到通讯录页面的ListView");
                 return;
             }
@@ -187,7 +179,7 @@ public class AuxiliaryService extends AccessibilityService {
                 }
 
                 mCurScrollDirection = Direction.BACKWARD;
-                forwardingMessage(event, rootInfo, sourceInfo, curPage);
+                onAccessibilityEvent(event);
             } else {
                 if (rst.get(0).performAction(AccessibilityNodeInfo.ACTION_SCROLL_BACKWARD)) {
                     try {
@@ -199,7 +191,7 @@ public class AuxiliaryService extends AccessibilityService {
                 }
 
                 mCurScrollDirection = Direction.FORWARD;
-                forwardingMessage(event, rootInfo, sourceInfo, curPage);
+                onAccessibilityEvent(event);
             }
 
             return;
@@ -208,7 +200,7 @@ public class AuxiliaryService extends AccessibilityService {
         if (curPage == Page.PAGE_PERSONAL_INTRODUCTION) {
             rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/kw");
             if (isListEmpty(rst)) {
-                Toast.makeText(this, "请手动返回微信通讯录界面", Toast.LENGTH_SHORT).show();
+                Log.d(TAG, "forwardingMessage: 没有找到Personal页面的后退按钮");
                 return;
             }
             AccessibilityNodeInfo backInfo = rst.get(0);
@@ -238,7 +230,7 @@ public class AuxiliaryService extends AccessibilityService {
         if (curPage == Page.PAGE_CHAT) {
             rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/km");
             if (isListEmpty(rst)) {
-                Toast.makeText(this, "请手动返回微信通讯录页面", Toast.LENGTH_SHORT).show();
+                Log.d(TAG, "forwardingMessage: 没有找到聊天页面的后退按钮");
                 return;
             }
             AccessibilityNodeInfo backInfo = rst.get(0);
@@ -303,6 +295,7 @@ public class AuxiliaryService extends AccessibilityService {
             if (!mShareData.getLabel().equals(labelText)) {
                 Toast.makeText(this, "当前标签页面与群发指定的不符，请切换到：" +
                         mShareData.getLabel() + "：标签页面", Toast.LENGTH_SHORT).show();
+                Log.d(TAG, "performLoadForwardingSet: 当前标签页面与指定的标签：" + mShareData.getLabel() + " :不一致");
                 return;
             }
 
