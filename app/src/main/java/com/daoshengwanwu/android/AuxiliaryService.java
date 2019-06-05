@@ -47,8 +47,8 @@ public class AuxiliaryService extends AccessibilityService {
 
     @Override
     public boolean onUnbind(Intent intent) {
-        showToast(getResources().getString(R.string.app_name) +
-                " 已关闭，如需再次使用请在设置中重新开启本插件.", Toast.LENGTH_SHORT);
+        Toast.makeText(this, "getResources().getString(R.string.app_name) +\n" +
+                "                \" 已关闭，如需再次使用请在设置中重新开启本插件.\"", Toast.LENGTH_SHORT).show();
 
         mHandler = null;
         mHandlerThread.quitSafely();
@@ -147,6 +147,12 @@ public class AuxiliaryService extends AccessibilityService {
             for (AccessibilityNodeInfo info : rst) {
                 String title = String.valueOf(info.getText());
                 if (mToForwardingSet.contains(title)) {
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+
                     if (!info.getParent().performAction(AccessibilityNodeInfo.ACTION_CLICK)) {
                         Log.d(TAG, "forwardingMessage: 点击通讯录item：" + title + " 失败");
                         break;
@@ -260,7 +266,7 @@ public class AuxiliaryService extends AccessibilityService {
 
             Bundle arguments = new Bundle();
             arguments.putCharSequence(AccessibilityNodeInfo.ACTION_ARGUMENT_SET_TEXT_CHARSEQUENCE,
-                    mCurSendingTarget.charAt(0) + "老师, " + mShareData.getContent());
+                    getToSendContent());
 
             if (!etInfo.performAction(AccessibilityNodeInfo.ACTION_SET_TEXT, arguments)) {
                 backInfo.performAction(AccessibilityNodeInfo.ACTION_CLICK);
@@ -278,6 +284,20 @@ public class AuxiliaryService extends AccessibilityService {
 
             backInfo.performAction(AccessibilityNodeInfo.ACTION_CLICK);
         }
+    }
+
+    private String getToSendContent() {
+        String commonContent = mShareData.getContent();
+        String nickName = mCurSendingTarget;
+        if (commonContent.startsWith("xing")) {
+            nickName = nickName.charAt(0) + "";
+        } else if (commonContent.startsWith("name")) {
+            nickName = nickName.split("-")[0];
+        }
+
+        commonContent = commonContent.substring(4);
+
+        return nickName + commonContent;
     }
 
     private void performLoadForwardingSet(AccessibilityEvent event, AccessibilityNodeInfo rootInfo,
