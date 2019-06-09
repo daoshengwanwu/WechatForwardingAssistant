@@ -288,16 +288,13 @@ public class AuxiliaryService extends AccessibilityService {
 
     private String getToSendContent() {
         String commonContent = mShareData.getContent();
-        String nickName = mCurSendingTarget;
-        if (commonContent.startsWith("xing")) {
-            nickName = nickName.charAt(0) + "";
-        } else if (commonContent.startsWith("name")) {
-            nickName = nickName.split("-")[0];
-        }
+        String xing = mCurSendingTarget.charAt(0) + "";
+        String name = mCurSendingTarget.split("-")[0];
 
-        commonContent = commonContent.substring(4);
+        commonContent = commonContent.replaceAll("xing", xing);
+        commonContent = commonContent.replaceAll("name", name);
 
-        return nickName + commonContent;
+        return commonContent;
     }
 
     private void performLoadForwardingSet(AccessibilityEvent event, AccessibilityNodeInfo rootInfo,
