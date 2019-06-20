@@ -1,4 +1,4 @@
-package com.daoshengwanwu.android;
+package com.daoshengwanwu.android.service;
 
 
 import android.accessibilityservice.AccessibilityService;
@@ -11,6 +11,8 @@ import android.util.Log;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.Toast;
+import com.daoshengwanwu.android.R;
+import com.daoshengwanwu.android.model.ShareData;
 
 import java.util.HashSet;
 import java.util.List;

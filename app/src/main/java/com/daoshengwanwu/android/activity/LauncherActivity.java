@@ -1,4 +1,4 @@
-package com.daoshengwanwu.android;
+package com.daoshengwanwu.android.activity;
 
 
 import android.text.TextUtils;
@@ -8,6 +8,8 @@ import android.widget.EditText;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
+import com.daoshengwanwu.android.R;
+import com.daoshengwanwu.android.model.ShareData;
 
 
 public class LauncherActivity extends AppCompatActivity {

@@ -12,7 +12,7 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
-        <activity android:name=".LauncherActivity">
+        <activity android:name=".activity.LauncherActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -21,7 +21,7 @@
         </activity>
 
         <service
-                android:name=".AuxiliaryService"
+                android:name=".service.AuxiliaryService"
                 android:enabled="true"
                 android:exported="true"
                 android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">

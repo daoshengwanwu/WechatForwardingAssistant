@@ -1,4 +1,4 @@
-package com.daoshengwanwu.android;
+package com.daoshengwanwu.android.model;
 
 
 public class ShareData {
