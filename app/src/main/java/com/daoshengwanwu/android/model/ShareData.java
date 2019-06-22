@@ -1,6 +1,9 @@
 package com.daoshengwanwu.android.model;
 
 
+import com.daoshengwanwu.android.constant.Task;
+
+
 public class ShareData {
     private static final ShareData sInstance = new ShareData();
 
@@ -62,11 +65,5 @@ public class ShareData {
 
     public interface OnDataChangedListener {
         void onDataChanged();
-    }
-
-    public static final class Task {
-        public static final int NONE = -1;
-        public static final int TASK_FORWARDING = 0;
-        public static final int TASK_CLEAN = 1;
     }
 }

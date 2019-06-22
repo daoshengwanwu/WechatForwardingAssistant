@@ -12,6 +12,7 @@ import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.Toast;
 import com.daoshengwanwu.android.R;
+import com.daoshengwanwu.android.constant.Task;
 import com.daoshengwanwu.android.model.ShareData;
 
 import java.util.HashSet;
@@ -37,6 +38,7 @@ public class AuxiliaryService extends AccessibilityService {
 
     // 与UI共享的数据
     private ShareData mShareData = ShareData.getInstance();
+
 
     @Override
     protected void onServiceConnected() {
@@ -66,7 +68,7 @@ public class AuxiliaryService extends AccessibilityService {
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
         int activeTask = mShareData.getActiveTask();
-        if (activeTask == ShareData.Task.NONE) {
+        if (activeTask == Task.NONE) {
             return;
         }
 
@@ -90,13 +92,17 @@ public class AuxiliaryService extends AccessibilityService {
         }
 
         switch (activeTask) {
-            case ShareData.Task.TASK_CLEAN: {
+            case Task.TASK_CLEAN: {
                 performClean(event, rootInfo, source, curPage);
             } return;
 
-            case ShareData.Task.TASK_FORWARDING: {
+            case Task.TASK_FORWARDING: {
                 performForwarding(event, rootInfo, source, curPage);
             } return;
+
+            case Task.TASK_LOAD_LABEL_INFO: {
+                performLoadForwardingSet(event, rootInfo, source, curPage);
+            }
 
             default: break;
         }
@@ -106,15 +112,8 @@ public class AuxiliaryService extends AccessibilityService {
                                    final AccessibilityNodeInfo sourceInfo, final int curPage) {
 
         if (!mIsToForwardingSetLoaded) {
-            performLoadForwardingSet(event, rootInfo, sourceInfo, curPage);
             return;
         }
-
-        forwardingMessage(event, rootInfo, sourceInfo, curPage);
-    }
-
-    private void forwardingMessage(AccessibilityEvent event, AccessibilityNodeInfo rootInfo,
-                                   AccessibilityNodeInfo sourceInfo, int curPage) {
 
         if (!mIsForwrdingAlreadyStarted &&
                 (curPage == Page.PAGE_WECHAT || curPage == Page.PAGE_CONTACT || curPage == Page.PAGE_EXPLORE)) {
@@ -288,17 +287,6 @@ public class AuxiliaryService extends AccessibilityService {
         }
     }
 
-    private String getToSendContent() {
-        String commonContent = mShareData.getContent();
-        String xing = mCurSendingTarget.charAt(0) + "";
-        String name = mCurSendingTarget.split("-")[0];
-
-        commonContent = commonContent.replaceAll("xing", xing);
-        commonContent = commonContent.replaceAll("name", name);
-
-        return commonContent;
-    }
-
     private void performLoadForwardingSet(AccessibilityEvent event, AccessibilityNodeInfo rootInfo,
                                           AccessibilityNodeInfo sourceInfo, int curPage) {
 
@@ -312,6 +300,9 @@ public class AuxiliaryService extends AccessibilityService {
             // 验证下标签是否和界面中指定的相同
             rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/l3");
             if (isListEmpty(rst)) {
+                showToast("当前标签页面与群发指定的不符，请切换到：" +
+                        mShareData.getLabel() + "：标签页面", Toast.LENGTH_SHORT);
+                Log.d(TAG, "performLoadForwardingSet: 当前标签页面与指定的标签：" + mShareData.getLabel() + " :不一致");
                 return;
             }
             AccessibilityNodeInfo labelInfo = rst.get(0);
@@ -370,6 +361,17 @@ public class AuxiliaryService extends AccessibilityService {
     private void performClean(AccessibilityEvent event, AccessibilityNodeInfo rootInfo,
                               AccessibilityNodeInfo sourceInfo, int curPage) {
 
+    }
+
+    private String getToSendContent() {
+        String commonContent = mShareData.getContent();
+        String xing = mCurSendingTarget.charAt(0) + "";
+        String name = mCurSendingTarget.split("-")[0];
+
+        commonContent = commonContent.replaceAll("xing", xing);
+        commonContent = commonContent.replaceAll("name", name);
+
+        return commonContent;
     }
 
     private int whereAmI(AccessibilityNodeInfo rootInfo) {
