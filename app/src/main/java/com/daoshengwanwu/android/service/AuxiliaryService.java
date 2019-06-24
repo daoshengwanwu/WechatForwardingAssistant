@@ -108,6 +108,77 @@ public class AuxiliaryService extends AccessibilityService {
         }
     }
 
+    private void performLoadForwardingSet(AccessibilityEvent event, AccessibilityNodeInfo rootInfo,
+                                          AccessibilityNodeInfo sourceInfo, int curPage) {
+
+        if (curPage != Page.PAGE_LABEL_MEMBERS) {
+            mIsLabelVerification = false;
+            return;
+        }
+
+        List<AccessibilityNodeInfo> rst;
+        if (!mIsLabelVerification) {
+            // 验证下标签是否和界面中指定的相同
+            rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/l3");
+            if (isListEmpty(rst)) {
+                showToast("当前标签页面与群发指定的不符，请切换到：" +
+                        mShareData.getLabel() + "：标签页面", Toast.LENGTH_SHORT);
+                Log.d(TAG, "performLoadForwardingSet: 当前标签页面与指定的标签：" + mShareData.getLabel() + " :不一致");
+                return;
+            }
+            AccessibilityNodeInfo labelInfo = rst.get(0);
+            String labelText = String.valueOf(labelInfo.getText());
+            if (!mShareData.getLabel().equals(labelText)) {
+                showToast("当前标签页面与群发指定的不符，请切换到：" +
+                        mShareData.getLabel() + "：标签页面", Toast.LENGTH_SHORT);
+                Log.d(TAG, "performLoadForwardingSet: 当前标签页面与指定的标签：" + mShareData.getLabel() + " :不一致");
+                return;
+            }
+
+            mIsLabelVerification = true;
+            mToForwardingSet.clear();
+        }
+
+        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/kw");
+        if (isListEmpty(rst)) {
+            return;
+        }
+        AccessibilityNodeInfo backInfo = rst.get(0);
+
+        rst = rootInfo.findAccessibilityNodeInfosByViewId("android:id/list");
+        if (isListEmpty(rst)) {
+            return;
+        }
+        AccessibilityNodeInfo listInfo = rst.get(0);
+
+        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/e42");
+        for (AccessibilityNodeInfo textInfo : rst) {
+            String title = String.valueOf(textInfo.getText());
+            if (!TextUtils.isEmpty(title)) {
+                mToForwardingSet.add(title);
+            }
+        }
+
+        boolean success = listInfo.performAction(AccessibilityNodeInfo.ACTION_SCROLL_FORWARD);
+        if (!success) {
+            mIsLabelVerification = false;
+            mIsToForwardingSetLoaded = true;
+            backInfo.performAction(AccessibilityNodeInfo.ACTION_CLICK);
+            showToast("目标信息已读取完毕", Toast.LENGTH_SHORT);
+            showToast("目标信息：\n" + mToForwardingSet  + "\n 共 " +
+                    mToForwardingSet.size() + " 人", 2000, Toast.LENGTH_SHORT);
+
+            Log.d(TAG, "performLoadForwardingSet: toSet: " +
+                    mToForwardingSet + "\n 共 " + mToForwardingSet.size() + " 人");
+        }
+
+        try {
+            Thread.sleep(200);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
     private void performForwarding(final AccessibilityEvent event, final AccessibilityNodeInfo rootInfo,
                                    final AccessibilityNodeInfo sourceInfo, final int curPage) {
 
@@ -284,77 +355,6 @@ public class AuxiliaryService extends AccessibilityService {
             }
 
             backInfo.performAction(AccessibilityNodeInfo.ACTION_CLICK);
-        }
-    }
-
-    private void performLoadForwardingSet(AccessibilityEvent event, AccessibilityNodeInfo rootInfo,
-                                          AccessibilityNodeInfo sourceInfo, int curPage) {
-
-        if (curPage != Page.PAGE_LABEL_MEMBERS) {
-            mIsLabelVerification = false;
-            return;
-        }
-
-        List<AccessibilityNodeInfo> rst;
-        if (!mIsLabelVerification) {
-            // 验证下标签是否和界面中指定的相同
-            rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/l3");
-            if (isListEmpty(rst)) {
-                showToast("当前标签页面与群发指定的不符，请切换到：" +
-                        mShareData.getLabel() + "：标签页面", Toast.LENGTH_SHORT);
-                Log.d(TAG, "performLoadForwardingSet: 当前标签页面与指定的标签：" + mShareData.getLabel() + " :不一致");
-                return;
-            }
-            AccessibilityNodeInfo labelInfo = rst.get(0);
-            String labelText = String.valueOf(labelInfo.getText());
-            if (!mShareData.getLabel().equals(labelText)) {
-                showToast("当前标签页面与群发指定的不符，请切换到：" +
-                        mShareData.getLabel() + "：标签页面", Toast.LENGTH_SHORT);
-                Log.d(TAG, "performLoadForwardingSet: 当前标签页面与指定的标签：" + mShareData.getLabel() + " :不一致");
-                return;
-            }
-
-            mIsLabelVerification = true;
-            mToForwardingSet.clear();
-        }
-
-        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/kw");
-        if (isListEmpty(rst)) {
-            return;
-        }
-        AccessibilityNodeInfo backInfo = rst.get(0);
-
-        rst = rootInfo.findAccessibilityNodeInfosByViewId("android:id/list");
-        if (isListEmpty(rst)) {
-            return;
-        }
-        AccessibilityNodeInfo listInfo = rst.get(0);
-
-        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/e42");
-        for (AccessibilityNodeInfo textInfo : rst) {
-            String title = String.valueOf(textInfo.getText());
-            if (!TextUtils.isEmpty(title)) {
-                mToForwardingSet.add(title);
-            }
-        }
-
-        boolean success = listInfo.performAction(AccessibilityNodeInfo.ACTION_SCROLL_FORWARD);
-        if (!success) {
-            mIsLabelVerification = false;
-            mIsToForwardingSetLoaded = true;
-            backInfo.performAction(AccessibilityNodeInfo.ACTION_CLICK);
-            showToast("目标信息已读取完毕", Toast.LENGTH_SHORT);
-            showToast("目标信息：\n" + mToForwardingSet  + "\n 共 " +
-                    mToForwardingSet.size() + " 人", 2000, Toast.LENGTH_SHORT);
-
-            Log.d(TAG, "performLoadForwardingSet: toSet: " +
-                    mToForwardingSet + "\n 共 " + mToForwardingSet.size() + " 人");
-        }
-
-        try {
-            Thread.sleep(200);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
         }
     }
 
