@@ -12,7 +12,7 @@ import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.Toast;
 import com.daoshengwanwu.android.R;
-import com.daoshengwanwu.android.constant.Task;
+import com.daoshengwanwu.android.task.Task;
 import com.daoshengwanwu.android.model.ShareData;
 
 import java.util.HashSet;

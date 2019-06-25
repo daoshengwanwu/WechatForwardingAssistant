@@ -1,7 +1,7 @@
 package com.daoshengwanwu.android.model;
 
 
-import com.daoshengwanwu.android.constant.Task;
+import com.daoshengwanwu.android.task.Task;
 
 
 public class ShareData {
