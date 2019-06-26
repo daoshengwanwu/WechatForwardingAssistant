@@ -67,8 +67,9 @@ public class AuxiliaryService extends AccessibilityService {
 
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
-        int activeTask = mShareData.getActiveTask();
-        if (activeTask == Task.NONE) {
+        Task curActivatedTask = getCurActivatedTask();
+
+        if (curActivatedTask == null) {
             return;
         }
 
@@ -86,26 +87,11 @@ public class AuxiliaryService extends AccessibilityService {
             return;
         }
 
-        int curPage = whereAmI(rootInfo);
-        if (curPage == Page.PAGE_UNKNOWN) {
-            return;
-        }
+        curActivatedTask.execute(rootInfo);
+    }
 
-        switch (activeTask) {
-            case Task.TASK_CLEAN: {
-                performClean(event, rootInfo, source, curPage);
-            } return;
-
-            case Task.TASK_FORWARDING: {
-                performForwarding(event, rootInfo, source, curPage);
-            } return;
-
-            case Task.TASK_LOAD_LABEL_INFO: {
-                performLoadForwardingSet(event, rootInfo, source, curPage);
-            }
-
-            default: break;
-        }
+    private Task getCurActivatedTask() {
+        return null;
     }
 
     private void performLoadForwardingSet(AccessibilityEvent event, AccessibilityNodeInfo rootInfo,
