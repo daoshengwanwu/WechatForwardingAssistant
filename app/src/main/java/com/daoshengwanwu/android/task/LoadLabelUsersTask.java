@@ -1,6 +1,7 @@
 package com.daoshengwanwu.android.task;
 
 
+import android.content.Context;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.accessibility.AccessibilityNodeInfo;
@@ -8,6 +9,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import com.daoshengwanwu.android.model.item.UserItem;
 import com.daoshengwanwu.android.page.Page;
+import com.daoshengwanwu.android.util.CustomCollectionUtils;
+import com.daoshengwanwu.android.util.SingleSubThreadUtil;
 
 import java.util.List;
 import java.util.Set;
@@ -15,13 +18,21 @@ import java.util.Set;
 
 public class LoadLabelUsersTask extends Task {
     private boolean mIsLabelVerification = false;
+    private String mLabelTitle = "";
+    private Context mContext;
 
     private OnLabelUsersInfoLoadFinishedListener mOnLabelUsersInfoLoadFinishedListener;
 
 
-    protected LoadLabelUsersTask(@NonNull OnLabelUsersInfoLoadFinishedListener listener) {
+    protected LoadLabelUsersTask(
+            @NonNull Context context,
+            @NonNull String labelTitle,
+            @NonNull OnLabelUsersInfoLoadFinishedListener listener) {
+
         super(TaskId.TASK_LOAD_LABEL_USERS);
 
+        mContext = context;
+        mLabelTitle = labelTitle;
         mOnLabelUsersInfoLoadFinishedListener = listener;
     }
 
@@ -38,18 +49,16 @@ public class LoadLabelUsersTask extends Task {
         if (!mIsLabelVerification) {
             // 验证下标签是否和界面中指定的相同
             rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/l3");
-            if (isListEmpty(rst)) {
-                showToast("当前标签页面与群发指定的不符，请切换到：" +
-                        mShareData.getLabel() + "：标签页面", Toast.LENGTH_SHORT);
-                Log.d(TAG, "performLoadForwardingSet: 当前标签页面与指定的标签：" + mShareData.getLabel() + " :不一致");
+            if (CustomCollectionUtils.isListEmpty(rst)) {
+                SingleSubThreadUtil.showToast(mContext, "当前标签页面与群发指定的不符，请切换到：" +
+                        mLabelTitle + "：标签页面", Toast.LENGTH_SHORT);
                 return;
             }
             AccessibilityNodeInfo labelInfo = rst.get(0);
             String labelText = String.valueOf(labelInfo.getText());
-            if (!mShareData.getLabel().equals(labelText)) {
-                showToast("当前标签页面与群发指定的不符，请切换到：" +
-                        mShareData.getLabel() + "：标签页面", Toast.LENGTH_SHORT);
-                Log.d(TAG, "performLoadForwardingSet: 当前标签页面与指定的标签：" + mShareData.getLabel() + " :不一致");
+            if (!mLabelTitle.equals(labelText)) {
+                SingleSubThreadUtil.showToast(mContext, "当前标签页面与群发指定的不符，请切换到：" +
+                        mLabelTitle + "：标签页面", Toast.LENGTH_SHORT);
                 return;
             }
 
