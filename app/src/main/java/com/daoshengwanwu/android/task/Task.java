@@ -23,7 +23,7 @@ public abstract class Task {
     public enum TaskId {
         NONE,
         TASK_FORWARDING,
-        TASK_LOAD_LABEL_INFO,
+        TASK_LOAD_LABEL_USERS,
         TASK_CLEAN;
     }
 }

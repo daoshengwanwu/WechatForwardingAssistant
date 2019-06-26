@@ -9,7 +9,7 @@ public abstract class Page {
     private final PageId mPageId;
 
 
-    public static Page generateFrom(@NonNull AccessibilityNodeInfo rootInfo) {
+    @NonNull public static Page generateFrom(@NonNull AccessibilityNodeInfo rootInfo) {
         // TODO::
         return null;
     }
@@ -20,7 +20,7 @@ public abstract class Page {
     }
 
 
-    protected Page(PageId pageId) {
+    protected Page(@NonNull PageId pageId) {
         mPageId = pageId;
     }
 
