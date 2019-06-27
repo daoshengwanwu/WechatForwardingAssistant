@@ -11,11 +11,21 @@ public abstract class Page {
 
     @NonNull public static Page generateFrom(@NonNull AccessibilityNodeInfo rootInfo) {
         // TODO::
-        return null;
+        switch (whichPage(rootInfo)) {
+            case PAGE_LABEL_MEMBERS: {
+                return LabelMembersPage.generateFrom(rootInfo);
+            }
+        }
+
+        return UnknownPage.generateFrom(rootInfo);
     }
 
     private static PageId whichPage(@NonNull AccessibilityNodeInfo rootInfo) {
         // TODO::
+        if (LabelMembersPage.isSelf(rootInfo)) {
+            return PageId.PAGE_LABEL_MEMBERS;
+        }
+
         return PageId.PAGE_UNKNOWN;
     }
 

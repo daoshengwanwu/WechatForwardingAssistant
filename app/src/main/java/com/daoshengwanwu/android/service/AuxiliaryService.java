@@ -79,12 +79,6 @@ public class AuxiliaryService extends AccessibilityService {
         return null;
     }
 
-    private void performLoadForwardingSet(AccessibilityEvent event, AccessibilityNodeInfo rootInfo,
-                                          AccessibilityNodeInfo sourceInfo, int curPage) {
-
-
-    }
-
     private void performForwarding(final AccessibilityEvent event, final AccessibilityNodeInfo rootInfo,
                                    final AccessibilityNodeInfo sourceInfo, final int curPage) {
 
@@ -400,30 +394,6 @@ public class AuxiliaryService extends AccessibilityService {
 
         String description = String.valueOf(desInfo.getContentDescription());
         return description.startsWith("当前所在页面,与") && description.endsWith("的聊天");
-    }
-
-    private boolean isLabelMembersPage(AccessibilityNodeInfo rootInfo) {
-        List<AccessibilityNodeInfo> rst = rootInfo.findAccessibilityNodeInfosByViewId("android:id/text1");
-        if (isListEmpty(rst)) {
-            return false;
-        }
-        AccessibilityNodeInfo titleInfo = rst.get(0);
-        String title = String.valueOf(titleInfo.getText());
-        if (!"编辑标签".equals(title)) {
-            return false;
-        }
-
-        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/ki");
-        if (isListEmpty(rst)) {
-            return false;
-        }
-        AccessibilityNodeInfo saveBtnInfo = rst.get(0);
-        title = String.valueOf(saveBtnInfo.getText());
-        if (!"保存".equals(title) || !saveBtnInfo.isClickable()) {
-            return false;
-        }
-
-        return true;
     }
 
     private boolean isPersonalIntroductionPage(AccessibilityNodeInfo rootInfo) {

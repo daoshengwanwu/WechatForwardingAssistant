@@ -2,24 +2,24 @@ package com.daoshengwanwu.android.task;
 
 
 import android.content.Context;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import com.daoshengwanwu.android.model.item.UserItem;
+import com.daoshengwanwu.android.page.LabelMembersPage;
 import com.daoshengwanwu.android.page.Page;
-import com.daoshengwanwu.android.util.CustomCollectionUtils;
 import com.daoshengwanwu.android.util.SingleSubThreadUtil;
 
-import java.util.List;
+import java.util.HashSet;
 import java.util.Set;
 
 
 public class LoadLabelUsersTask extends Task {
+    private boolean mIsTaskFinished = false;
     private boolean mIsLabelVerification = false;
-    private String mLabelTitle = "";
+    private String mLabelTitle;
     private Context mContext;
+    private Set<UserItem> mToForwardingSet = new HashSet<>();
 
     private OnLabelUsersInfoLoadFinishedListener mOnLabelUsersInfoLoadFinishedListener;
 
@@ -38,24 +38,22 @@ public class LoadLabelUsersTask extends Task {
 
     @Override
     public void execute(@NonNull AccessibilityNodeInfo rootInfo) {
-        Page curPage = Page.generateFrom(rootInfo);
+        if (mIsTaskFinished) {
+            return;
+        }
 
-        if (curPage.getPageId() != Page.PageId.PAGE_LABEL_MEMBERS) {
+        Page page = Page.generateFrom(rootInfo);
+
+        if (page.getPageId() != Page.PageId.PAGE_LABEL_MEMBERS) {
             mIsLabelVerification = false;
             return;
         }
 
-        List<AccessibilityNodeInfo> rst;
+        LabelMembersPage lPage = (LabelMembersPage) page;
+
         if (!mIsLabelVerification) {
             // 验证下标签是否和界面中指定的相同
-            rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/l3");
-            if (CustomCollectionUtils.isListEmpty(rst)) {
-                SingleSubThreadUtil.showToast(mContext, "当前标签页面与群发指定的不符，请切换到：" +
-                        mLabelTitle + "：标签页面", Toast.LENGTH_SHORT);
-                return;
-            }
-            AccessibilityNodeInfo labelInfo = rst.get(0);
-            String labelText = String.valueOf(labelInfo.getText());
+            String labelText = lPage.getLabelText();
             if (!mLabelTitle.equals(labelText)) {
                 SingleSubThreadUtil.showToast(mContext, "当前标签页面与群发指定的不符，请切换到：" +
                         mLabelTitle + "：标签页面", Toast.LENGTH_SHORT);
@@ -66,37 +64,16 @@ public class LoadLabelUsersTask extends Task {
             mToForwardingSet.clear();
         }
 
-        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/kw");
-        if (isListEmpty(rst)) {
-            return;
-        }
-        AccessibilityNodeInfo backInfo = rst.get(0);
+        mToForwardingSet.addAll(lPage.getUserItems());
 
-        rst = rootInfo.findAccessibilityNodeInfosByViewId("android:id/list");
-        if (isListEmpty(rst)) {
-            return;
-        }
-        AccessibilityNodeInfo listInfo = rst.get(0);
-
-        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/e42");
-        for (AccessibilityNodeInfo textInfo : rst) {
-            String title = String.valueOf(textInfo.getText());
-            if (!TextUtils.isEmpty(title)) {
-                mToForwardingSet.add(title);
-            }
-        }
-
-        boolean success = listInfo.performAction(AccessibilityNodeInfo.ACTION_SCROLL_FORWARD);
+        boolean success = lPage.scrollListView_forward();
         if (!success) {
-            mIsLabelVerification = false;
-            mIsToForwardingSetLoaded = true;
-            backInfo.performAction(AccessibilityNodeInfo.ACTION_CLICK);
-            showToast("目标信息已读取完毕", Toast.LENGTH_SHORT);
-            showToast("目标信息：\n" + mToForwardingSet  + "\n 共 " +
+            mOnLabelUsersInfoLoadFinishedListener.onLabelUsersInfoLoadFinished(mToForwardingSet);
+            mIsTaskFinished = true;
+            lPage.back();
+            SingleSubThreadUtil.showToast(mContext, "目标信息已读取完毕", Toast.LENGTH_SHORT);
+            SingleSubThreadUtil.showToast(mContext, "目标信息：\n" + mToForwardingSet  + "\n 共 " +
                     mToForwardingSet.size() + " 人", 2000, Toast.LENGTH_SHORT);
-
-            Log.d(TAG, "performLoadForwardingSet: toSet: " +
-                    mToForwardingSet + "\n 共 " + mToForwardingSet.size() + " 人");
         }
 
         try {
