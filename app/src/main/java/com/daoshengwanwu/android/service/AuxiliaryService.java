@@ -4,8 +4,6 @@ package com.daoshengwanwu.android.service;
 import android.accessibilityservice.AccessibilityService;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.HandlerThread;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.accessibility.AccessibilityEvent;
@@ -13,6 +11,7 @@ import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.Toast;
 import com.daoshengwanwu.android.R;
 import com.daoshengwanwu.android.task.Task;
+import com.daoshengwanwu.android.util.SingleSubThreadUtil;
 
 import java.util.List;
 
@@ -20,26 +19,19 @@ import java.util.List;
 public class AuxiliaryService extends AccessibilityService {
     private static final String TAG = "AuxiliaryService";
 
-    private Handler mHandler;
-    private HandlerThread mHandlerThread = new HandlerThread("HandlerThread");
-
 
     @Override
     protected void onServiceConnected() {
         super.onServiceConnected();
 
-        mHandlerThread.start();
-        mHandler = new Handler(mHandlerThread.getLooper());
-        showToast("成功启动 " + getResources().getString(R.string.app_name) + ".", Toast.LENGTH_SHORT);
+        SingleSubThreadUtil.showToast(this, "成功启动 " +
+                getResources().getString(R.string.app_name) + ".", Toast.LENGTH_SHORT);
     }
 
     @Override
     public boolean onUnbind(Intent intent) {
         Toast.makeText(this, "getResources().getString(R.string.app_name) +\n" +
                 "                \" 已关闭，如需再次使用请在设置中重新开启本插件.\"", Toast.LENGTH_SHORT).show();
-
-        mHandler = null;
-        mHandlerThread.quitSafely();
 
         return super.onUnbind(intent);
     }
@@ -258,11 +250,6 @@ public class AuxiliaryService extends AccessibilityService {
         }
     }
 
-    private void performClean(AccessibilityEvent event, AccessibilityNodeInfo rootInfo,
-                              AccessibilityNodeInfo sourceInfo, int curPage) {
-
-    }
-
     private String getToSendContent() {
         String commonContent = mShareData.getContent();
         String xing = mCurSendingTarget.charAt(0) + "";
@@ -272,46 +259,6 @@ public class AuxiliaryService extends AccessibilityService {
         commonContent = commonContent.replaceAll("name", name);
 
         return commonContent;
-    }
-
-    private int whereAmI(AccessibilityNodeInfo rootInfo) {
-        if (isWechatPage(rootInfo)) {
-            return Page.PAGE_WECHAT;
-        }
-
-        if (isContactPage(rootInfo)) {
-            return Page.PAGE_CONTACT;
-        }
-
-        if (isExplorePage(rootInfo)) {
-            return Page.PAGE_EXPLORE;
-        }
-
-        if (isSelfPage(rootInfo)) {
-            return Page.PAGE_SELF;
-        }
-
-        if (isSearchForwardingPage(rootInfo)) {
-            return Page.PAGE_SEARCH_FORWARDING;
-        }
-
-        if (isChatPage(rootInfo)) {
-            return Page.PAGE_CHAT;
-        }
-
-        if (isChatWithCheckboxPage(rootInfo)) {
-            return Page.PAGE_CHAT_WITH_CHECKBOX;
-        }
-
-        if (isLabelMembersPage(rootInfo)) {
-            return Page.PAGE_LABEL_MEMBERS;
-        }
-
-        if (isPersonalIntroductionPage(rootInfo)) {
-            return Page.PAGE_PERSONAL_INTRODUCTION;
-        }
-
-        return Page.PAGE_UNKNOWN;
     }
 
     private boolean isWechatPage(AccessibilityNodeInfo rootInfo) {
@@ -434,36 +381,6 @@ public class AuxiliaryService extends AccessibilityService {
 
     private boolean isListEmpty(List lst) {
         return lst == null || lst.size() <= 0;
-    }
-
-    private void showToast(final String text, long delay, final int length) {
-        if (mHandler == null) {
-            return;
-        }
-
-        mHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                Toast.makeText(AuxiliaryService.this, text, length).show();
-            }
-        }, delay);
-    }
-
-    private void showToast(String text, int length) {
-        showToast(text, 0, length);
-    }
-
-    private static final class Page {
-        public static final int PAGE_UNKNOWN = -1;
-        public static final int PAGE_WECHAT = 0;
-        public static final int PAGE_CONTACT = 1;
-        public static final int PAGE_EXPLORE = 2;
-        public static final int PAGE_SELF = 3;
-        public static final int PAGE_SEARCH_FORWARDING = 4;
-        public static final int PAGE_CHAT = 5;
-        public static final int PAGE_CHAT_WITH_CHECKBOX = 6;
-        public static final int PAGE_LABEL_MEMBERS = 7;
-        public static final int PAGE_PERSONAL_INTRODUCTION = 8;
     }
 
     private static final class Direction {
