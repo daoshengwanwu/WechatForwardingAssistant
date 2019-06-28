@@ -7,6 +7,7 @@ import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import com.daoshengwanwu.android.model.item.UserItem;
+import com.daoshengwanwu.android.page.ContactPage;
 import com.daoshengwanwu.android.page.ExplorePage;
 import com.daoshengwanwu.android.page.Page;
 import com.daoshengwanwu.android.page.WechatPage;
@@ -65,7 +66,9 @@ public class ForwardingTask extends Task {
             return;
         }
 
-        if (curPage == Page.PAGE_CONTACT) {
+        if (page.getPageId() == Page.PageId.PAGE_CONTACT) {
+            ContactPage contactPage = (ContactPage) page;
+
             rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/o1");
             for (AccessibilityNodeInfo info : rst) {
                 String title = String.valueOf(info.getText());
@@ -86,13 +89,17 @@ public class ForwardingTask extends Task {
                 }
             }
 
+            AccessibilityNodeInfo info = contactPage.findFirstInfoInSpecificSet(mToForwardingSet);
+            if (info != null) {
+                SystemClock.sleep(100);
+                if (info.performAction(AccessibilityNodeInfo.ACTION_CLICK)) {
+
+                }
+            }
+
             if (mToForwardingSet.isEmpty()) {
-                showToast("群发任务完成", Toast.LENGTH_SHORT);
-                mToForwardingSet.clear();
-                mIsForwrdingAlreadyStarted = false;
-                mIsToForwardingSetLoaded = false;
-                mIsLabelVerification = false;
-                mShareData.clearData();
+                SingleSubThreadUtil.showToast(mContext, "群发任务完成", Toast.LENGTH_SHORT);
+                mIsTaskFinished = true;
                 return;
             }
 
