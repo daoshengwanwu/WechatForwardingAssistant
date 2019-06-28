@@ -47,29 +47,12 @@ public class LabelMembersPage extends Page {
     @NonNull public static LabelMembersPage generateFrom(@NonNull Context context, @NonNull AccessibilityNodeInfo rootInfo) {
         LabelMembersPage page = new LabelMembersPage();
 
-        List<AccessibilityNodeInfo> rst;
-        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/l3");
-        if (!CustomCollectionUtils.isListEmpty(rst)) {
-            page.mLabelInfo = rst.get(0);
-        }
-
-        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/kw");
-        if (!CustomCollectionUtils.isListEmpty(rst)) {
-            page.mBackInfo = rst.get(0);
-        }
-
-        rst = rootInfo.findAccessibilityNodeInfosByViewId("android:id/list");
-        if (!CustomCollectionUtils.isListEmpty(rst)) {
-            page.mListInfo = rst.get(0);
-        }
-
-        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/e42");
-        page.mTextInfos = rst;
-
-        if (page.mBackInfo == null || page.mListInfo == null || page.mTextInfos == null) {
+        try {
+            page.bindData(rootInfo);
+        } catch (RuntimeException e) {
             SingleSubThreadUtil.showToast(context, "出现意外错误，为避免行为不可控，程序自行终止", Toast.LENGTH_LONG);
             SystemClock.sleep(3000);
-            throw new RuntimeException("出现意外错误，为避免行为不可控，程序自行终止");
+            throw e;
         }
 
         return page;
@@ -103,5 +86,31 @@ public class LabelMembersPage extends Page {
 
     private LabelMembersPage() {
         super(PageId.PAGE_LABEL_MEMBERS);
+    }
+
+    @Override
+    public void bindData(AccessibilityNodeInfo rootInfo) {
+        List<AccessibilityNodeInfo> rst;
+        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/l3");
+        if (!CustomCollectionUtils.isListEmpty(rst)) {
+            mLabelInfo = rst.get(0);
+        }
+
+        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/kw");
+        if (!CustomCollectionUtils.isListEmpty(rst)) {
+            mBackInfo = rst.get(0);
+        }
+
+        rst = rootInfo.findAccessibilityNodeInfosByViewId("android:id/list");
+        if (!CustomCollectionUtils.isListEmpty(rst)) {
+            mListInfo = rst.get(0);
+        }
+
+        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/e42");
+        mTextInfos = rst;
+
+        if (mBackInfo == null || mListInfo == null || mTextInfos == null) {
+            throw new RuntimeException("出现意外错误，为避免行为不可控，程序自行终止");
+        }
     }
 }

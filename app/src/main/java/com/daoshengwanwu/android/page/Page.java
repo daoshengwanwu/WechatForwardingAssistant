@@ -9,6 +9,9 @@ public abstract class Page {
     private final PageId mPageId;
 
 
+    public abstract void bindData(AccessibilityNodeInfo rootInfo);
+
+
     @NonNull public static Page generateFrom(@NonNull AccessibilityNodeInfo rootInfo) {
         // TODO::
         switch (whichPage(rootInfo)) {
