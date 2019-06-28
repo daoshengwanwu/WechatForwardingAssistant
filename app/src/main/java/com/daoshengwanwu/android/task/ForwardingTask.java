@@ -18,6 +18,7 @@ import java.util.Set;
 public class ForwardingTask extends Task {
     private Context mContext;
     private Set<UserItem> mToForwardingSet;
+    private boolean mIsTaskFinished = false;
     private boolean mIsForwrdingAlreadyStarted = false;
 
 
@@ -30,6 +31,10 @@ public class ForwardingTask extends Task {
 
     @Override
     public void execute(@NonNull AccessibilityNodeInfo rootInfo) {
+        if (mIsTaskFinished) {
+            return;
+        }
+
         Page page = Page.generateFrom(rootInfo);
 
         if (!mIsForwrdingAlreadyStarted &&
