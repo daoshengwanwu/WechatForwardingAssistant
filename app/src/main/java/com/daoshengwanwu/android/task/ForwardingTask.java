@@ -7,12 +7,10 @@ import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import com.daoshengwanwu.android.model.item.UserItem;
-import com.daoshengwanwu.android.page.ContactPage;
-import com.daoshengwanwu.android.page.ExplorePage;
-import com.daoshengwanwu.android.page.Page;
-import com.daoshengwanwu.android.page.WechatPage;
+import com.daoshengwanwu.android.page.*;
 import com.daoshengwanwu.android.util.SingleSubThreadUtil;
 
+import java.util.Iterator;
 import java.util.Set;
 
 
@@ -106,32 +104,16 @@ public class ForwardingTask extends Task {
             return;
         }
 
-        if (curPage == Page.PAGE_PERSONAL_INTRODUCTION) {
-            rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/kw");
-            if (isListEmpty(rst)) {
-                Log.d(TAG, "forwardingMessage: 没有找到Personal页面的后退按钮");
-                return;
-            }
-            AccessibilityNodeInfo backInfo = rst.get(0);
+        if (page.getPageId()== Page.PageId.PAGE_PERSONAL_INTRODUCTION) {
+            PersonalIntroductionPage personalIntroductionPage = (PersonalIntroductionPage) page;
 
-            rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/dq7");
-            if (isListEmpty(rst)) {
-                backInfo.performAction(AccessibilityNodeInfo.ACTION_CLICK);
-                return;
-            }
-            String labelText = String.valueOf(rst.get(0).getText());
-            if (!labelText.contains(mShareData.getLabel())) {
-                mToForwardingSet.remove(mCurSendingTarget);
-                backInfo.performAction(AccessibilityNodeInfo.ACTION_CLICK);
+            if (!personalIntroductionPage.isLabelTextInToForwardingSet(mToForwardingSet)) {
+                removeUserItemByFullnickname(personalIntroductionPage.getLabelText());
+                personalIntroductionPage.performBack();
                 return;
             }
 
-            rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/ct");
-            if (isListEmpty(rst)) {
-                backInfo.performAction(AccessibilityNodeInfo.ACTION_CLICK);
-                return;
-            }
-            rst.get(0).getParent().performAction(AccessibilityNodeInfo.ACTION_CLICK);
+            personalIntroductionPage.performClickSendMessageInfo();
 
             return;
         }
@@ -181,6 +163,18 @@ public class ForwardingTask extends Task {
             }
 
             backInfo.performAction(AccessibilityNodeInfo.ACTION_CLICK);
+        }
+    }
+
+    private void removeUserItemByFullnickname(String fullNickname) {
+        Iterator<UserItem> itemIterator = mToForwardingSet.iterator();
+
+        while (itemIterator.hasNext()) {
+            UserItem item = itemIterator.next();
+            if (item.fullNickName.equals(fullNickname)) {
+                itemIterator.remove();
+                return;
+            }
         }
     }
 
