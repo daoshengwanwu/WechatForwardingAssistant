@@ -2,6 +2,7 @@ package com.daoshengwanwu.android.page;
 
 
 import android.view.accessibility.AccessibilityNodeInfo;
+import androidx.annotation.NonNull;
 import com.daoshengwanwu.android.model.item.UserItem;
 import com.daoshengwanwu.android.util.CustomCollectionUtils;
 
@@ -37,7 +38,15 @@ public class ContactPage extends Page {
         mListInfo = rst.get(0);
     }
 
-    public AccessibilityNodeInfo findFirstInfoInSpecificSet(Set<UserItem> set) {
+    public boolean performForwardingScrollListView() {
+        return mListInfo.performAction(AccessibilityNodeInfo.ACTION_SCROLL_FORWARD);
+    }
+
+    public boolean performBackwordScrollListView() {
+        return mListInfo.performAction(AccessibilityNodeInfo.ACTION_SCROLL_BACKWARD);
+    }
+
+    public FindResult findFirstInfoInSpecificSet(Set<UserItem> set) {
         if (mContactInfos == null) {
             return null;
         }
@@ -45,7 +54,7 @@ public class ContactPage extends Page {
         for (AccessibilityNodeInfo info : mContactInfos) {
             String title = info.getText() + "";
             if (contains(set, title)) {
-                return info.getParent();
+                return new FindResult(info.getParent(), title);
             }
         }
 
@@ -64,5 +73,17 @@ public class ContactPage extends Page {
         }
 
         return false;
+    }
+
+
+    public static final class FindResult {
+        @NonNull public final AccessibilityNodeInfo info;
+        @NonNull public final String text;
+
+
+        public FindResult(AccessibilityNodeInfo info, String text) {
+            this.info = info;
+            this.text = text;
+        }
     }
 }

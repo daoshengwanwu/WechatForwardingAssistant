@@ -19,6 +19,8 @@ import java.util.Set;
 public class ForwardingTask extends Task {
     private Context mContext;
     private Set<UserItem> mToForwardingSet;
+    private String mCurSendingTarget;
+    private int mCurScrollDirection = Direction.FORWARD;
     private boolean mIsTaskFinished = false;
     private boolean mIsForwrdingAlreadyStarted = false;
 
@@ -69,31 +71,11 @@ public class ForwardingTask extends Task {
         if (page.getPageId() == Page.PageId.PAGE_CONTACT) {
             ContactPage contactPage = (ContactPage) page;
 
-            rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/o1");
-            for (AccessibilityNodeInfo info : rst) {
-                String title = String.valueOf(info.getText());
-                if (mToForwardingSet.contains(title)) {
-                    try {
-                        Thread.sleep(100);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-
-                    if (!info.getParent().performAction(AccessibilityNodeInfo.ACTION_CLICK)) {
-                        Log.d(TAG, "forwardingMessage: 点击通讯录item：" + title + " 失败");
-                        break;
-                    }
-
-                    mCurSendingTarget = title;
-                    return;
-                }
-            }
-
-            AccessibilityNodeInfo info = contactPage.findFirstInfoInSpecificSet(mToForwardingSet);
-            if (info != null) {
+            ContactPage.FindResult findResult = contactPage.findFirstInfoInSpecificSet(mToForwardingSet);
+            if (findResult != null) {
                 SystemClock.sleep(100);
-                if (info.performAction(AccessibilityNodeInfo.ACTION_CLICK)) {
-
+                if (findResult.info.performAction(AccessibilityNodeInfo.ACTION_CLICK)) {
+                    mCurSendingTarget = findResult.text;
                 }
             }
 
@@ -103,36 +85,22 @@ public class ForwardingTask extends Task {
                 return;
             }
 
-            rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/n3");
-            if (isListEmpty(rst)) {
-                Log.d(TAG, "forwardingMessage: 没有找到通讯录页面的ListView");
-                return;
-            }
-
             if (mCurScrollDirection == Direction.FORWARD) {
-                if (rst.get(0).performAction(AccessibilityNodeInfo.ACTION_SCROLL_FORWARD)) {
-                    try {
-                        Thread.sleep(200);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+                if (contactPage.performForwardingScrollListView()) {
+                    SystemClock.sleep(200);
                     return;
                 }
 
                 mCurScrollDirection = Direction.BACKWARD;
-                onAccessibilityEvent(event);
+                execute(rootInfo);
             } else {
-                if (rst.get(0).performAction(AccessibilityNodeInfo.ACTION_SCROLL_BACKWARD)) {
-                    try {
-                        Thread.sleep(200);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+                if (contactPage.performBackwordScrollListView()) {
+                    SystemClock.sleep(200);
                     return;
                 }
 
                 mCurScrollDirection = Direction.FORWARD;
-                onAccessibilityEvent(event);
+                execute(rootInfo);
             }
 
             return;
@@ -214,5 +182,10 @@ public class ForwardingTask extends Task {
 
             backInfo.performAction(AccessibilityNodeInfo.ACTION_CLICK);
         }
+    }
+
+    private static final class Direction {
+        public static final int FORWARD = 0;
+        public static final int BACKWARD = 1;
     }
 }

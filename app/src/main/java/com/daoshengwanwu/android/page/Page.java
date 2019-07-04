@@ -23,6 +23,14 @@ public abstract class Page {
         return UnknownPage.generateFrom(rootInfo);
     }
 
+    @NonNull public static String getInfoText(AccessibilityNodeInfo info) {
+        if (info == null) {
+            return "";
+        }
+
+        return info.getText() + "";
+    }
+
     private static PageId whichPage(@NonNull AccessibilityNodeInfo rootInfo) {
         // TODO::
         if (LabelMembersPage.isSelf(rootInfo)) {
