@@ -53,8 +53,9 @@ public class ContactPage extends Page {
 
         for (AccessibilityNodeInfo info : mContactInfos) {
             String title = info.getText() + "";
-            if (contains(set, title)) {
-                return new FindResult(info.getParent(), title);
+            UserItem item = getByFullNickname(set, title);
+            if (item != null) {
+                return new FindResult(info.getParent(), item);
             }
         }
 
@@ -75,15 +76,29 @@ public class ContactPage extends Page {
         return false;
     }
 
+    private UserItem getByFullNickname(Set<UserItem> userItems, String fullNickname) {
+        if (userItems == null || fullNickname == null) {
+            return null;
+        }
+
+        for (UserItem item : userItems) {
+            if (item.fullNickName.equals(fullNickname)) {
+                return item;
+            }
+        }
+
+        return null;
+    }
+
 
     public static final class FindResult {
         @NonNull public final AccessibilityNodeInfo info;
-        @NonNull public final String text;
+        @NonNull public final UserItem item;
 
 
-        public FindResult(AccessibilityNodeInfo info, String text) {
+        public FindResult(AccessibilityNodeInfo info, UserItem item) {
             this.info = info;
-            this.text = text;
+            this.item = item;
         }
     }
 }

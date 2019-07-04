@@ -2,6 +2,7 @@ package com.daoshengwanwu.android.task;
 
 
 import android.content.Context;
+import android.os.Bundle;
 import android.os.SystemClock;
 import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.Toast;
@@ -17,7 +18,7 @@ import java.util.Set;
 public class ForwardingTask extends Task {
     private Context mContext;
     private Set<UserItem> mToForwardingSet;
-    private String mCurSendingTarget;
+    private UserItem mCurSendingTarget;
     private int mCurScrollDirection = Direction.FORWARD;
     private boolean mIsTaskFinished = false;
     private boolean mIsForwrdingAlreadyStarted = false;
@@ -73,7 +74,7 @@ public class ForwardingTask extends Task {
             if (findResult != null) {
                 SystemClock.sleep(100);
                 if (findResult.info.performAction(AccessibilityNodeInfo.ACTION_CLICK)) {
-                    mCurSendingTarget = findResult.text;
+                    mCurSendingTarget = findResult.item;
                 }
             }
 
@@ -118,52 +119,31 @@ public class ForwardingTask extends Task {
             return;
         }
 
-        if (curPage == Page.PAGE_CHAT) {
-            rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/km");
-            if (isListEmpty(rst)) {
-                Log.d(TAG, "forwardingMessage: 没有找到聊天页面的后退按钮");
-                return;
-            }
-            AccessibilityNodeInfo backInfo = rst.get(0);
+        if (page.getPageId() == Page.PageId.PAGE_CHAT) {
+            ChatPage chatPage = (ChatPage) page;
 
-            rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/ko");
-            if (isListEmpty(rst)) {
-                backInfo.performAction(AccessibilityNodeInfo.ACTION_CLICK);
-                return;
-            }
-            String title = String.valueOf(rst.get(0).getText());
-            if (!title.equals(mCurSendingTarget)) {
-                backInfo.performAction(AccessibilityNodeInfo.ACTION_CLICK);
+            String title = chatPage.getTitle();
+            if (!title.equals(mCurSendingTarget.fullNickName)) {
+                chatPage.performBack();
                 return;
             }
 
-            rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/ami");
-            if (isListEmpty(rst)) {
-                backInfo.performAction(AccessibilityNodeInfo.ACTION_CLICK);
-                return;
-            }
-            AccessibilityNodeInfo etInfo = rst.get(0);
-
-            Bundle arguments = new Bundle();
-            arguments.putCharSequence(AccessibilityNodeInfo.ACTION_ARGUMENT_SET_TEXT_CHARSEQUENCE,
-                    getToSendContent());
-
-            if (!etInfo.performAction(AccessibilityNodeInfo.ACTION_SET_TEXT, arguments)) {
-                backInfo.performAction(AccessibilityNodeInfo.ACTION_CLICK);
+            if (!chatPage.setEditTextText(getToSendText())) {
+                chatPage.performBack();
                 return;
             }
 
-            rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/amp");
-            if (isListEmpty(rst)) {
-                backInfo.performAction(AccessibilityNodeInfo.ACTION_CLICK);
-                return;
-            }
-            if (rst.get(0).performAction(AccessibilityNodeInfo.ACTION_CLICK)) {
+            if (chatPage.performClickSendButn()) {
                 mToForwardingSet.remove(mCurSendingTarget);
             }
 
-            backInfo.performAction(AccessibilityNodeInfo.ACTION_CLICK);
+            chatPage.performBack();
         }
+    }
+
+    private String getToSendText() {
+        // TODO::
+        return "";
     }
 
     private void removeUserItemByFullnickname(String fullNickname) {
