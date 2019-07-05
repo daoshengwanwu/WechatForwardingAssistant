@@ -66,10 +66,9 @@ public class ChatPage extends Page {
         mEditTextInfo = rst.get(0);
 
         rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/amp");
-        if (CustomCollectionUtils.isListEmpty(rst)) {
-            throw new RuntimeException("沒有找到聊天頁面的發送按鈕info");
+        if (!CustomCollectionUtils.isListEmpty(rst)) {
+            mSendingBtnInfo = rst.get(0);
         }
-        mSendingBtnInfo = rst.get(0);
     }
 
     public String getTitle() {
@@ -86,7 +85,13 @@ public class ChatPage extends Page {
         return mEditTextInfo.performAction(AccessibilityNodeInfo.ACTION_SET_TEXT, arguments);
     }
 
-    public boolean performClickSendButn() {
+    public boolean performClickSendButn(AccessibilityNodeInfo rootInfo) {
+        if (mSendingBtnInfo == null) {
+            bindData(rootInfo);
+        }
+        if (mSendingBtnInfo == null) {
+            throw new RuntimeException("無法找到聊天界面的發送按鈕");
+        }
         return mSendingBtnInfo.performAction(AccessibilityNodeInfo.ACTION_CLICK);
     }
 }

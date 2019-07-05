@@ -18,6 +18,26 @@ public abstract class Page {
             case PAGE_LABEL_MEMBERS: {
                 return LabelMembersPage.generateFrom(rootInfo);
             }
+
+            case PAGE_CHAT: {
+                return ChatPage.generateFrom(rootInfo);
+            }
+
+            case PAGE_CONTACT: {
+                return ContactPage.generateFrom(rootInfo);
+            }
+
+            case PAGE_EXPLORE: {
+                return ExplorePage.generateFrom(rootInfo);
+            }
+
+            case PAGE_PERSONAL_INTRODUCTION: {
+                return PersonalIntroductionPage.generateFrom(rootInfo);
+            }
+
+            case PAGE_WECHAT: {
+                return WechatPage.generateFrom(rootInfo);
+            }
         }
 
         return UnknownPage.generateFrom(rootInfo);
@@ -32,9 +52,18 @@ public abstract class Page {
     }
 
     private static PageId whichPage(@NonNull AccessibilityNodeInfo rootInfo) {
-        // TODO::
         if (LabelMembersPage.isSelf(rootInfo)) {
             return PageId.PAGE_LABEL_MEMBERS;
+        } else if (ChatPage.isSelf(rootInfo)) {
+            return PageId.PAGE_CHAT;
+        } else if (ContactPage.isSelf(rootInfo)) {
+            return PageId.PAGE_CONTACT;
+        } else if (ExplorePage.isSelf(rootInfo)) {
+            return PageId.PAGE_EXPLORE;
+        } else if (PersonalIntroductionPage.isSelf(rootInfo)) {
+            return PageId.PAGE_PERSONAL_INTRODUCTION;
+        } else if (WechatPage.isSelf(rootInfo)) {
+            return PageId.PAGE_WECHAT;
         }
 
         return PageId.PAGE_UNKNOWN;

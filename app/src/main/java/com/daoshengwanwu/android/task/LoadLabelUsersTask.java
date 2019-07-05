@@ -24,7 +24,7 @@ public class LoadLabelUsersTask extends Task {
     private OnLabelUsersInfoLoadFinishedListener mOnLabelUsersInfoLoadFinishedListener;
 
 
-    protected LoadLabelUsersTask(
+    public LoadLabelUsersTask(
             @NonNull Context context,
             @NonNull String labelTitle,
             @NonNull OnLabelUsersInfoLoadFinishedListener listener) {

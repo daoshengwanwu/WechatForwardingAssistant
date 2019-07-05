@@ -15,6 +15,7 @@ public class PersonalIntroductionPage extends Page {
     private AccessibilityNodeInfo mBackInfo;
     private AccessibilityNodeInfo mLabelInfo;
     private AccessibilityNodeInfo mSendMessageInfo;
+    private AccessibilityNodeInfo mTitleInfo;
 
 
     public static boolean isSelf(@NonNull AccessibilityNodeInfo rootInfo) {
@@ -25,15 +26,6 @@ public class PersonalIntroductionPage extends Page {
 
         rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/b4n");
         if (CustomCollectionUtils.isListEmpty(rst)) {
-            return false;
-        }
-
-        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/b4t");
-        if (CustomCollectionUtils.isListEmpty(rst)) {
-            return false;
-        }
-        String nickName = String.valueOf(rst.get(0).getText());
-        if (TextUtils.isEmpty(nickName) || !nickName.startsWith("昵称:")) {
             return false;
         }
 
@@ -82,6 +74,16 @@ public class PersonalIntroductionPage extends Page {
             throw new RuntimeException("無法找到PersonalIntroduction頁面的發消息按鈕");
         }
         mSendMessageInfo = rst.get(0).getParent();
+
+        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/b4n");
+        if (CustomCollectionUtils.isListEmpty(rst)) {
+            throw new RuntimeException("PersonalIntroduction頁面title info 無法找到");
+        }
+        mTitleInfo = rst.get(0);
+    }
+
+    public String getTitle() {
+        return mTitleInfo.getText() + "";
     }
 
     public String getLabelText() {
@@ -102,7 +104,7 @@ public class PersonalIntroductionPage extends Page {
         }
 
         for (UserItem userItem : toForwardingSet) {
-            if (getLabelText().equals(userItem.fullNickName)) {
+            if (getTitle().equals(userItem.fullNickName)) {
                 return true;
             }
         }

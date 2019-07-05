@@ -1,8 +1,13 @@
 package com.daoshengwanwu.android.model;
 
 
+import android.content.Context;
+import com.daoshengwanwu.android.model.item.UserItem;
 import com.daoshengwanwu.android.task.ForwardingTask;
+import com.daoshengwanwu.android.task.LoadLabelUsersTask;
 import com.daoshengwanwu.android.task.Task;
+
+import java.util.Set;
 
 
 public class ShareData {
@@ -13,6 +18,8 @@ public class ShareData {
     private Task mActiveTask = null;
 
     private OnDataChangedListener mListener;
+
+    private Set<UserItem> userItems = null;
 
 
     private ShareData() {
@@ -49,8 +56,20 @@ public class ShareData {
         return mActiveTask;
     }
 
-    public void activeForwarding(String label, String content) {
-        mActiveTask = new ForwardingTask(null, null);
+    public void activeForwarding(final Context context, String label, final String content) {
+        Task task = null;
+        if (userItems == null) {
+            task = new LoadLabelUsersTask(context, label, new LoadLabelUsersTask.OnLabelUsersInfoLoadFinishedListener() {
+                @Override
+                public void onLabelUsersInfoLoadFinished(Set<UserItem> labelUsersInfo) {
+                    mActiveTask = new ForwardingTask(context, labelUsersInfo, content);
+                }
+            });
+        } else {
+            task = new ForwardingTask(context, userItems, content);
+        }
+
+        mActiveTask = task;
         mLabel = label;
         mContent = content;
 

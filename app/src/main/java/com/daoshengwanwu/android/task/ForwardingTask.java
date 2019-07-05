@@ -2,7 +2,6 @@ package com.daoshengwanwu.android.task;
 
 
 import android.content.Context;
-import android.os.Bundle;
 import android.os.SystemClock;
 import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.Toast;
@@ -22,13 +21,15 @@ public class ForwardingTask extends Task {
     private int mCurScrollDirection = Direction.FORWARD;
     private boolean mIsTaskFinished = false;
     private boolean mIsForwrdingAlreadyStarted = false;
+    private String mContent = "";
 
 
-    public ForwardingTask(@NonNull Context context, @NonNull Set<UserItem> toForwardingSet) {
+    public ForwardingTask(@NonNull Context context, @NonNull Set<UserItem> toForwardingSet, String content) {
         super(TaskId.TASK_FORWARDING);
 
         mContext = context;
         mToForwardingSet = toForwardingSet;
+        mContent = content;
     }
 
     @Override
@@ -108,13 +109,10 @@ public class ForwardingTask extends Task {
         if (page.getPageId()== Page.PageId.PAGE_PERSONAL_INTRODUCTION) {
             PersonalIntroductionPage personalIntroductionPage = (PersonalIntroductionPage) page;
 
-            if (!personalIntroductionPage.isLabelTextInToForwardingSet(mToForwardingSet)) {
-                removeUserItemByFullnickname(personalIntroductionPage.getLabelText());
-                personalIntroductionPage.performBack();
-                return;
+            if (!personalIntroductionPage.performClickSendMessageInfo()) {
+                personalIntroductionPage.bindData(rootInfo);
+                execute(rootInfo);
             }
-
-            personalIntroductionPage.performClickSendMessageInfo();
 
             return;
         }
@@ -133,7 +131,7 @@ public class ForwardingTask extends Task {
                 return;
             }
 
-            if (chatPage.performClickSendButn()) {
+            if (chatPage.performClickSendButn(rootInfo)) {
                 mToForwardingSet.remove(mCurSendingTarget);
             }
 
@@ -142,8 +140,7 @@ public class ForwardingTask extends Task {
     }
 
     private String getToSendText() {
-        // TODO::
-        return "";
+        return mContent.replaceAll("xing", mCurSendingTarget.surname).replaceAll("name", mCurSendingTarget.name);
         /*
         String commonContent = mShareData.getContent();
         String xing = mCurSendingTarget.charAt(0) + "";

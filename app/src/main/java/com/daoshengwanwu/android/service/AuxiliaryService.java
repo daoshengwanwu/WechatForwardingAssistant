@@ -7,6 +7,7 @@ import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.Toast;
 import com.daoshengwanwu.android.R;
+import com.daoshengwanwu.android.model.ShareData;
 import com.daoshengwanwu.android.task.Task;
 import com.daoshengwanwu.android.util.SingleSubThreadUtil;
 
@@ -60,6 +61,6 @@ public class AuxiliaryService extends AccessibilityService {
 
     private Task getCurActivatedTask() {
         // TODO::
-        return null;
+        return ShareData.getInstance().getActiveTask();
     }
 }

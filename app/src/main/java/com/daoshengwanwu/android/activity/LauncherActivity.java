@@ -36,7 +36,7 @@ public class LauncherActivity extends AppCompatActivity {
                 String content = mContentET.getText().toString();
 
                 if (!TextUtils.isEmpty(label) && !TextUtils.isEmpty(content)) {
-                    mShareData.activeForwarding(label, content);
+                    mShareData.activeForwarding(LauncherActivity.this, label, content);
                     Toast.makeText(LauncherActivity.this, "已激活群发任务", Toast.LENGTH_SHORT).show();
                 } else {
                     mShareData.clearData();

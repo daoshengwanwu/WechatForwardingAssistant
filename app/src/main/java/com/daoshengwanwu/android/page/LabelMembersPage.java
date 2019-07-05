@@ -44,16 +44,10 @@ public class LabelMembersPage extends Page {
         return "保存".equals(title) && saveBtnInfo.isClickable();
     }
 
-    @NonNull public static LabelMembersPage generateFrom(@NonNull Context context, @NonNull AccessibilityNodeInfo rootInfo) {
+    @NonNull public static LabelMembersPage generateFrom(@NonNull AccessibilityNodeInfo rootInfo) {
         LabelMembersPage page = new LabelMembersPage();
 
-        try {
-            page.bindData(rootInfo);
-        } catch (RuntimeException e) {
-            SingleSubThreadUtil.showToast(context, "出现意外错误，为避免行为不可控，程序自行终止", Toast.LENGTH_LONG);
-            SystemClock.sleep(3000);
-            throw e;
-        }
+        page.bindData(rootInfo);
 
         return page;
     }
