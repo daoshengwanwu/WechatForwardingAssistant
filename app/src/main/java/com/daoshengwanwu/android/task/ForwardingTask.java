@@ -24,7 +24,7 @@ public class ForwardingTask extends Task {
     private boolean mIsForwrdingAlreadyStarted = false;
 
 
-    protected ForwardingTask(@NonNull Context context, @NonNull Set<UserItem> toForwardingSet) {
+    public ForwardingTask(@NonNull Context context, @NonNull Set<UserItem> toForwardingSet) {
         super(TaskId.TASK_FORWARDING);
 
         mContext = context;
@@ -144,6 +144,16 @@ public class ForwardingTask extends Task {
     private String getToSendText() {
         // TODO::
         return "";
+        /*
+        String commonContent = mShareData.getContent();
+        String xing = mCurSendingTarget.charAt(0) + "";
+        String name = mCurSendingTarget.split("-")[0];
+
+        commonContent = commonContent.replaceAll("xing", xing);
+        commonContent = commonContent.replaceAll("name", name);
+
+        return commonContent;
+         */
     }
 
     private void removeUserItemByFullnickname(String fullNickname) {

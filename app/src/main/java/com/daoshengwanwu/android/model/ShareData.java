@@ -1,6 +1,7 @@
 package com.daoshengwanwu.android.model;
 
 
+import com.daoshengwanwu.android.task.ForwardingTask;
 import com.daoshengwanwu.android.task.Task;
 
 
@@ -9,7 +10,7 @@ public class ShareData {
 
     private String mLabel = "";
     private String mContent = "";
-    private int mActiveTask = Task.NONE;
+    private Task mActiveTask = null;
 
     private OnDataChangedListener mListener;
 
@@ -25,7 +26,7 @@ public class ShareData {
     public void clearData() {
         mLabel = "";
         mContent = "";
-        mActiveTask = Task.NONE;
+        mActiveTask = null;
 
         if (mListener != null) {
             mListener.onDataChanged();
@@ -33,7 +34,7 @@ public class ShareData {
     }
 
     public boolean isActiveForwarding() {
-        return mActiveTask == Task.TASK_FORWARDING;
+        return mActiveTask instanceof ForwardingTask;
     }
 
     public String getLabel() {
@@ -44,12 +45,12 @@ public class ShareData {
         return mContent;
     }
 
-    public int getActiveTask() {
+    public Task getActiveTask() {
         return mActiveTask;
     }
 
     public void activeForwarding(String label, String content) {
-        mActiveTask = Task.TASK_FORWARDING;
+        mActiveTask = new ForwardingTask(null, null);
         mLabel = label;
         mContent = content;
 

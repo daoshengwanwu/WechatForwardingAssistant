@@ -2,6 +2,7 @@ package com.daoshengwanwu.android.page;
 
 
 import android.view.accessibility.AccessibilityNodeInfo;
+import androidx.annotation.NonNull;
 import com.daoshengwanwu.android.util.CustomCollectionUtils;
 
 import java.util.List;
@@ -10,6 +11,18 @@ import java.util.List;
 public class ExplorePage extends Page {
     private AccessibilityNodeInfo mContactTabInfo;
 
+
+    public static boolean isSelf(@NonNull AccessibilityNodeInfo rootInfo) {
+        List<AccessibilityNodeInfo> rst = rootInfo.findAccessibilityNodeInfosByViewId("android:id/text1");
+        if (CustomCollectionUtils.isListEmpty(rst)) {
+            return false;
+        }
+
+        AccessibilityNodeInfo titleInfo = rst.get(0);
+        String title = String.valueOf(titleInfo.getText());
+
+        return title.startsWith("发现");
+    }
 
     public static ExplorePage generateFrom(AccessibilityNodeInfo rootInfo) {
         ExplorePage page = new ExplorePage();

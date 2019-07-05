@@ -3,6 +3,7 @@ package com.daoshengwanwu.android.page;
 
 import android.os.Bundle;
 import android.view.accessibility.AccessibilityNodeInfo;
+import androidx.annotation.NonNull;
 import com.daoshengwanwu.android.util.CustomCollectionUtils;
 
 import java.util.List;
@@ -14,6 +15,21 @@ public class ChatPage extends Page {
     private AccessibilityNodeInfo mEditTextInfo;
     private AccessibilityNodeInfo mSendingBtnInfo;
 
+
+    public static boolean isSelf(@NonNull AccessibilityNodeInfo rootInfo) {
+        List<AccessibilityNodeInfo> rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/ev2");
+        if (CustomCollectionUtils.isListEmpty(rst)) {
+            return false;
+        }
+
+        AccessibilityNodeInfo desInfo = rst.get(0).getParent();
+        if (desInfo == null) {
+            return false;
+        }
+
+        String description = String.valueOf(desInfo.getContentDescription());
+        return description.startsWith("当前所在页面,与") && description.endsWith("的聊天");
+    }
 
     public static ChatPage generateFrom(AccessibilityNodeInfo rootInfo) {
         ChatPage page = new ChatPage();

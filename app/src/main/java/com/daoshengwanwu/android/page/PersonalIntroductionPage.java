@@ -1,7 +1,9 @@
 package com.daoshengwanwu.android.page;
 
 
+import android.text.TextUtils;
 import android.view.accessibility.AccessibilityNodeInfo;
+import androidx.annotation.NonNull;
 import com.daoshengwanwu.android.model.item.UserItem;
 import com.daoshengwanwu.android.util.CustomCollectionUtils;
 
@@ -14,6 +16,38 @@ public class PersonalIntroductionPage extends Page {
     private AccessibilityNodeInfo mLabelInfo;
     private AccessibilityNodeInfo mSendMessageInfo;
 
+
+    public static boolean isSelf(@NonNull AccessibilityNodeInfo rootInfo) {
+        List<AccessibilityNodeInfo> rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/b4m");
+        if (CustomCollectionUtils.isListEmpty(rst)) {
+            return false;
+        }
+
+        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/b4n");
+        if (CustomCollectionUtils.isListEmpty(rst)) {
+            return false;
+        }
+
+        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/b4t");
+        if (CustomCollectionUtils.isListEmpty(rst)) {
+            return false;
+        }
+        String nickName = String.valueOf(rst.get(0).getText());
+        if (TextUtils.isEmpty(nickName) || !nickName.startsWith("昵称:")) {
+            return false;
+        }
+
+        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/b4v");
+        if (CustomCollectionUtils.isListEmpty(rst)) {
+            return false;
+        }
+        String wxidText = String.valueOf(rst.get(0).getText());
+        if (TextUtils.isEmpty(wxidText) || !wxidText.startsWith("微信号:")) {
+            return false;
+        }
+
+        return true;
+    }
 
     public static PersonalIntroductionPage generateFrom(AccessibilityNodeInfo rootInfo) {
         PersonalIntroductionPage personalIntroductionPage = new PersonalIntroductionPage();

@@ -11,7 +11,7 @@ public abstract class Task {
 
     public abstract void execute(@NonNull AccessibilityNodeInfo rootInfo);
 
-    protected Task(TaskId taskId) {
+    public Task(TaskId taskId) {
         mTaskId = taskId;
     }
 

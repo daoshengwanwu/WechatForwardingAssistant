@@ -15,6 +15,18 @@ public class ContactPage extends Page {
     private List<AccessibilityNodeInfo> mContactInfos;
 
 
+    public static boolean isSelf(@NonNull AccessibilityNodeInfo rootInfo) {
+        List<AccessibilityNodeInfo> rst = rootInfo.findAccessibilityNodeInfosByViewId("android:id/text1");
+        if (CustomCollectionUtils.isListEmpty(rst)) {
+            return false;
+        }
+
+        AccessibilityNodeInfo titleInfo = rst.get(0);
+        String title = String.valueOf(titleInfo.getText());
+
+        return title.startsWith("通讯录");
+    }
+
     public static ContactPage generateFrom(AccessibilityNodeInfo rootInfo) {
         ContactPage page = new ContactPage();
 

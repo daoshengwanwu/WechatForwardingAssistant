@@ -17,6 +17,18 @@ public class WechatPage extends Page {
     }
 
 
+    public static boolean isSelf(@NonNull AccessibilityNodeInfo rootInfo) {
+        List<AccessibilityNodeInfo> rst = rootInfo.findAccessibilityNodeInfosByViewId("android:id/text1");
+        if (CustomCollectionUtils.isListEmpty(rst)) {
+            return false;
+        }
+
+        AccessibilityNodeInfo titleInfo = rst.get(0);
+        String title = String.valueOf(titleInfo.getText());
+
+        return title.startsWith("微信");
+    }
+
     @NonNull public static WechatPage generateFrom(@NonNull AccessibilityNodeInfo rootInfo) {
         WechatPage page = new WechatPage();
 
