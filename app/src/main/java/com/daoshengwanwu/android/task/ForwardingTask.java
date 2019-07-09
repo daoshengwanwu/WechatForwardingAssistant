@@ -119,6 +119,12 @@ public class ForwardingTask extends Task {
         if (page.getPageId()== Page.PageId.PAGE_PERSONAL_INTRODUCTION) {
             PersonalIntroductionPage personalIntroductionPage = (PersonalIntroductionPage) page;
 
+            if (!mCurSendingTarget.labelText.equals(personalIntroductionPage.getLabelText())) {
+                removeUserItemByFullnickname(mCurSendingTarget.fullNickName);
+                personalIntroductionPage.performBack();
+                return;
+            }
+
             if (!personalIntroductionPage.performClickSendMessageInfo()) {
                 personalIntroductionPage.bindData(rootInfo);
                 execute(rootInfo);

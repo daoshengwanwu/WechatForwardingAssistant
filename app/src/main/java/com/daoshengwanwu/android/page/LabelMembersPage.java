@@ -56,13 +56,13 @@ public class LabelMembersPage extends Page {
         return mLabelInfo == null ? "" : mLabelInfo.getText() + "";
     }
 
-    public Set<UserItem> getUserItems() {
+    public Set<UserItem> getUserItems(String labelText) {
         Set<UserItem> rst = new HashSet<>();
 
         for (AccessibilityNodeInfo info : mTextInfos) {
             String title = info.getText() + "";
             if (!TextUtils.isEmpty(title)) {
-                rst.add(new UserItem(title));
+                rst.add(new UserItem(title, labelText));
             }
         }
 

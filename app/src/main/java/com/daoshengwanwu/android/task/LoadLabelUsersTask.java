@@ -64,7 +64,7 @@ public class LoadLabelUsersTask extends Task {
             mToForwardingSet.clear();
         }
 
-        mToForwardingSet.addAll(lPage.getUserItems());
+        mToForwardingSet.addAll(lPage.getUserItems(mLabelTitle));
 
         boolean success = lPage.scrollListView_forward();
         if (!success) {
