@@ -62,11 +62,21 @@ public class ShareData {
             task = new LoadLabelUsersTask(context, label, new LoadLabelUsersTask.OnLabelUsersInfoLoadFinishedListener() {
                 @Override
                 public void onLabelUsersInfoLoadFinished(Set<UserItem> labelUsersInfo) {
-                    mActiveTask = new ForwardingTask(context, labelUsersInfo, content);
+                    mActiveTask = new ForwardingTask(context, labelUsersInfo, content, new ForwardingTask.OnForwardingTaskFinishedListener() {
+                        @Override
+                        public void onForwardingTaskFinished() {
+                            clearData();
+                        }
+                    });
                 }
             });
         } else {
-            task = new ForwardingTask(context, userItems, content);
+            task = new ForwardingTask(context, userItems, content, new ForwardingTask.OnForwardingTaskFinishedListener() {
+                @Override
+                public void onForwardingTaskFinished() {
+                    clearData();
+                }
+            });
         }
 
         mActiveTask = task;

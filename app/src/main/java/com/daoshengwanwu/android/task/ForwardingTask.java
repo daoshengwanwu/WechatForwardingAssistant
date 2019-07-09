@@ -22,14 +22,21 @@ public class ForwardingTask extends Task {
     private boolean mIsTaskFinished = false;
     private boolean mIsForwrdingAlreadyStarted = false;
     private String mContent = "";
+    private OnForwardingTaskFinishedListener mListener;
 
 
-    public ForwardingTask(@NonNull Context context, @NonNull Set<UserItem> toForwardingSet, String content) {
+    public ForwardingTask(
+            @NonNull Context context,
+            @NonNull Set<UserItem> toForwardingSet,
+            String content,
+            OnForwardingTaskFinishedListener listener) {
+
         super(TaskId.TASK_FORWARDING);
 
         mContext = context;
         mToForwardingSet = toForwardingSet;
         mContent = content;
+        mListener = listener;
     }
 
     @Override
@@ -82,6 +89,9 @@ public class ForwardingTask extends Task {
             if (mToForwardingSet.isEmpty()) {
                 SingleSubThreadUtil.showToast(mContext, "群发任务完成", Toast.LENGTH_SHORT);
                 mIsTaskFinished = true;
+                if (mListener != null) {
+                    mListener.onForwardingTaskFinished();
+                }
                 return;
             }
 
@@ -168,5 +178,9 @@ public class ForwardingTask extends Task {
     private static final class Direction {
         public static final int FORWARD = 0;
         public static final int BACKWARD = 1;
+    }
+
+    public interface OnForwardingTaskFinishedListener {
+        void onForwardingTaskFinished();
     }
 }

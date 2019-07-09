@@ -11,6 +11,8 @@ import com.daoshengwanwu.android.model.ShareData;
 import com.daoshengwanwu.android.task.Task;
 import com.daoshengwanwu.android.util.SingleSubThreadUtil;
 
+import java.util.List;
+
 
 public class AuxiliaryService extends AccessibilityService {
     @Override

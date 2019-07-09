@@ -17,7 +17,7 @@ public class ChatPage extends Page {
 
 
     public static boolean isSelf(@NonNull AccessibilityNodeInfo rootInfo) {
-        List<AccessibilityNodeInfo> rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/ev2");
+        List<AccessibilityNodeInfo> rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/f20");
         if (CustomCollectionUtils.isListEmpty(rst)) {
             return false;
         }
@@ -47,25 +47,25 @@ public class ChatPage extends Page {
     public void bindData(AccessibilityNodeInfo rootInfo) {
         List<AccessibilityNodeInfo> rst;
 
-        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/km");
+        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/l2");
         if (CustomCollectionUtils.isListEmpty(rst)) {
             throw new RuntimeException("没有找到聊天页面的后退按钮");
         }
         mBackInfo = rst.get(0);
 
-        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/ko");
+        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/l4");
         if (CustomCollectionUtils.isListEmpty(rst)) {
             throw new RuntimeException("沒有找到聊天頁面的title info");
         }
         mTitleInfo = rst.get(0);
 
-        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/ami");
+        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/ao9");
         if (CustomCollectionUtils.isListEmpty(rst)) {
             throw new RuntimeException("沒有找到聊天頁面的EditText info");
         }
         mEditTextInfo = rst.get(0);
 
-        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/amp");
+        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/aof");
         if (!CustomCollectionUtils.isListEmpty(rst)) {
             mSendingBtnInfo = rst.get(0);
         }

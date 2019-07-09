@@ -41,9 +41,9 @@ public class ContactPage extends Page {
 
     @Override
     public void bindData(AccessibilityNodeInfo rootInfo) {
-        mContactInfos = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/o1");
+        mContactInfos = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/ok");
 
-        List<AccessibilityNodeInfo> rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/n3");
+        List<AccessibilityNodeInfo> rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/nm");
         if (CustomCollectionUtils.isListEmpty(rst)) {
             throw new RuntimeException("没有找到联系人界面的ListView程序意外终止");
         }
