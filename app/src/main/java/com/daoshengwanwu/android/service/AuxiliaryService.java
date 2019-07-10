@@ -11,8 +11,6 @@ import com.daoshengwanwu.android.model.ShareData;
 import com.daoshengwanwu.android.task.Task;
 import com.daoshengwanwu.android.util.SingleSubThreadUtil;
 
-import java.util.List;
-
 
 public class AuxiliaryService extends AccessibilityService {
     @Override
@@ -25,8 +23,8 @@ public class AuxiliaryService extends AccessibilityService {
 
     @Override
     public boolean onUnbind(Intent intent) {
-        Toast.makeText(this, "getResources().getString(R.string.app_name) +\n" +
-                "                \" 已关闭，如需再次使用请在设置中重新开启本插件.\"", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, getResources().getString(R.string.app_name) +
+                "已关闭，如需再次使用请在设置中重新开启本插件.", Toast.LENGTH_SHORT).show();
 
         return super.onUnbind(intent);
     }
@@ -62,7 +60,6 @@ public class AuxiliaryService extends AccessibilityService {
     }
 
     private Task getCurActivatedTask() {
-        // TODO::
         return ShareData.getInstance().getActiveTask();
     }
 }
