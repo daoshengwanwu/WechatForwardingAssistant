@@ -2,6 +2,7 @@ package com.daoshengwanwu.android.page;
 
 
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.view.accessibility.AccessibilityNodeInfo;
 import androidx.annotation.NonNull;
 import com.daoshengwanwu.android.util.CustomCollectionUtils;
@@ -89,9 +90,11 @@ public class ChatPage extends Page {
         if (mSendingBtnInfo == null) {
             bindData(rootInfo);
         }
+
         if (mSendingBtnInfo == null) {
             throw new RuntimeException("無法找到聊天界面的發送按鈕");
         }
+
         return mSendingBtnInfo.performAction(AccessibilityNodeInfo.ACTION_CLICK);
     }
 }

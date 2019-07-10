@@ -65,7 +65,7 @@ public class PersonalIntroductionPage extends Page {
         }
         mBackInfo = rst.get(0);
 
-        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/dq7");
+        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/dvd");
         if (!CustomCollectionUtils.isListEmpty(rst)) {
             mLabelInfo = rst.get(0);
         }
