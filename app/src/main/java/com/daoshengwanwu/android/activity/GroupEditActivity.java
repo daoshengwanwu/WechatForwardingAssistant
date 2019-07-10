@@ -10,6 +10,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.daoshengwanwu.android.R;
 
@@ -20,6 +21,8 @@ public class GroupEditActivity extends AppCompatActivity {
     private EditText mLabelNameET;
     private Button mImportBtn;
     private RecyclerView mRecyclerView;
+
+    private Adapter mAdapter = new Adapter();
 
 
     @Override
@@ -32,6 +35,9 @@ public class GroupEditActivity extends AppCompatActivity {
         mLabelNameET = findViewById(R.id.label_name_et);
         mImportBtn = findViewById(R.id.import_btn);
         mRecyclerView = findViewById(R.id.users_rv);
+
+        mRecyclerView.setAdapter(mAdapter);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
 
 
