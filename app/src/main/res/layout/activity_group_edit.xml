@@ -52,9 +52,17 @@
                                                app:layout_constraintEnd_toEndOf="parent"
                                                app:layout_constraintStart_toStartOf="parent"
                                                app:layout_constraintTop_toBottomOf="@+id/label_name_et"
-                                               android:layout_marginTop="8dp" android:id="@+id/users_rv"/>
+                                               android:id="@+id/users_rv"/>
     <androidx.constraintlayout.widget.Guideline android:layout_width="wrap_content" android:layout_height="wrap_content"
                                                 android:id="@+id/guideline"
                                                 android:orientation="vertical"
                                                 app:layout_constraintGuide_percent="0.45"/>
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" android:id="@+id/user_count_tv"
+            android:layout_marginEnd="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/users_rv"
+    android:textSize="12sp"
+    android:textColor="#444"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

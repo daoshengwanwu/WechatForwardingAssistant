@@ -36,24 +36,10 @@ public class LauncherActivity extends AppCompatActivity {
                 String content = mContentET.getText().toString();
 
                 if (!TextUtils.isEmpty(label) && !TextUtils.isEmpty(content)) {
-                    mShareData.activeForwarding(LauncherActivity.this, label, content);
                     Toast.makeText(LauncherActivity.this, "已激活群发任务", Toast.LENGTH_SHORT).show();
                 } else {
                     mShareData.clearData();
                     Toast.makeText(LauncherActivity.this, "输入内容不可为空", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-
-        mShareData.setDataChangedListener(new ShareData.OnDataChangedListener() {
-            @Override
-            public void onDataChanged() {
-                mLabelET.setText(mShareData.getLabel());
-                mContentET.setText(mShareData.getContent());
-                if (mShareData.isActiveForwarding()) {
-                    mButton.setText("已激活群发任务");
-                } else {
-                    mButton.setText("激活群发");
                 }
             }
         });

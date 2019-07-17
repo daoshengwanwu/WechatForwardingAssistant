@@ -13,13 +13,9 @@ import java.util.Set;
 public class ShareData {
     private static final ShareData sInstance = new ShareData();
 
-    private String mLabel = "";
-    private String mContent = "";
+
     private Task mActiveTask = null;
-
     private OnDataChangedListener mListener;
-
-    private Set<UserItem> userItems = null;
 
 
     private ShareData() {
@@ -31,8 +27,6 @@ public class ShareData {
     }
 
     public void clearData() {
-        mLabel = "";
-        mContent = "";
         mActiveTask = null;
 
         if (mListener != null) {
@@ -40,52 +34,21 @@ public class ShareData {
         }
     }
 
-    public boolean isActiveForwarding() {
-        return mActiveTask instanceof ForwardingTask;
-    }
-
-    public String getLabel() {
-        return mLabel;
-    }
-
-    public String getContent() {
-        return mContent;
-    }
-
     public Task getActiveTask() {
         return mActiveTask;
     }
 
-    public void activeForwarding(final Context context, String label, final String content) {
-        Task task = null;
-        if (userItems == null) {
-            task = new LoadLabelUsersTask(context, label, new LoadLabelUsersTask.OnLabelUsersInfoLoadFinishedListener() {
-                @Override
-                public void onLabelUsersInfoLoadFinished(Set<UserItem> labelUsersInfo) {
-                    mActiveTask = new ForwardingTask(context, labelUsersInfo, content, new ForwardingTask.OnForwardingTaskFinishedListener() {
-                        @Override
-                        public void onForwardingTaskFinished() {
-                            clearData();
-                        }
-                    });
-                }
-            });
-        } else {
-            task = new ForwardingTask(context, userItems, content, new ForwardingTask.OnForwardingTaskFinishedListener() {
+    public void activeForwardingTask(final Context context, Set<UserItem> userItems, final String content) {
+        mActiveTask = new ForwardingTask(context, userItems, content, new ForwardingTask.OnForwardingTaskFinishedListener() {
                 @Override
                 public void onForwardingTaskFinished() {
                     clearData();
                 }
             });
-        }
+    }
 
-        mActiveTask = task;
-        mLabel = label;
-        mContent = content;
-
-        if (mListener != null) {
-            mListener.onDataChanged();
-        }
+    public void activeLoadToForwardingTask(final Context context, String labelTitle, LoadLabelUsersTask.OnLabelUsersInfoLoadFinishedListener listener) {
+        mActiveTask = new LoadLabelUsersTask(context, labelTitle, listener);
     }
 
     public void setDataChangedListener(OnDataChangedListener listener) {

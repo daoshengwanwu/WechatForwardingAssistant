@@ -1,6 +1,7 @@
 package com.daoshengwanwu.android.model.item;
 
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.daoshengwanwu.android.util.CustomTextUtils;
 
@@ -14,11 +15,11 @@ public final class UserItem {
 
 
     public UserItem(String nickName, String labelText) {
-        fullNickName = nickName == null ? "" : nickName;
+        this.fullNickName = nickName == null ? "" : nickName;
         this.labelText = labelText == null ? "" : labelText;
 
-        surname = CustomTextUtils.getSurname(nickName);
-        name = CustomTextUtils.getName(nickName);
+        this.surname = CustomTextUtils.getSurname(nickName);
+        this.name = CustomTextUtils.getName(nickName);
     }
 
     @Override
@@ -29,5 +30,16 @@ public final class UserItem {
 
         return fullNickName.equals(((UserItem)obj).fullNickName) &&
                 labelText.equals(((UserItem)obj).labelText);
+    }
+
+    @Override
+    public int hashCode() {
+        return fullNickName.hashCode() * 31 + labelText.hashCode();
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return fullNickName + "\n";
     }
 }
