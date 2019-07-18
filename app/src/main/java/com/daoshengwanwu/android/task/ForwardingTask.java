@@ -6,6 +6,7 @@ import android.os.SystemClock;
 import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
+import com.daoshengwanwu.android.model.UserGroup;
 import com.daoshengwanwu.android.model.item.UserItem;
 import com.daoshengwanwu.android.page.*;
 import com.daoshengwanwu.android.util.SingleSubThreadUtil;
@@ -17,6 +18,7 @@ import java.util.Set;
 public class ForwardingTask extends Task {
     private Context mContext;
     private Set<UserItem> mToForwardingSet;
+    private UserGroup mUserGroup;
     private UserItem mCurSendingTarget;
     private int mCurScrollDirection = Direction.FORWARD;
     private boolean mIsTaskFinished = false;
@@ -27,14 +29,15 @@ public class ForwardingTask extends Task {
 
     public ForwardingTask(
             @NonNull Context context,
-            @NonNull Set<UserItem> toForwardingSet,
+            @NonNull UserGroup group,
             String content,
             OnForwardingTaskFinishedListener listener) {
 
         super(TaskId.TASK_FORWARDING);
 
         mContext = context;
-        mToForwardingSet = toForwardingSet;
+        mUserGroup = group;
+        mToForwardingSet = mUserGroup.getUserItems();
         mContent = content;
         mListener = listener;
     }

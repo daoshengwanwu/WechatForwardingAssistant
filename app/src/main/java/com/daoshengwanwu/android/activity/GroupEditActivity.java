@@ -15,7 +15,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import androidx.constraintlayout.widget.Group;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.daoshengwanwu.android.R;
@@ -223,7 +222,7 @@ public class GroupEditActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         View rootView = LayoutInflater.from(GroupEditActivity.this).inflate(R.layout.popup_window, null, false);
-                        final PopupWindow window = new PopupWindow(rootView, 200, ViewGroup.LayoutParams.WRAP_CONTENT);
+                        final PopupWindow window = new PopupWindow(rootView, 400, ViewGroup.LayoutParams.WRAP_CONTENT);
                         View delView = rootView.findViewById(R.id.delete_tv);
                         delView.setOnClickListener(new View.OnClickListener() {
                             @Override

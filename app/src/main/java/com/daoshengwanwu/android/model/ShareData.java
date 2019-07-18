@@ -2,20 +2,16 @@ package com.daoshengwanwu.android.model;
 
 
 import android.content.Context;
-import com.daoshengwanwu.android.model.item.UserItem;
 import com.daoshengwanwu.android.task.ForwardingTask;
 import com.daoshengwanwu.android.task.LoadLabelUsersTask;
 import com.daoshengwanwu.android.task.Task;
-
-import java.util.Set;
 
 
 public class ShareData {
     private static final ShareData sInstance = new ShareData();
 
-
+    private boolean mIsForwardingPause = false;
     private Task mActiveTask = null;
-    private OnDataChangedListener mListener;
 
 
     private ShareData() {
@@ -28,35 +24,38 @@ public class ShareData {
 
     public void clearData() {
         mActiveTask = null;
-
-        if (mListener != null) {
-            mListener.onDataChanged();
-        }
     }
 
     public Task getActiveTask() {
+        if (mIsForwardingPause) {
+            return null;
+        }
+
         return mActiveTask;
     }
 
-    public void activeForwardingTask(final Context context, Set<UserItem> userItems, final String content) {
-        mActiveTask = new ForwardingTask(context, userItems, content, new ForwardingTask.OnForwardingTaskFinishedListener() {
-                @Override
-                public void onForwardingTaskFinished() {
-                    clearData();
-                }
-            });
+    public void activeForwardingTask(
+            final Context context,
+            UserGroup group,
+            final String content,
+            ForwardingTask.OnForwardingTaskFinishedListener listener) {
+
+        mActiveTask = new ForwardingTask(context, group, content, listener);
+    }
+
+    public void stopForwardingTask() {
+        mActiveTask = null;
+    }
+
+    public void pauseForwardingTask() {
+        mIsForwardingPause = true;
+    }
+
+    public void resumeForwardingTask() {
+        mIsForwardingPause = false;
     }
 
     public void activeLoadToForwardingTask(final Context context, String labelTitle, LoadLabelUsersTask.OnLabelUsersInfoLoadFinishedListener listener) {
         mActiveTask = new LoadLabelUsersTask(context, labelTitle, listener);
-    }
-
-    public void setDataChangedListener(OnDataChangedListener listener) {
-        mListener = listener;
-    }
-
-
-    public interface OnDataChangedListener {
-        void onDataChanged();
     }
 }
