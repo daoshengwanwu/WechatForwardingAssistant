@@ -1,18 +1,18 @@
 package com.daoshengwanwu.android.activity;
 
 
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.view.LayoutInflater;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -43,6 +43,51 @@ public class GroupEditActivity extends AppCompatActivity {
 
     private List<PopupWindow> mPopupWindows = new ArrayList<>();
 
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.group_edit_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.enter_forwarding: {
+                View rootView = LayoutInflater.from(this).inflate(R.layout.dialog_enter_forwarding, null, false);
+                final EditText et = rootView.findViewById(R.id.content_et);
+
+                final AlertDialog dialog = new AlertDialog.Builder(this).
+                        setTitle("设置群发内容").
+                        setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                               Intent intent = ForwardingProcessActivity.newIntent(GroupEditActivity.this, mUserGroup.getUUID(), et.getText() + "");
+                               startActivity(intent);
+                            }
+                        }).
+                        setView(rootView).
+                        create();
+
+                dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "取消", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+
+                dialog.show();
+            } break;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        updateView();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
