@@ -24,6 +24,10 @@ public class UserGroupLab {
         return mUUIDSetMap.get(id);
     }
 
+    public UserGroup getCloneUserItemsByUUID(UUID id) {
+        return new UserGroup(getUserItemsByUUID(id));
+    }
+
     public void putOrMergeUserItems(UserGroup userGroup) {
         if (userGroup == null) {
             return;

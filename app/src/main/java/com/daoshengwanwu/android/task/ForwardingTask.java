@@ -122,7 +122,7 @@ public class ForwardingTask extends Task {
         if (page.getPageId()== Page.PageId.PAGE_PERSONAL_INTRODUCTION) {
             PersonalIntroductionPage personalIntroductionPage = (PersonalIntroductionPage) page;
 
-            if (!mCurSendingTarget.labelText.equals(personalIntroductionPage.getLabelText())) {
+            if (!personalIntroductionPage.getLabelText().contains(mCurSendingTarget.labelText)) {
                 removeUserItemByFullnickname(mCurSendingTarget.fullNickName);
                 personalIntroductionPage.performBack();
                 return;
@@ -160,16 +160,6 @@ public class ForwardingTask extends Task {
 
     private String getToSendText() {
         return mContent.replaceAll("xing", mCurSendingTarget.surname).replaceAll("name", mCurSendingTarget.name);
-        /*
-        String commonContent = mShareData.getContent();
-        String xing = mCurSendingTarget.charAt(0) + "";
-        String name = mCurSendingTarget.split("-")[0];
-
-        commonContent = commonContent.replaceAll("xing", xing);
-        commonContent = commonContent.replaceAll("name", name);
-
-        return commonContent;
-         */
     }
 
     private void removeUserItemByFullnickname(String fullNickname) {

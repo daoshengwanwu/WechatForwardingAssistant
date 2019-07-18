@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
@@ -63,7 +64,7 @@ public class ForwardingProcessActivity extends AppCompatActivity {
         setContentView(R.layout.activity_forwarding_process);
 
         UUID groupId = UUID.fromString(getIntent().getStringExtra(EXTRA_GROUP_ID));
-        mUserGroup = mUserGroupLab.getUserItemsByUUID(groupId);
+        mUserGroup = mUserGroupLab.getCloneUserItemsByUUID(groupId);
         mForwardingContent = getIntent().getStringExtra(EXTRA_FORWARDING_CONTENT);
 
         mStatusTV = findViewById(R.id.status_tv);
@@ -84,6 +85,7 @@ public class ForwardingProcessActivity extends AppCompatActivity {
                         mShareData.stopForwardingTask();
                         mStatus = ForwardingStatus.STOPED;
                         updateView();
+                        Toast.makeText(ForwardingProcessActivity.this, "已停止", Toast.LENGTH_SHORT).show();
                     } break;
 
                     case FINISHED:
@@ -102,6 +104,7 @@ public class ForwardingProcessActivity extends AppCompatActivity {
                                 });
                         mStatus = ForwardingStatus.PROCESSING;
                         updateView();
+                        Toast.makeText(ForwardingProcessActivity.this, "已激活群发", Toast.LENGTH_SHORT).show();
                     } break;
                 }
             }
@@ -115,12 +118,14 @@ public class ForwardingProcessActivity extends AppCompatActivity {
                         mShareData.pauseForwardingTask();
                         mStatus = ForwardingStatus.PAUSED;
                         updateView();
+                        Toast.makeText(ForwardingProcessActivity.this, "已暂停", Toast.LENGTH_SHORT).show();
                     } break;
 
                     case PAUSED: {
                         mShareData.resumeForwardingTask();
                         mStatus = ForwardingStatus.PROCESSING;
                         updateView();
+                        Toast.makeText(ForwardingProcessActivity.this, "继续群发", Toast.LENGTH_SHORT).show();
                     }
                 }
             }

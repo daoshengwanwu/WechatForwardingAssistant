@@ -40,6 +40,6 @@ public final class UserItem {
     @NonNull
     @Override
     public String toString() {
-        return fullNickName + "\n";
+        return fullNickName;
     }
 }

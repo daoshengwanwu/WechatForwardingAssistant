@@ -71,9 +71,6 @@ public class LoadLabelUsersTask extends Task {
             mOnLabelUsersInfoLoadFinishedListener.onLabelUsersInfoLoadFinished(mToForwardingSet);
             mIsTaskFinished = true;
             lPage.back();
-            SingleSubThreadUtil.showToast(mContext, "目标信息已读取完毕", Toast.LENGTH_SHORT);
-            SingleSubThreadUtil.showToast(mContext, "目标信息：\n" + mToForwardingSet  + "\n 共 " +
-                    mToForwardingSet.size() + " 人", 2000, Toast.LENGTH_SHORT);
         }
 
         try {

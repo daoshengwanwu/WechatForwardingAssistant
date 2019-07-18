@@ -7,10 +7,7 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.*;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.PopupWindow;
-import android.widget.TextView;
+import android.widget.*;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -119,8 +116,10 @@ public class GroupEditActivity extends AppCompatActivity {
                         mUserGroup.mergeUserItems(labelUsersInfo);
                         UserGroupLab.getInstance().putOrMergeUserItems(mUserGroup);
                         updateView();
+                        Toast.makeText(GroupEditActivity.this, "导入联系人成功", Toast.LENGTH_SHORT).show();
                     }
                 });
+                Toast.makeText(GroupEditActivity.this, "激活成功，现在请手动切换到微信的" + labelName + "标签页下", Toast.LENGTH_SHORT).show();
             }
         });
 

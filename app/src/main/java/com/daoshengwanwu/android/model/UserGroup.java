@@ -17,6 +17,12 @@ public class UserGroup {
         mGroupName = groupName;
     }
 
+    public UserGroup(UserGroup group) {
+        mUUID = UUID.fromString(group.mUUID.toString());
+        mGroupName = group.mGroupName;
+        mUserItems.addAll(group.getUserItems());
+    }
+
     public void mergeUserItems(UserGroup group) {
         mUserItems.addAll(group.getUserItems());
     }
