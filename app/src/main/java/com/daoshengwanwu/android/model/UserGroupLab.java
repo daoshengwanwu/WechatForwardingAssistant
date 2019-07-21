@@ -18,6 +18,14 @@ public class UserGroupLab {
 
     }
 
+    public UserGroup createUserGroup(String groupName) {
+        UserGroup userGroup = new UserGroup(groupName);
+
+        mUUIDSetMap.put(userGroup.getUUID(), userGroup);
+
+        return userGroup;
+    }
+
     public UserGroup getUserItemsByUUID(UUID id) {
         return mUUIDSetMap.get(id);
     }

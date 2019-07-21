@@ -1,6 +1,7 @@
 package com.daoshengwanwu.android.activity;
 
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.text.Editable;
@@ -25,6 +26,8 @@ import java.util.*;
 
 
 public class GroupEditActivity extends AppCompatActivity {
+    private static final String EXTRA_GROUP_ID = "extra_group_id";
+
     private EditText mGroupNameET;
     private EditText mKeywordET;
     private EditText mLabelNameET;
@@ -35,11 +38,19 @@ public class GroupEditActivity extends AppCompatActivity {
     private Adapter mAdapter = new Adapter();
     private ShareData mShareData = ShareData.getInstance();
     private String mKeyword;
-    private final UserGroup mUserGroup = new UserGroup("");
+    private UserGroup mUserGroup;
 
 
     private List<PopupWindow> mPopupWindows = new ArrayList<>();
 
+
+    public static Intent newIntent(@NonNull Context packageContext, @NonNull UUID groupId) {
+        Intent intent = new Intent(packageContext, GroupEditActivity.class);
+
+        intent.putExtra(EXTRA_GROUP_ID, groupId.toString());
+
+        return intent;
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -90,6 +101,9 @@ public class GroupEditActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group_edit);
+
+        mUserGroup = UserGroupLab.getInstance().getCloneUserItemsByUUID(
+                UUID.fromString(getIntent().getStringExtra(EXTRA_GROUP_ID)));
 
         mGroupNameET = findViewById(R.id.group_name_et);
         mKeywordET = findViewById(R.id.search_keyword_et);

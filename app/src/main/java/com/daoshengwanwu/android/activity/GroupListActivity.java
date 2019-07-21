@@ -81,7 +81,8 @@ public class GroupListActivity extends AppCompatActivity {
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
+                        startActivity(GroupEditActivity.newIntent(
+                                GroupListActivity.this, mCurGroup.getUUID()));
                     }
                 });
 

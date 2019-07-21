@@ -12,12 +12,12 @@ public class UserGroup {
     private final Set<UserItem> mUserItems = new HashSet<>();
 
 
-    public UserGroup(String groupName) {
+    UserGroup(String groupName) {
         mUUID = UUID.randomUUID();
         mGroupName = groupName;
     }
 
-    public UserGroup(UserGroup group) {
+    UserGroup(UserGroup group) {
         mUUID = UUID.fromString(group.mUUID.toString());
         mGroupName = group.mGroupName;
         mUserItems.addAll(group.getUserItems());
