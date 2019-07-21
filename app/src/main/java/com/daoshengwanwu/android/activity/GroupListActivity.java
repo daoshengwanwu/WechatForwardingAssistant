@@ -17,12 +17,15 @@ import com.daoshengwanwu.android.model.UserGroup;
 import com.daoshengwanwu.android.model.UserGroupLab;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 
 public class GroupListActivity extends AppCompatActivity {
     private Adapter mAdapter = new Adapter();
     private RecyclerView mRecyclerView;
+    private Set<UserGroup> mSelectedUserGroups = new HashSet<>();
 
 
     @Override
@@ -33,6 +36,7 @@ public class GroupListActivity extends AppCompatActivity {
         mRecyclerView = findViewById(R.id.recycler_view);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mAdapter.updateView();
     }
 
 
@@ -89,7 +93,11 @@ public class GroupListActivity extends AppCompatActivity {
                 mCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-
+                        if (isChecked) {
+                            mSelectedUserGroups.add(mCurGroup);
+                        } else {
+                            mSelectedUserGroups.remove(mCurGroup);
+                        }
                     }
                 });
             }

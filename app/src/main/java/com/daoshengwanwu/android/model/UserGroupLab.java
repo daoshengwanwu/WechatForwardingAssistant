@@ -54,4 +54,14 @@ public class UserGroupLab {
     public List<UserGroup> getAllUserGroups() {
         return new ArrayList<>(mUUIDSetMap.values());
     }
+
+    public void removeUserGroups(Collection<UserGroup> groups) {
+        if (groups == null) {
+            return;
+        }
+
+        for (UserGroup group : groups) {
+            mUUIDSetMap.remove(group.getUUID());
+        }
+    }
 }
