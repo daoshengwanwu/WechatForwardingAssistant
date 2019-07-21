@@ -1,9 +1,7 @@
 package com.daoshengwanwu.android.model;
 
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 
 public class UserGroupLab {
@@ -43,5 +41,9 @@ public class UserGroupLab {
         }
 
         mUUIDSetMap.put(id, group);
+    }
+
+    public List<UserGroup> getAllUserGroups() {
+        return new ArrayList<>(mUUIDSetMap.values());
     }
 }
