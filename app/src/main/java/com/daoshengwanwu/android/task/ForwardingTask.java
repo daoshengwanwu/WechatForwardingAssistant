@@ -6,6 +6,7 @@ import android.os.SystemClock;
 import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
+import com.daoshengwanwu.android.model.ShareData;
 import com.daoshengwanwu.android.model.UserGroup;
 import com.daoshengwanwu.android.model.item.UserItem;
 import com.daoshengwanwu.android.page.*;
@@ -25,6 +26,7 @@ public class ForwardingTask extends Task {
     private boolean mIsForwrdingAlreadyStarted = false;
     private String mContent = "";
     private OnForwardingTaskFinishedListener mListener;
+    private int mOriginCount;
 
 
     public ForwardingTask(
@@ -40,6 +42,7 @@ public class ForwardingTask extends Task {
         mToForwardingSet = mUserGroup.getUserItems();
         mContent = content;
         mListener = listener;
+        mOriginCount = group.getUserItems().size();
     }
 
     @Override
@@ -61,6 +64,13 @@ public class ForwardingTask extends Task {
             SystemClock.sleep(3000);
             mIsForwrdingAlreadyStarted = true;
             execute(rootInfo);
+            return;
+        }
+
+        if (mOriginCount - mToForwardingSet.size() == 1) {
+            ShareData.getInstance().pauseForwardingTask();
+            SingleSubThreadUtil.showToast(mContext, "已自动暂停", Toast.LENGTH_LONG);
+            mOriginCount = -1;
             return;
         }
 

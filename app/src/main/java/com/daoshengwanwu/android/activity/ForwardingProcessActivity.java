@@ -135,11 +135,15 @@ public class ForwardingProcessActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+        if (ShareData.getInstance().mIsForwardingPause) {
+            mStatus = ForwardingStatus.PAUSED;
+        }
         updateView();
     }
 
     private void updateView() {
         mStatusTV.setText(mStatus.toString());
+
         switch (mStatus) {
             case NOT_START: {
                 mStartStopBtn.setText("开始");

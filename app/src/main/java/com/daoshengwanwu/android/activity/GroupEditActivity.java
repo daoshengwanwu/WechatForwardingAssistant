@@ -151,6 +151,7 @@ public class GroupEditActivity extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable s) {
                 mUserGroup.setGroupName(s.toString());
+                UserGroupLab.getInstance().updateGroup(mUserGroup);
             }
         });
 
@@ -189,6 +190,7 @@ public class GroupEditActivity extends AppCompatActivity {
     private void updateView() {
         mAdapter.setData(mUserGroup);
         mUserCountTV.setText("人数： " + mAdapter.getItemCount());
+        mGroupNameET.setText(mUserGroup.getGroupName());
     }
 
 

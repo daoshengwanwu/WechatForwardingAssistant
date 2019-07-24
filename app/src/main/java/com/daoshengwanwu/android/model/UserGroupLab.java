@@ -64,4 +64,12 @@ public class UserGroupLab {
             mUUIDSetMap.remove(group.getUUID());
         }
     }
+
+    public void updateGroup(UserGroup group) {
+        if (group == null) {
+            return;
+        }
+
+        mUUIDSetMap.put(group.getUUID(), group);
+    }
 }

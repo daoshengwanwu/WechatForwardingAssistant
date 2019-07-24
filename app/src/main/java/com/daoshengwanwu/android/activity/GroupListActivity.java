@@ -1,9 +1,8 @@
 package com.daoshengwanwu.android.activity;
 
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.content.Intent;
+import android.view.*;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.TextView;
@@ -23,6 +22,12 @@ import java.util.Set;
 
 
 public class GroupListActivity extends AppCompatActivity {
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mAdapter.updateView();
+    }
+
     private Adapter mAdapter = new Adapter();
     private RecyclerView mRecyclerView;
     private Set<UserGroup> mSelectedUserGroups = new HashSet<>();
@@ -39,6 +44,30 @@ public class GroupListActivity extends AppCompatActivity {
         mAdapter.updateView();
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.add: {
+                UserGroup group = UserGroupLab.getInstance().createUserGroup("");
+                mAdapter.updateView();
+                Intent intent = GroupEditActivity.newIntent(this, group.getUUID());
+                startActivity(intent);
+            } break;
+
+            case R.id.delete: {
+                UserGroupLab.getInstance().removeUserGroups(mSelectedUserGroups);
+                mAdapter.updateView();
+            } break;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.group_list_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
 
     private class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
         private List<UserGroup> mData = new ArrayList<>();

@@ -10,7 +10,7 @@ import com.daoshengwanwu.android.task.Task;
 public class ShareData {
     private static final ShareData sInstance = new ShareData();
 
-    private boolean mIsForwardingPause = false;
+    public boolean mIsForwardingPause = false;
     private Task mActiveTask = null;
 
 
