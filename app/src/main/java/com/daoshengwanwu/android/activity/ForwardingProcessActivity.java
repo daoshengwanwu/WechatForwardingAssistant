@@ -162,7 +162,7 @@ public class ForwardingProcessActivity extends AppCompatActivity {
             } break;
 
             case FINISHED: {
-                mStartStopBtn.setText("开始");
+                mStartStopBtn.setVisibility(View.INVISIBLE);
                 mPauseResumeBtn.setVisibility(View.INVISIBLE);
             } break;
 

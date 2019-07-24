@@ -40,6 +40,8 @@ public class GroupEditActivity extends AppCompatActivity {
     private String mKeyword;
     private UserGroup mUserGroup;
 
+    private String mForwardingContent = "";
+
 
     private List<PopupWindow> mPopupWindows = new ArrayList<>();
 
@@ -62,27 +64,40 @@ public class GroupEditActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.enter_forwarding: {
+                if (TextUtils.isEmpty(mForwardingContent)) {
+                    Toast.makeText(this, "请点击星号编辑群发内容后再进入群发.", Toast.LENGTH_SHORT).show();
+                    break;
+                }
+
+                Intent intent = ForwardingProcessActivity.newIntent(GroupEditActivity.this, mUserGroup.getUUID(), mForwardingContent);
+                startActivity(intent);
+            } break;
+
+            case R.id.edit_content: {
                 View rootView = LayoutInflater.from(this).inflate(R.layout.dialog_enter_forwarding, null, false);
                 final EditText et = rootView.findViewById(R.id.content_et);
+                et.setText(mForwardingContent);
 
                 final AlertDialog dialog = new AlertDialog.Builder(this).
                         setTitle("设置群发内容").
                         setPositiveButton("确定", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                               Intent intent = ForwardingProcessActivity.newIntent(GroupEditActivity.this, mUserGroup.getUUID(), et.getText() + "");
-                               startActivity(intent);
+                                mForwardingContent = et.getText().toString();
+                                if (!TextUtils.isEmpty(mForwardingContent)) {
+                                    Toast.makeText(GroupEditActivity.this, "成功", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        }).
+                        setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
                             }
                         }).
                         setView(rootView).
+                        setCancelable(false).
                         create();
-
-                dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "取消", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
 
                 dialog.show();
             } break;
@@ -120,6 +135,12 @@ public class GroupEditActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String labelName = mLabelNameET.getText() + "";
+
+                if (TextUtils.isEmpty(labelName)) {
+                    Toast.makeText(GroupEditActivity.this, "请输入正确的标签名称", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 mShareData.activeLoadToForwardingTask(
                         GroupEditActivity.this,
                         labelName,
