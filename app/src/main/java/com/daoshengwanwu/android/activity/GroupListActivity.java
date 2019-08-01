@@ -2,6 +2,7 @@ package com.daoshengwanwu.android.activity;
 
 
 import android.content.Intent;
+import android.util.Log;
 import android.view.*;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -14,11 +15,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.daoshengwanwu.android.R;
 import com.daoshengwanwu.android.model.UserGroup;
 import com.daoshengwanwu.android.model.UserGroupLab;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 
 public class GroupListActivity extends AppCompatActivity {
@@ -26,6 +26,7 @@ public class GroupListActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         mAdapter.updateView();
+        UserGroupLab.getInstance().saveAllGroupToSP(this);
     }
 
     private Adapter mAdapter = new Adapter();
@@ -48,14 +49,14 @@ public class GroupListActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.add: {
-                UserGroup group = UserGroupLab.getInstance().createUserGroup("");
+                UserGroup group = UserGroupLab.getInstance().createUserGroup(this, "");
                 mAdapter.updateView();
                 Intent intent = GroupEditActivity.newIntent(this, group.getUUID());
                 startActivity(intent);
             } break;
 
             case R.id.delete: {
-                UserGroupLab.getInstance().removeUserGroups(mSelectedUserGroups);
+                UserGroupLab.getInstance().removeUserGroups(this, mSelectedUserGroups);
                 mAdapter.updateView();
             } break;
         }
@@ -136,6 +137,12 @@ public class GroupListActivity extends AppCompatActivity {
 
                 mTitleTV.setText(mCurGroup.getGroupName());
                 mSizeTV.setText("人数： " + mCurGroup.size());
+
+                if (mSelectedUserGroups.contains(mCurGroup)) {
+                    mCheckBox.setChecked(true);
+                } else {
+                    mCheckBox.setChecked(false);
+                }
             }
         }
     }

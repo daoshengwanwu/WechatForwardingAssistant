@@ -1,6 +1,7 @@
 package com.daoshengwanwu.android.model;
 
 
+import androidx.annotation.NonNull;
 import com.daoshengwanwu.android.model.item.UserItem;
 
 import java.util.*;
@@ -63,5 +64,11 @@ public class UserGroup {
 
     public int size() {
         return mUserItems.size();
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return mGroupName + mUserItems.toString();
     }
 }

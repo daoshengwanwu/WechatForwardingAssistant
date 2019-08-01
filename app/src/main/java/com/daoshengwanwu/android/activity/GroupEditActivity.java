@@ -13,9 +13,11 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
+import androidx.appcompat.widget.ForwardingListener;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.daoshengwanwu.android.R;
+import com.daoshengwanwu.android.model.ForwardingContentLab;
 import com.daoshengwanwu.android.model.ShareData;
 import com.daoshengwanwu.android.model.UserGroup;
 import com.daoshengwanwu.android.model.UserGroupLab;
@@ -84,6 +86,7 @@ public class GroupEditActivity extends AppCompatActivity {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 mForwardingContent = et.getText().toString();
+                                ForwardingContentLab.getInstance().putContent(GroupEditActivity.this, mUserGroup.getUUID(), mForwardingContent);
                                 if (!TextUtils.isEmpty(mForwardingContent)) {
                                     Toast.makeText(GroupEditActivity.this, "成功", Toast.LENGTH_SHORT).show();
                                 }
@@ -149,7 +152,7 @@ public class GroupEditActivity extends AppCompatActivity {
                     @Override
                     public void onLabelUsersInfoLoadFinished(Set<UserItem> labelUsersInfo) {
                         mUserGroup.mergeUserItems(labelUsersInfo);
-                        UserGroupLab.getInstance().putOrMergeUserItems(mUserGroup);
+                        UserGroupLab.getInstance().putOrMergeUserItems(GroupEditActivity.this, mUserGroup);
                         updateView();
                         Toast.makeText(GroupEditActivity.this, "导入联系人成功", Toast.LENGTH_SHORT).show();
                     }
@@ -172,7 +175,7 @@ public class GroupEditActivity extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable s) {
                 mUserGroup.setGroupName(s.toString());
-                UserGroupLab.getInstance().updateGroup(mUserGroup);
+                UserGroupLab.getInstance().updateGroup(GroupEditActivity.this, mUserGroup);
             }
         });
 
@@ -206,6 +209,8 @@ public class GroupEditActivity extends AppCompatActivity {
         });
 
         updateView();
+
+        mForwardingContent = ForwardingContentLab.getInstance().getContent(mUserGroup.getUUID());
     }
 
     private void updateView() {
