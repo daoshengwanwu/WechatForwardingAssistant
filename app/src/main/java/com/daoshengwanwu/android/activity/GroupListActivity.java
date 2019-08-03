@@ -2,7 +2,6 @@ package com.daoshengwanwu.android.activity;
 
 
 import android.content.Intent;
-import android.util.Log;
 import android.view.*;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -15,8 +14,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.daoshengwanwu.android.R;
 import com.daoshengwanwu.android.model.UserGroup;
 import com.daoshengwanwu.android.model.UserGroupLab;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
 import java.util.*;
 
