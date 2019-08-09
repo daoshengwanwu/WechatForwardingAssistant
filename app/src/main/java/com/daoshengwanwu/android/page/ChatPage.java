@@ -15,6 +15,7 @@ public class ChatPage extends Page {
     private AccessibilityNodeInfo mTitleInfo;
     private AccessibilityNodeInfo mEditTextInfo;
     private AccessibilityNodeInfo mSendingBtnInfo;
+    private AccessibilityNodeInfo mCheckBoxInfo;
 
 
     public static boolean isSelf(@NonNull AccessibilityNodeInfo rootInfo) {
@@ -70,6 +71,11 @@ public class ChatPage extends Page {
         if (!CustomCollectionUtils.isListEmpty(rst)) {
             mSendingBtnInfo = rst.get(0);
         }
+
+        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/a9");
+        if (!CustomCollectionUtils.isListEmpty(rst)) {
+            mCheckBoxInfo = rst.get(0);
+        }
     }
 
     public String getTitle() {
@@ -86,6 +92,10 @@ public class ChatPage extends Page {
         return mEditTextInfo.performAction(AccessibilityNodeInfo.ACTION_SET_TEXT, arguments);
     }
 
+    public boolean isWithCheckBox() {
+        return mCheckBoxInfo != null;
+    }
+
     public boolean performClickSendButn(AccessibilityNodeInfo rootInfo) {
         if (mSendingBtnInfo == null) {
             bindData(rootInfo);
@@ -96,5 +106,17 @@ public class ChatPage extends Page {
         }
 
         return mSendingBtnInfo.performAction(AccessibilityNodeInfo.ACTION_CLICK);
+    }
+
+    public boolean isChecked() {
+        if (!isWithCheckBox()) {
+            return false;
+        }
+
+        return mCheckBoxInfo.isChecked();
+    }
+
+    public void performCheck() {
+        mCheckBoxInfo.getParent().performAction(AccessibilityNodeInfo.ACTION_CLICK);
     }
 }
