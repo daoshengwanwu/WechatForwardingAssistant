@@ -3,6 +3,10 @@ package com.daoshengwanwu.android.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -103,16 +107,36 @@ public class UITaskEditActivity extends AppCompatActivity {
             } break;
         }
 
+        setUIForwardingTaskName();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_forwarding_content_edit, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.save) {
+            mUIForwardingTask.getForwardingContent().setContent(mEditText.getText().toString());
+            setUIForwardingTaskName();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void setUIForwardingTaskName() {
         ForwardingContent content = mUIForwardingTask.getForwardingContent();
         UserGroup group = mUIForwardingTask.getUserGroup();
 
         String name = "";
-        if (content != null) {
-            name += content.getContent();
-        }
 
         if (group != null) {
             name += ": " + group.getGroupName();
+        }
+
+        if (content != null) {
+            name += content.getContent();
         }
 
         mUIForwardingTask.setTaskName(name);
@@ -122,7 +146,13 @@ public class UITaskEditActivity extends AppCompatActivity {
 
     private void updateViews() {
         if (mUIForwardingTask.getForwardingContent() != null) {
+            mEditText.setVisibility(View.VISIBLE);
+            mStartBtn.setVisibility(View.VISIBLE);
             mEditText.setText(mUIForwardingTask.getForwardingContent().getContent());
+        }
+
+        if (mUIForwardingTask.getUserGroup() != null) {
+            mSelGroupBtn.setText(mUIForwardingTask.getUserGroup().getGroupName());
         }
     }
 }

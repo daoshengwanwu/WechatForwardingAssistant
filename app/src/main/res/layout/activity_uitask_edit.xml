@@ -15,6 +15,7 @@ android:orientation="vertical">
             android:layout_height="wrap_content"/>
 
     <EditText
+            android:gravity="top|start"
             android:id="@+id/edit_text"
             android:layout_weight="1"
             android:visibility="gone"

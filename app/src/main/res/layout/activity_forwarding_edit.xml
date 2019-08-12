@@ -8,6 +8,8 @@
         tools:context=".activity.ForwardingEditActivity">
 
     <androidx.appcompat.widget.AppCompatEditText
+            android:gravity="top|start"
+            android:hint="输入群发内容"
             android:layout_width="0dp"
                                                  android:layout_height="0dp"
                                                  app:layout_constraintEnd_toEndOf="parent"

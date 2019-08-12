@@ -1,10 +1,8 @@
 package com.daoshengwanwu.android.activity;
 
 
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
+import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
@@ -36,6 +34,12 @@ public class UITaskListActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        mAdapter.updateDataAndViews();
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_ui_task_list, menu);
         return super.onCreateOptionsMenu(menu);
@@ -48,8 +52,7 @@ public class UITaskListActivity extends AppCompatActivity {
             mUIForwardingTaskLab.putForwrdingTaskLab(this, task);
             mAdapter.updateDataAndViews();
 
-            //TODO:: 开启UITask编辑页面
-
+            startActivity(UITaskEditActivity.newIntent(this, task.getId()));
         }
         return super.onOptionsItemSelected(item);
     }
@@ -61,7 +64,8 @@ public class UITaskListActivity extends AppCompatActivity {
         @NonNull
         @Override
         public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            return null;
+            View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_forwarding_content_list, parent, false);
+            return new ViewHolder(itemView);
         }
 
         @Override
@@ -84,13 +88,27 @@ public class UITaskListActivity extends AppCompatActivity {
         }
 
         class ViewHolder extends RecyclerView.ViewHolder {
+            private UIForwardingTask mTask;
+            private TextView mTextView;
+
 
             public ViewHolder(@NonNull View itemView) {
                 super(itemView);
+
+                mTextView = itemView.findViewById(R.id.text_view);
+
+                itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        startActivity(UITaskEditActivity.newIntent(UITaskListActivity.this, mTask.getId()));
+                    }
+                });
             }
 
             public void bindData(UIForwardingTask task) {
+                mTask = task;
 
+                mTextView.setText(task.getTaskName());
             }
         }
     }

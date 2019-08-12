@@ -70,6 +70,12 @@ public class ForwardingContentListActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mAdapter.notifyDataSetChanged();
+    }
+
     private class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
         private List<ForwardingContent> mContents = mForwardingContentLab.getAllForwardingContents();
 
@@ -120,6 +126,7 @@ public class ForwardingContentListActivity extends AppCompatActivity {
                             Intent data = new Intent();
                             data.putExtra("forwarding_content_uuid", mForwardingContent.getId().toString());
                             setResult(RESULT_OK, data);
+                            finish();
                         }
                     }
                 });
