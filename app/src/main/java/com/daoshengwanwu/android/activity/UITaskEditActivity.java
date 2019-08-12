@@ -69,7 +69,9 @@ public class UITaskEditActivity extends AppCompatActivity {
         mStartBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO:: 打开群发状态控制页面
+                if (mUIForwardingTask.getForwardingContent() != null && mUIForwardingTask.getUserGroup() != null) {
+                    startActivity(ForwardingProcessActivity.newIntent(UITaskEditActivity.this, mUIForwardingTask.getUserGroup().getUUID(), mUIForwardingTask.getForwardingContent().getContent()));
+                }
             }
         });
 
@@ -132,11 +134,11 @@ public class UITaskEditActivity extends AppCompatActivity {
         String name = "";
 
         if (group != null) {
-            name += ": " + group.getGroupName();
+            name += group.getGroupName();
         }
 
         if (content != null) {
-            name += content.getContent();
+            name += ": " + content.getContent();
         }
 
         mUIForwardingTask.setTaskName(name);

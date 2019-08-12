@@ -34,7 +34,7 @@ public class LabelMembersPage extends Page {
             return false;
         }
 
-        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/ky");
+        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/kz");
         if (CustomCollectionUtils.isListEmpty(rst)) {
             return false;
         }
@@ -85,12 +85,12 @@ public class LabelMembersPage extends Page {
     @Override
     public void bindData(AccessibilityNodeInfo rootInfo) {
         List<AccessibilityNodeInfo> rst;
-        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/lh");
+        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/li");
         if (!CustomCollectionUtils.isListEmpty(rst)) {
             mLabelInfo = rst.get(0);
         }
 
-        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/la");
+        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/lb");
         if (!CustomCollectionUtils.isListEmpty(rst)) {
             mBackInfo = rst.get(0);
         }
@@ -100,7 +100,7 @@ public class LabelMembersPage extends Page {
             mListInfo = rst.get(0);
         }
 
-        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/e9y");
+        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/e_x");
         mTextInfos = rst;
 
         if (mBackInfo == null || mListInfo == null || mTextInfos == null) {

@@ -49,25 +49,25 @@ public class ChatPage extends Page {
     public void bindData(AccessibilityNodeInfo rootInfo) {
         List<AccessibilityNodeInfo> rst;
 
-        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/l2");
+        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/l3");
         if (CustomCollectionUtils.isListEmpty(rst)) {
             throw new RuntimeException("没有找到聊天页面的后退按钮");
         }
         mBackInfo = rst.get(0);
 
-        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/l4");
+        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/l5");
         if (CustomCollectionUtils.isListEmpty(rst)) {
             throw new RuntimeException("沒有找到聊天頁面的title info");
         }
         mTitleInfo = rst.get(0);
 
-        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/ao9");
+        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/aom");
         if (CustomCollectionUtils.isListEmpty(rst)) {
             throw new RuntimeException("沒有找到聊天頁面的EditText info");
         }
         mEditTextInfo = rst.get(0);
 
-        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/aof");
+        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/aot");
         if (!CustomCollectionUtils.isListEmpty(rst)) {
             mSendingBtnInfo = rst.get(0);
         }

@@ -40,7 +40,7 @@ public class ExplorePage extends Page {
     public void bindData(AccessibilityNodeInfo rootInfo) {
         List<AccessibilityNodeInfo> rst;
 
-        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/dcr");
+        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/sh");
         if (CustomCollectionUtils.isListEmpty(rst) || rst.size() != 4) {
             throw new RuntimeException("在ExplorePage页面没有找到ContactTabInfo，程序意外终止");
         }

@@ -20,18 +20,18 @@ public class PersonalIntroductionPage extends Page {
 
     public static boolean isSelf(@NonNull AccessibilityNodeInfo rootInfo) {
         //title
-        List<AccessibilityNodeInfo> rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/b7d");
+        List<AccessibilityNodeInfo> rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/b7r");
         if (CustomCollectionUtils.isListEmpty(rst)) {
             return false;
         }
 
         //头像
-        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/b7c");
+        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/b7q");
         if (CustomCollectionUtils.isListEmpty(rst)) {
             return false;
         }
 
-        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/b7l");
+        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/b7z");
         if (CustomCollectionUtils.isListEmpty(rst)) {
             return false;
         }
@@ -59,24 +59,24 @@ public class PersonalIntroductionPage extends Page {
     public void bindData(AccessibilityNodeInfo rootInfo) {
         List<AccessibilityNodeInfo> rst;
 
-        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/la");
+        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/lb");
         if (CustomCollectionUtils.isListEmpty(rst)) {
             throw new RuntimeException("無法找到PersonalIntroduction頁面的後退按鈕");
         }
         mBackInfo = rst.get(0);
 
-        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/dvd");
+        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/dwb");
         if (!CustomCollectionUtils.isListEmpty(rst)) {
             mLabelInfo = rst.get(0);
         }
 
-        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/cv");
+        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/cw");
         if (CustomCollectionUtils.isListEmpty(rst)) {
             throw new RuntimeException("無法找到PersonalIntroduction頁面的發消息按鈕");
         }
         mSendMessageInfo = rst.get(0).getParent();
 
-        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/b7d");
+        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/b7r");
         if (CustomCollectionUtils.isListEmpty(rst)) {
             throw new RuntimeException("PersonalIntroduction頁面title info 無法找到");
         }
