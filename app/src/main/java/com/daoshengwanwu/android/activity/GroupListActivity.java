@@ -1,6 +1,7 @@
 package com.daoshengwanwu.android.activity;
 
 
+import android.content.Context;
 import android.content.Intent;
 import android.view.*;
 import android.widget.CheckBox;
@@ -30,6 +31,13 @@ public class GroupListActivity extends AppCompatActivity {
     private RecyclerView mRecyclerView;
     private Set<UserGroup> mSelectedUserGroups = new HashSet<>();
 
+    private Mode mCurMode = Mode.MODE_SELECT;
+
+
+    public static Intent newIntent(Context context) {
+        Intent intent = new Intent(context, GroupListActivity.class);
+        return intent;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +63,20 @@ public class GroupListActivity extends AppCompatActivity {
             case R.id.delete: {
                 UserGroupLab.getInstance().removeUserGroups(this, mSelectedUserGroups);
                 mAdapter.updateView();
+            } break;
+
+            case R.id.switch_mode: {
+                if (mCurMode == Mode.MODE_SELECT) {
+                    mCurMode = Mode.MODE_EDIT;
+                    item.setTitle("退出编辑");
+                    break;
+                }
+
+                if (mCurMode == Mode.MODE_EDIT) {
+                    mCurMode = Mode.MODE_SELECT;
+                    item.setTitle("编辑");
+                    break;
+                }
             } break;
         }
 
@@ -112,8 +134,17 @@ public class GroupListActivity extends AppCompatActivity {
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        startActivity(GroupEditActivity.newIntent(
-                                GroupListActivity.this, mCurGroup.getUUID()));
+                        if (mCurMode == Mode.MODE_EDIT) {
+                            startActivity(GroupEditActivity.newIntent(
+                                    GroupListActivity.this, mCurGroup.getUUID()));
+                        } else if (mCurMode == Mode.MODE_SELECT) {
+                            Intent data = new Intent();
+
+                            data.putExtra("user_group_uuid", mCurGroup.getUUID().toString());
+
+                            setResult(RESULT_OK, data);
+                            finish();
+                        }
                     }
                 });
 
@@ -142,5 +173,9 @@ public class GroupListActivity extends AppCompatActivity {
                 }
             }
         }
+    }
+
+    private enum Mode {
+        MODE_EDIT, MODE_SELECT
     }
 }

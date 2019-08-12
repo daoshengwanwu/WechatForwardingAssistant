@@ -13,20 +13,30 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
-        <activity android:name=".activity.GroupListActivity"
-        android:label="@string/app_name">
+        <activity android:name=".activity.UITaskEditActivity">
+        </activity>
+        <activity android:name=".activity.UITaskListActivity">
+        </activity>
+        <activity android:name=".activity.ForwardingEditActivity">
+        </activity>
+        <activity android:name=".activity.ForwardingContentListActivity">
+        </activity>
+        <activity
+                android:name=".activity.GroupListActivity"
+                android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".activity.ForwardingProcessActivity"
-        android:label="进度控制">
+        <activity
+                android:name=".activity.ForwardingProcessActivity"
+                android:label="进度控制">
         </activity>
-        <activity android:name=".activity.GroupEditActivity"
-        android:label="分组编辑">
-
+        <activity
+                android:name=".activity.GroupEditActivity"
+                android:label="分组编辑">
         </activity>
 
         <service
