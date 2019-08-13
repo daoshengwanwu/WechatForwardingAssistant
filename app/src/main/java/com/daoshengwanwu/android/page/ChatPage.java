@@ -2,10 +2,11 @@ package com.daoshengwanwu.android.page;
 
 
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.view.accessibility.AccessibilityNodeInfo;
 import androidx.annotation.NonNull;
+import com.daoshengwanwu.android.util.ActionPerformer;
 import com.daoshengwanwu.android.util.CustomCollectionUtils;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -18,6 +19,9 @@ public class ChatPage extends Page {
     private AccessibilityNodeInfo mCheckBoxInfo;
 
 
+    //================================================================================
+    //============================= Common Start =====================================
+    //================================================================================
     public static boolean isSelf(@NonNull AccessibilityNodeInfo rootInfo) {
         List<AccessibilityNodeInfo> rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/f2z");
         if (CustomCollectionUtils.isListEmpty(rst)) {
@@ -46,7 +50,7 @@ public class ChatPage extends Page {
     }
 
     @Override
-    public void bindData(AccessibilityNodeInfo rootInfo) {
+    public void bindData(@NotNull AccessibilityNodeInfo rootInfo) {
         List<AccessibilityNodeInfo> rst;
 
         rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/l3");
@@ -62,10 +66,9 @@ public class ChatPage extends Page {
         mTitleInfo = rst.get(0);
 
         rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/aom");
-        if (CustomCollectionUtils.isListEmpty(rst)) {
-            throw new RuntimeException("沒有找到聊天頁面的EditText info");
+        if (!CustomCollectionUtils.isListEmpty(rst)) {
+            mEditTextInfo = rst.get(0);
         }
-        mEditTextInfo = rst.get(0);
 
         rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/aot");
         if (!CustomCollectionUtils.isListEmpty(rst)) {
@@ -77,23 +80,24 @@ public class ChatPage extends Page {
             mCheckBoxInfo = rst.get(0);
         }
     }
+    //================================================================================
+    //============================= Common End =======================================
+    //================================================================================
 
-    public String getTitle() {
-        return mTitleInfo.getText() + "";
-    }
 
     public void performBack() {
-        mBackInfo.performAction(AccessibilityNodeInfo.ACTION_CLICK);
+        ActionPerformer.performAction(mBackInfo, AccessibilityNodeInfo.ACTION_CLICK, "聊天界面点击back");
     }
 
     public boolean setEditTextText(String text) {
         Bundle arguments = new Bundle();
         arguments.putCharSequence(AccessibilityNodeInfo.ACTION_ARGUMENT_SET_TEXT_CHARSEQUENCE, text);
-        return mEditTextInfo.performAction(AccessibilityNodeInfo.ACTION_SET_TEXT, arguments);
-    }
 
-    public boolean isWithCheckBox() {
-        return mCheckBoxInfo != null;
+        return ActionPerformer.performAction(
+                mEditTextInfo,
+                AccessibilityNodeInfo.ACTION_SET_TEXT,
+                arguments,
+                "聊天界面设置输入框内容");
     }
 
     public boolean performClickSendButn(AccessibilityNodeInfo rootInfo) {
@@ -101,11 +105,15 @@ public class ChatPage extends Page {
             bindData(rootInfo);
         }
 
-        if (mSendingBtnInfo == null) {
-            throw new RuntimeException("無法找到聊天界面的發送按鈕");
-        }
+        return ActionPerformer.performAction(mSendingBtnInfo, AccessibilityNodeInfo.ACTION_CLICK, "聊天界面点击发送按钮");
+    }
 
-        return mSendingBtnInfo.performAction(AccessibilityNodeInfo.ACTION_CLICK);
+    public boolean isWithCheckBox() {
+        return mCheckBoxInfo != null;
+    }
+
+    public String getTitle() {
+        return mTitleInfo.getText() + "";
     }
 
     public boolean isChecked() {

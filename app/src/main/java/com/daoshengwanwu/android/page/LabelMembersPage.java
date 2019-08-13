@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import com.daoshengwanwu.android.model.item.UserItem;
 import com.daoshengwanwu.android.util.CustomCollectionUtils;
 import com.daoshengwanwu.android.util.SingleSubThreadUtil;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashSet;
 import java.util.List;
@@ -83,7 +84,7 @@ public class LabelMembersPage extends Page {
     }
 
     @Override
-    public void bindData(AccessibilityNodeInfo rootInfo) {
+    public void bindData(@NotNull AccessibilityNodeInfo rootInfo) {
         List<AccessibilityNodeInfo> rst;
         rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/li");
         if (!CustomCollectionUtils.isListEmpty(rst)) {

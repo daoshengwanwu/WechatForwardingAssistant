@@ -6,14 +6,12 @@ import androidx.annotation.NonNull;
 
 
 public abstract class Page {
-    private final PageId mPageId;
+    @NonNull private final PageId mPageId;
 
 
-    public abstract void bindData(AccessibilityNodeInfo rootInfo);
-
+    public abstract void bindData(@NonNull AccessibilityNodeInfo rootInfo);
 
     @NonNull public static Page generateFrom(@NonNull AccessibilityNodeInfo rootInfo) {
-        // TODO::
         switch (whichPage(rootInfo)) {
             case PAGE_LABEL_MEMBERS: {
                 return LabelMembersPage.generateFrom(rootInfo);
@@ -43,15 +41,7 @@ public abstract class Page {
         return UnknownPage.generateFrom(rootInfo);
     }
 
-    @NonNull public static String getInfoText(AccessibilityNodeInfo info) {
-        if (info == null) {
-            return "";
-        }
-
-        return info.getText() + "";
-    }
-
-    private static PageId whichPage(@NonNull AccessibilityNodeInfo rootInfo) {
+    @NonNull private static PageId whichPage(@NonNull AccessibilityNodeInfo rootInfo) {
         if (LabelMembersPage.isSelf(rootInfo)) {
             return PageId.PAGE_LABEL_MEMBERS;
         } else if (ChatPage.isSelf(rootInfo)) {
@@ -69,12 +59,11 @@ public abstract class Page {
         return PageId.PAGE_UNKNOWN;
     }
 
-
     protected Page(@NonNull PageId pageId) {
         mPageId = pageId;
     }
 
-    public final PageId getPageId() {
+    @NonNull public final PageId getPageId() {
         return mPageId;
     }
 

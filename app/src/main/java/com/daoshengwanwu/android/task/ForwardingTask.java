@@ -150,20 +150,19 @@ public class ForwardingTask extends Task {
             ChatPage chatPage = (ChatPage) page;
 
             String title = chatPage.getTitle();
-            if (!title.equals(mCurSendingTarget.fullNickName)) {
-                chatPage.performBack();
+            if (mCurSendingTarget == null || !title.equals(mCurSendingTarget.fullNickName)) {
                 return;
             }
 
             if (!chatPage.setEditTextText(getToSendText())) {
-                chatPage.performBack();
                 return;
             }
 
-            if (chatPage.performClickSendButn(rootInfo)) {
-                mToForwardingSet.remove(mCurSendingTarget);
+            if (!chatPage.performClickSendButn(rootInfo)) {
+                return;
             }
 
+            mToForwardingSet.remove(mCurSendingTarget);
             chatPage.performBack();
         }
     }

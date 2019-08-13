@@ -6,6 +6,7 @@ import android.view.accessibility.AccessibilityNodeInfo;
 import androidx.annotation.NonNull;
 import com.daoshengwanwu.android.model.item.UserItem;
 import com.daoshengwanwu.android.util.CustomCollectionUtils;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Set;
@@ -56,7 +57,7 @@ public class PersonalIntroductionPage extends Page {
     }
 
     @Override
-    public void bindData(AccessibilityNodeInfo rootInfo) {
+    public void bindData(@NotNull AccessibilityNodeInfo rootInfo) {
         List<AccessibilityNodeInfo> rst;
 
         rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/lb");

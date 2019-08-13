@@ -2,11 +2,12 @@ package com.daoshengwanwu.android.page;
 
 
 import android.view.accessibility.AccessibilityNodeInfo;
+import org.jetbrains.annotations.NotNull;
 
 
 public class UnknownPage extends Page {
     @Override
-    public void bindData(AccessibilityNodeInfo rootInfo) {
+    public void bindData(@NotNull AccessibilityNodeInfo rootInfo) {
         //do nothing
     }
 
