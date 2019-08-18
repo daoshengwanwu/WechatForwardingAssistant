@@ -2,6 +2,7 @@ package com.daoshengwanwu.android.model;
 
 
 import android.content.Context;
+import com.daoshengwanwu.android.task.CleanTask;
 import com.daoshengwanwu.android.task.ForwardingTask;
 import com.daoshengwanwu.android.task.LoadLabelUsersTask;
 import com.daoshengwanwu.android.task.Task;
@@ -41,6 +42,16 @@ public class ShareData {
             ForwardingTask.OnForwardingTaskFinishedListener listener) {
 
         mActiveTask = new ForwardingTask(context, group, content, listener);
+    }
+
+    public void activeCleanTask() {
+        mActiveTask = new CleanTask();
+    }
+
+    public void stopCleanTask() {
+        if (mActiveTask.getTaskId() == Task.TaskId.TASK_CLEAN) {
+            mActiveTask = null;
+        }
     }
 
     public void stopForwardingTask() {

@@ -2,6 +2,7 @@ package com.daoshengwanwu.android.page;
 
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.accessibility.AccessibilityNodeInfo;
 import androidx.annotation.NonNull;
 import com.daoshengwanwu.android.util.ActionPerformer;
@@ -16,7 +17,7 @@ public class ChatPage extends Page {
     private AccessibilityNodeInfo mTitleInfo;
     private AccessibilityNodeInfo mEditTextInfo;
     private AccessibilityNodeInfo mSendingBtnInfo;
-    private AccessibilityNodeInfo mCheckBoxInfo;
+    private List<AccessibilityNodeInfo> mCheckBoxInfos;
 
 
     //================================================================================
@@ -75,10 +76,7 @@ public class ChatPage extends Page {
             mSendingBtnInfo = rst.get(0);
         }
 
-        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/a9");
-        if (!CustomCollectionUtils.isListEmpty(rst)) {
-            mCheckBoxInfo = rst.get(0);
-        }
+        mCheckBoxInfos = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/a9");
     }
     //================================================================================
     //============================= Common End =======================================
@@ -109,22 +107,29 @@ public class ChatPage extends Page {
     }
 
     public boolean isWithCheckBox() {
-        return mCheckBoxInfo != null;
+        return mCheckBoxInfos != null && mCheckBoxInfos.size() > 0;
     }
 
     public String getTitle() {
         return mTitleInfo.getText() + "";
     }
 
-    public boolean isChecked() {
-        if (!isWithCheckBox()) {
-            return false;
+    public void performAllCheck() {
+        if (mCheckBoxInfos != null) {
+            for (AccessibilityNodeInfo info : mCheckBoxInfos) {
+                if (!info.isChecked()) {
+                    AccessibilityNodeInfo parent = info.getParent();
+                    if (parent == null) {
+                        return;
+                    }
+
+                    if (parent.getChildCount() == 3 || parent.getChildCount() == 4) {
+                        parent.getChild(0).performAction(AccessibilityNodeInfo.ACTION_CLICK);
+                    } else if (parent.getChildCount() == 5){
+                        parent.getChild(1).performAction(AccessibilityNodeInfo.ACTION_CLICK);
+                    }
+                }
+            }
         }
-
-        return mCheckBoxInfo.isChecked();
-    }
-
-    public void performCheck() {
-        mCheckBoxInfo.getParent().performAction(AccessibilityNodeInfo.ACTION_CLICK);
     }
 }
