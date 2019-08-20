@@ -13,9 +13,18 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
+        <activity android:name=".activity.CleanActivity"
+        android:label="清理插件">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
         <activity android:name=".activity.UITaskEditActivity">
         </activity>
-        <activity android:name=".activity.UITaskListActivity">
+        <activity android:name=".activity.UITaskListActivity"
+        android:label="群发助手">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -29,7 +38,6 @@
         <activity
                 android:name=".activity.GroupListActivity"
                 android:label="分组列表页面">
-
         </activity>
         <activity
                 android:name=".activity.ForwardingProcessActivity"
