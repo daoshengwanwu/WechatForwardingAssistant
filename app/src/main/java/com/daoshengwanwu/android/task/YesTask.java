@@ -8,6 +8,9 @@ import com.daoshengwanwu.android.page.Page;
 
 
 public class YesTask extends Task {
+    private FriendPage mFriendPage;
+
+
     public YesTask() {
         super(TaskId.TASK_YES);
     }
@@ -19,7 +22,10 @@ public class YesTask extends Task {
             return;
         }
 
-        FriendPage friendPage = (FriendPage) page;
-        friendPage.performAllTDotClick();
+        if (mFriendPage == null) {
+            mFriendPage = (FriendPage) page;
+        }
+
+        mFriendPage.performClickTDotIfNeed(rootInfo);
     }
 }

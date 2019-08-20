@@ -6,11 +6,15 @@ import android.view.accessibility.AccessibilityNodeInfo;
 import androidx.annotation.NonNull;
 import com.daoshengwanwu.android.util.CustomCollectionUtils;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 
 public class FriendPage extends Page {
-    private List<AccessibilityNodeInfo> mTDotIVInfos;
+    private Set<String> mAlreadyYesSet = new HashSet<>();
+    private List<FriendItem> mFriendItems = new ArrayList<>();
 
 
     public static boolean isSelf(AccessibilityNodeInfo rootInfo) {
@@ -42,16 +46,66 @@ public class FriendPage extends Page {
 
     @Override
     public void bindData(@NonNull AccessibilityNodeInfo rootInfo) {
-        mTDotIVInfos = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/eop");
+        mFriendItems.clear();
+
+        List<AccessibilityNodeInfo> tDotInfos = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/eop");
+        List<AccessibilityNodeInfo> titleInfos = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/b9i");
+
+        int i = 0;
+        while (i < tDotInfos.size() - 1 && i < titleInfos.size() - 1) {
+            mFriendItems.add(new FriendItem(titleInfos.get(i), tDotInfos.get(i)));
+            i++;
+        }
     }
 
-    public void performAllTDotClick() {
-        if (mTDotIVInfos == null) {
+    public void performClickTDotIfNeed(AccessibilityNodeInfo rootInfo) {
+        List<FriendItem> ori = mFriendItems;
+        mFriendItems = new ArrayList<>();
+        bindData(rootInfo);
+
+        if (equalsList(ori, mFriendItems)) {
             return;
         }
 
-        for (AccessibilityNodeInfo info : mTDotIVInfos) {
-            info.performAction(AccessibilityNodeInfo.ACTION_CLICK);
+        for (FriendItem item : mFriendItems) {
+            if (!mAlreadyYesSet.contains(item.titleInfo.getText() + "")) {
+                item.tDotInfo.performAction(AccessibilityNodeInfo.ACTION_CLICK);
+                mAlreadyYesSet.add(item.titleInfo.getText() + "");
+                return;
+            }
+        }
+    }
+
+    public void reset() {
+        mAlreadyYesSet.clear();
+    }
+
+    private boolean equalsList(List<FriendItem> ori, List<FriendItem> last) {
+        if (ori.size() != last.size()) {
+            return false;
+        }
+
+        for (int i = 0; i < ori.size(); i++) {
+            FriendItem oriItem = ori.get(i);
+            FriendItem lastItem = last.get(i);
+
+            if (!(oriItem.titleInfo.getText() + "").equals(lastItem.titleInfo.getText() + "")) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+
+    private class FriendItem {
+        public AccessibilityNodeInfo titleInfo;
+        public AccessibilityNodeInfo tDotInfo;
+
+
+        public FriendItem(AccessibilityNodeInfo titleInfo, AccessibilityNodeInfo tDotInfo) {
+            this.titleInfo = titleInfo;
+            this.tDotInfo = tDotInfo;
         }
     }
 }
