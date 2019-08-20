@@ -36,6 +36,10 @@ public abstract class Page {
             case PAGE_WECHAT: {
                 return WechatPage.generateFrom(rootInfo);
             }
+
+            case PAGE_FRIEND: {
+                return FriendPage.generateFrom(rootInfo);
+            }
         }
 
         return UnknownPage.generateFrom(rootInfo);
@@ -54,6 +58,8 @@ public abstract class Page {
             return PageId.PAGE_PERSONAL_INTRODUCTION;
         } else if (WechatPage.isSelf(rootInfo)) {
             return PageId.PAGE_WECHAT;
+        } else if (FriendPage.isSelf(rootInfo)) {
+            return PageId.PAGE_FRIEND;
         }
 
         return PageId.PAGE_UNKNOWN;
@@ -74,10 +80,9 @@ public abstract class Page {
         PAGE_CONTACT,
         PAGE_EXPLORE,
         PAGE_SELF,
-        PAGE_SEARCH_FORWARDING,
         PAGE_CHAT,
-        PAGE_CHAT_WITH_CHECKBOX,
         PAGE_LABEL_MEMBERS,
-        PAGE_PERSONAL_INTRODUCTION;
+        PAGE_PERSONAL_INTRODUCTION,
+        PAGE_FRIEND;
     }
 }
