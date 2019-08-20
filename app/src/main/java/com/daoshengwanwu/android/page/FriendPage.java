@@ -19,7 +19,7 @@ public class FriendPage extends Page {
             return false;
         }
 
-        String des = rst.get(0).getContentDescription() + "";
+        String des = rst.get(0).getParent().getContentDescription() + "";
         if (TextUtils.isEmpty(des) || "null".equals(des)) {
             return false;
         }
