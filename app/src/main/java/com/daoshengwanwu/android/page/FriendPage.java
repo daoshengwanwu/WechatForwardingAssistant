@@ -13,7 +13,6 @@ import java.util.Set;
 
 
 public class FriendPage extends Page {
-    private Set<String> mAlreadyYesSet = new HashSet<>();
     private List<FriendItem> mFriendItems = new ArrayList<>();
 
 
@@ -51,8 +50,8 @@ public class FriendPage extends Page {
         List<AccessibilityNodeInfo> tDotInfos = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/eop");
         List<AccessibilityNodeInfo> titleInfos = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/b9i");
 
-        int i = 0;
-        while (i < tDotInfos.size() - 1 && i < titleInfos.size() - 1) {
+        int i = 1;
+        while (i < tDotInfos.size() && i < titleInfos.size()) {
             mFriendItems.add(new FriendItem(titleInfos.get(i), tDotInfos.get(i)));
             i++;
         }
@@ -68,16 +67,9 @@ public class FriendPage extends Page {
         }
 
         for (FriendItem item : mFriendItems) {
-            if (!mAlreadyYesSet.contains(item.titleInfo.getText() + "")) {
-                item.tDotInfo.performAction(AccessibilityNodeInfo.ACTION_CLICK);
-                mAlreadyYesSet.add(item.titleInfo.getText() + "");
-                return;
-            }
+            item.tDotInfo.performAction(AccessibilityNodeInfo.ACTION_CLICK);
+            return;
         }
-    }
-
-    public void reset() {
-        mAlreadyYesSet.clear();
     }
 
     private boolean equalsList(List<FriendItem> ori, List<FriendItem> last) {
