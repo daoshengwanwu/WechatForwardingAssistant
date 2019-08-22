@@ -13,7 +13,6 @@ import java.util.Set;
 
 
 public class FriendPage extends Page {
-    private Set<String> mAlreadyYesSet = new HashSet<>();
     private List<FriendItem> mFriendItems = new ArrayList<>();
 
 
@@ -68,16 +67,9 @@ public class FriendPage extends Page {
         }
 
         for (FriendItem item : mFriendItems) {
-            if (!mAlreadyYesSet.contains(item.titleInfo.getText() + "")) {
-                item.tDotInfo.performAction(AccessibilityNodeInfo.ACTION_CLICK);
-                mAlreadyYesSet.add(item.titleInfo.getText() + "");
-                return;
-            }
+            item.tDotInfo.performAction(AccessibilityNodeInfo.ACTION_CLICK);
+            return;
         }
-    }
-
-    public void reset() {
-        mAlreadyYesSet.clear();
     }
 
     private boolean equalsList(List<FriendItem> ori, List<FriendItem> last) {
