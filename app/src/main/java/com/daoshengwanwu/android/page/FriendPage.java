@@ -14,6 +14,9 @@ import java.util.Set;
 
 public class FriendPage extends Page {
     private List<FriendItem> mFriendItems = new ArrayList<>();
+    private AccessibilityNodeInfo mCommentContainerInfo;
+    private AccessibilityNodeInfo mCommentInfo;
+    private AccessibilityNodeInfo mYesInfo;
 
 
     public static boolean isSelf(AccessibilityNodeInfo rootInfo) {
@@ -51,18 +54,42 @@ public class FriendPage extends Page {
         List<AccessibilityNodeInfo> titleInfos = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/b9i");
 
         int i = 1;
-        while (i < tDotInfos.size() - 1 && i < titleInfos.size() - 1) {
+        while (i < tDotInfos.size()&& i < titleInfos.size()) {
             mFriendItems.add(new FriendItem(titleInfos.get(i), tDotInfos.get(i)));
             i++;
+        }
+
+        List<AccessibilityNodeInfo> rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/mv");
+        if (!CustomCollectionUtils.isListEmpty(rst)) {
+            mCommentContainerInfo = rst.get(0);
+        } else {
+            mCommentContainerInfo = null;
+        }
+
+        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/eoc");
+        if (!CustomCollectionUtils.isListEmpty(rst)) {
+            mYesInfo = rst.get(0);
+        } else {
+            mYesInfo = null;
+        }
+
+        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/eof");
+        if (!CustomCollectionUtils.isListEmpty(rst)) {
+            mCommentInfo = rst.get(0);
+        } else {
+            mCommentInfo = null;
         }
     }
 
     public void performClickTDotIfNeed(AccessibilityNodeInfo rootInfo) {
-        List<FriendItem> ori = mFriendItems;
-        mFriendItems = new ArrayList<>();
         bindData(rootInfo);
 
-        if (equalsList(ori, mFriendItems)) {
+        if (mCommentContainerInfo != null &&
+                mYesInfo != null &&
+                (mYesInfo.getText() + "").equals("赞") &&
+                mCommentInfo != null &&
+                (mCommentInfo.getText() + "").equals("评论")) {
+
             return;
         }
 
@@ -70,23 +97,6 @@ public class FriendPage extends Page {
             item.tDotInfo.performAction(AccessibilityNodeInfo.ACTION_CLICK);
             return;
         }
-    }
-
-    private boolean equalsList(List<FriendItem> ori, List<FriendItem> last) {
-        if (ori.size() != last.size()) {
-            return false;
-        }
-
-        for (int i = 0; i < ori.size(); i++) {
-            FriendItem oriItem = ori.get(i);
-            FriendItem lastItem = last.get(i);
-
-            if (!(oriItem.titleInfo.getText() + "").equals(lastItem.titleInfo.getText() + "")) {
-                return false;
-            }
-        }
-
-        return true;
     }
 
 
