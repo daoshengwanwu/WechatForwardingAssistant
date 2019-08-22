@@ -51,7 +51,7 @@ public class FriendPage extends Page {
         List<AccessibilityNodeInfo> tDotInfos = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/eop");
         List<AccessibilityNodeInfo> titleInfos = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/b9i");
 
-        int i = 0;
+        int i = 1;
         while (i < tDotInfos.size() - 1 && i < titleInfos.size() - 1) {
             mFriendItems.add(new FriendItem(titleInfos.get(i), tDotInfos.get(i)));
             i++;
