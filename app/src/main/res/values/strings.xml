@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">微信群发助手</string>
+    <string name="app_name">微信助手</string>
     <string name="auxiliary_service_description">帮助用户在微信中群发消息，群发消息前会自动拼接对方的称呼</string>
     <string name="failure_text_get_root_info">获取根节点信息失败</string>
 </resources>
