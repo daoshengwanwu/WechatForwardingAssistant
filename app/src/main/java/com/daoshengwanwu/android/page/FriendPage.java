@@ -86,7 +86,7 @@ public class FriendPage extends Page {
 
         if (mCommentContainerInfo != null &&
                 mYesInfo != null &&
-                (mYesInfo.getText() + "").equals("赞") &&
+                ((mYesInfo.getText() + "").equals("赞") || (mYesInfo.getText() + "").equals("取消")) &&
                 mCommentInfo != null &&
                 (mCommentInfo.getText() + "").equals("评论")) {
 
