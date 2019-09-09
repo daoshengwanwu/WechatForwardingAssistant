@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import com.daoshengwanwu.android.R;
 import com.daoshengwanwu.android.model.ShareData;
+import com.daoshengwanwu.android.task.Task;
 
 
 public class CleanActivity extends AppCompatActivity {
@@ -44,5 +45,8 @@ public class CleanActivity extends AppCompatActivity {
                 }
             }
         });
+
+        mIsStart = mShareData.getActiveTask() != null && mShareData.getActiveTask().getTaskId() == Task.TaskId.TASK_CLEAN;
+        mCleanBtn.setText(mIsStart ? "关闭自动选中复选框" : "开启自动选中复选框");
     }
 }

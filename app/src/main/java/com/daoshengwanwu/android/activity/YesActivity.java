@@ -40,5 +40,7 @@ public class YesActivity extends AppCompatActivity {
                 }
             }
         });
+
+        mButton.setText(mShareData.getActiveTask() != null && mShareData.getActiveTask().getTaskId() == Task.TaskId.TASK_YES ? "关闭点赞" : "激活点赞");
     }
 }
