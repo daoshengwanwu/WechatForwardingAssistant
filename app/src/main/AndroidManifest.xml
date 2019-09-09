@@ -14,7 +14,7 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
         <activity android:name=".activity.YesActivity"
-        android:label="点赞助手">
+        android:label="点赞">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -23,7 +23,7 @@
         </activity>
         <activity
                 android:name=".activity.CleanActivity"
-                android:label="清理插件">
+                android:label="清理">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -34,7 +34,7 @@
         </activity>
         <activity
                 android:name=".activity.UITaskListActivity"
-                android:label="群发助手">
+                android:label="群发">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 

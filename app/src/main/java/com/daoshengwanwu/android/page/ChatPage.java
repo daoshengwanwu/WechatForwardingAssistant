@@ -55,16 +55,14 @@ public class ChatPage extends Page {
         List<AccessibilityNodeInfo> rst;
 
         rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/l3");
-        if (CustomCollectionUtils.isListEmpty(rst)) {
-            throw new RuntimeException("没有找到聊天页面的后退按钮");
+        if (!CustomCollectionUtils.isListEmpty(rst)) {
+            mBackInfo = rst.get(0);
         }
-        mBackInfo = rst.get(0);
 
         rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/l5");
-        if (CustomCollectionUtils.isListEmpty(rst)) {
-            throw new RuntimeException("沒有找到聊天頁面的title info");
+        if (!CustomCollectionUtils.isListEmpty(rst)) {
+            mTitleInfo = rst.get(0);
         }
-        mTitleInfo = rst.get(0);
 
         rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/aom");
         if (!CustomCollectionUtils.isListEmpty(rst)) {
@@ -117,16 +115,24 @@ public class ChatPage extends Page {
     public void performAllCheck() {
         if (mCheckBoxInfos != null) {
             for (AccessibilityNodeInfo info : mCheckBoxInfos) {
-                if (!info.isChecked()) {
-                    AccessibilityNodeInfo parent = info.getParent();
-                    if (parent == null) {
-                        return;
+                if (info.isChecked()) {
+                    break;
+                }
+
+                AccessibilityNodeInfo parent = info.getParent();
+                if (parent == null) {
+                    return;
+                }
+
+                int childCount = parent.getChildCount();
+                for (int i = 0; i < childCount; i++) {
+                    AccessibilityNodeInfo childI = parent.getChild(i);
+                    if (childI == null) {
+                        break;
                     }
 
-                    if (parent.getChildCount() == 3 || parent.getChildCount() == 4) {
-                        parent.getChild(0).performAction(AccessibilityNodeInfo.ACTION_CLICK);
-                    } else if (parent.getChildCount() == 5){
-                        parent.getChild(1).performAction(AccessibilityNodeInfo.ACTION_CLICK);
+                    if ("android.view.View".equals(childI.getClassName() + "")) {
+                        childI.performAction(AccessibilityNodeInfo.ACTION_CLICK);
                     }
                 }
             }
