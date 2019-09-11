@@ -45,10 +45,9 @@ public class ContactPage extends Page {
         mContactInfos = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/ol");
 
         List<AccessibilityNodeInfo> rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/nn");
-        if (CustomCollectionUtils.isListEmpty(rst)) {
-            throw new RuntimeException("没有找到联系人界面的ListView程序意外终止");
+        if (!CustomCollectionUtils.isListEmpty(rst)) {
+            mListInfo = rst.get(0);
         }
-        mListInfo = rst.get(0);
     }
 
     public boolean performForwardingScrollListView() {

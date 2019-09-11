@@ -61,10 +61,9 @@ public class PersonalIntroductionPage extends Page {
         List<AccessibilityNodeInfo> rst;
 
         rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/lb");
-        if (CustomCollectionUtils.isListEmpty(rst)) {
-            throw new RuntimeException("無法找到PersonalIntroduction頁面的後退按鈕");
+        if (!CustomCollectionUtils.isListEmpty(rst)) {
+            mBackInfo = rst.get(0);
         }
-        mBackInfo = rst.get(0);
 
         rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/dwb");
         if (!CustomCollectionUtils.isListEmpty(rst)) {
@@ -72,16 +71,13 @@ public class PersonalIntroductionPage extends Page {
         }
 
         rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/cw");
-        if (CustomCollectionUtils.isListEmpty(rst)) {
-            throw new RuntimeException("無法找到PersonalIntroduction頁面的發消息按鈕");
+        if (!CustomCollectionUtils.isListEmpty(rst)) {
+            mSendMessageInfo = rst.get(0).getParent();
         }
-        mSendMessageInfo = rst.get(0).getParent();
-
         rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/b7r");
-        if (CustomCollectionUtils.isListEmpty(rst)) {
-            throw new RuntimeException("PersonalIntroduction頁面title info 無法找到");
+        if (!CustomCollectionUtils.isListEmpty(rst)) {
+            mTitleInfo = rst.get(0);
         }
-        mTitleInfo = rst.get(0);
     }
 
     public String getTitle() {

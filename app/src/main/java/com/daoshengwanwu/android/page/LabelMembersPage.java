@@ -103,9 +103,5 @@ public class LabelMembersPage extends Page {
 
         rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/e_x");
         mTextInfos = rst;
-
-        if (mBackInfo == null || mListInfo == null || mTextInfos == null) {
-            throw new RuntimeException("出现意外错误，为避免行为不可控，程序自行终止");
-        }
     }
 }

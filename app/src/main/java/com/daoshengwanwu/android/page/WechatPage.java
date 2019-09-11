@@ -45,7 +45,7 @@ public class WechatPage extends Page {
 
         rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/sh");
         if (CustomCollectionUtils.isListEmpty(rst) || rst.size() != 4) {
-            throw new RuntimeException("在WechatPage页面没有找到ContactTabInfo，程序意外终止");
+            return;
         }
 
         mContactTabInfo = rst.get(1).getParent();
