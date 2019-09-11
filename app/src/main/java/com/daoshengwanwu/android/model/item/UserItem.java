@@ -62,13 +62,12 @@ public final class UserItem implements Comparable<UserItem> {
             return false;
         }
 
-        return fullNickName.equals(((UserItem)obj).fullNickName) &&
-                labelText.equals(((UserItem)obj).labelText);
+        return fullNickName.equals(((UserItem)obj).fullNickName);
     }
 
     @Override
     public int hashCode() {
-        return fullNickName.hashCode() * 31 + labelText.hashCode();
+        return fullNickName.hashCode();
     }
 
     @NonNull
