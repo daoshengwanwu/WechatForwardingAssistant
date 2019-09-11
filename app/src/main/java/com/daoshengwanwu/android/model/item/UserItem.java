@@ -5,8 +5,42 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.daoshengwanwu.android.util.CustomTextUtils;
 
+import net.sourceforge.pinyin4j.PinyinHelper;
+import net.sourceforge.pinyin4j.format.HanyuPinyinCaseType;
+import net.sourceforge.pinyin4j.format.HanyuPinyinOutputFormat;
+import net.sourceforge.pinyin4j.format.HanyuPinyinToneType;
+import net.sourceforge.pinyin4j.format.exception.BadHanyuPinyinOutputFormatCombination;
+
 
 public final class UserItem implements Comparable<UserItem> {
+    public static String converterToPinyin(String chines) {
+        HanyuPinyinOutputFormat defaultFormat = new HanyuPinyinOutputFormat();
+        defaultFormat.setCaseType(HanyuPinyinCaseType.LOWERCASE);
+        defaultFormat.setToneType(HanyuPinyinToneType.WITHOUT_TONE);
+
+        StringBuilder pinyinName = new StringBuilder();
+        char[] nameChar = chines.toCharArray();
+        for (int i = 0; i < nameChar.length; i++) {
+            if (nameChar[i] > 128) {
+                try {
+                    String[] strs = PinyinHelper.toHanyuPinyinStringArray(nameChar[i], defaultFormat);
+                    if (strs != null) {
+                        for (String str : strs) {
+                            pinyinName.append(str);
+                        }
+                    }
+                } catch (BadHanyuPinyinOutputFormatCombination e) {
+                    e.printStackTrace();
+                }
+            } else {
+                pinyinName.append(nameChar[i]);
+            }
+        }
+
+        return pinyinName.toString();
+    }
+
+
     public final String labelText;
     public final String fullNickName;
 
@@ -49,6 +83,7 @@ public final class UserItem implements Comparable<UserItem> {
             return 1;
         }
 
-        return (labelText + fullNickName).compareTo(o.labelText + fullNickName);
+        return converterToPinyin(fullNickName + labelText)
+                .compareTo(converterToPinyin(o.fullNickName + o.labelText));
     }
 }
