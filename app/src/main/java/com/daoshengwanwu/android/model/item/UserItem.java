@@ -6,7 +6,7 @@ import androidx.annotation.Nullable;
 import com.daoshengwanwu.android.util.CustomTextUtils;
 
 
-public final class UserItem {
+public final class UserItem implements Comparable<UserItem> {
     public final String labelText;
     public final String fullNickName;
 
@@ -41,5 +41,14 @@ public final class UserItem {
     @Override
     public String toString() {
         return fullNickName;
+    }
+
+    @Override
+    public int compareTo(UserItem o) {
+        if (o == null) {
+            return 1;
+        }
+
+        return (labelText + fullNickName).compareTo(o.labelText + fullNickName);
     }
 }

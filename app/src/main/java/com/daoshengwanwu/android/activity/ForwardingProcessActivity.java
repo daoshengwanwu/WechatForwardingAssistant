@@ -23,6 +23,7 @@ import com.daoshengwanwu.android.task.ForwardingTask;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -211,6 +212,7 @@ public class ForwardingProcessActivity extends AppCompatActivity {
                 mUserItems = new ArrayList<>();
             } else {
                 mUserItems = new ArrayList<>(mUserGroup.getUserItems());
+                Collections.sort(mUserItems);
             }
 
             notifyDataSetChanged();

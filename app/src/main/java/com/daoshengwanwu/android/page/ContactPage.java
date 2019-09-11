@@ -58,14 +58,14 @@ public class ContactPage extends Page {
         return mListInfo.performAction(AccessibilityNodeInfo.ACTION_SCROLL_BACKWARD);
     }
 
-    public FindResult findFirstInfoInSpecificSet(Set<UserItem> set) {
+    public FindResult findFirstInfoInSpecificSet(List<UserItem> list) {
         if (mContactInfos == null) {
             return null;
         }
 
         for (AccessibilityNodeInfo info : mContactInfos) {
             String title = info.getText() + "";
-            UserItem item = getByFullNickname(set, title);
+            UserItem item = getByFullNickname(list, title);
             if (item != null) {
                 return new FindResult(info.getParent().getParent(), item);
             }
@@ -88,7 +88,7 @@ public class ContactPage extends Page {
         return false;
     }
 
-    private UserItem getByFullNickname(Set<UserItem> userItems, String fullNickname) {
+    private UserItem getByFullNickname(List<UserItem> userItems, String fullNickname) {
         if (userItems == null || fullNickname == null) {
             return null;
         }

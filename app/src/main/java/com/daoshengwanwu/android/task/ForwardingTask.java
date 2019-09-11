@@ -12,13 +12,15 @@ import com.daoshengwanwu.android.model.item.UserItem;
 import com.daoshengwanwu.android.page.*;
 import com.daoshengwanwu.android.util.SingleSubThreadUtil;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
-import java.util.Set;
+import java.util.List;
 
 
 public class ForwardingTask extends Task {
     private Context mContext;
-    private Set<UserItem> mToForwardingSet;
+    private List<UserItem> mToForwardingList;
     private UserGroup mUserGroup;
     private UserItem mCurSendingTarget;
     private int mCurScrollDirection = Direction.FORWARD;
@@ -39,7 +41,9 @@ public class ForwardingTask extends Task {
 
         mContext = context;
         mUserGroup = group;
-        mToForwardingSet = mUserGroup.getUserItems();
+        mToForwardingList = new ArrayList<>(mUserGroup.getUserItems());
+        Collections.sort(mToForwardingList);
+
         mContent = content;
         mListener = listener;
         mOriginCount = group.getUserItems().size();
@@ -67,7 +71,7 @@ public class ForwardingTask extends Task {
             return;
         }
 
-        if (mOriginCount - mToForwardingSet.size() == 1 && mToForwardingSet.size() > 0) {
+        if (mOriginCount - mToForwardingList.size() == 1 && mToForwardingList.size() > 0) {
             ShareData.getInstance().pauseForwardingTask();
             SingleSubThreadUtil.showToast(mContext, "已自动暂停", Toast.LENGTH_LONG);
             mOriginCount = -1;
@@ -91,7 +95,7 @@ public class ForwardingTask extends Task {
         if (page.getPageId() == Page.PageId.PAGE_CONTACT) {
             ContactPage contactPage = (ContactPage) page;
 
-            ContactPage.FindResult findResult = contactPage.findFirstInfoInSpecificSet(mToForwardingSet);
+            ContactPage.FindResult findResult = contactPage.findFirstInfoInSpecificSet(mToForwardingList);
             if (findResult != null) {
                 SystemClock.sleep(100);
                 if (findResult.info.performAction(AccessibilityNodeInfo.ACTION_CLICK)) {
@@ -99,7 +103,7 @@ public class ForwardingTask extends Task {
                 }
             }
 
-            if (mToForwardingSet.isEmpty()) {
+            if (mToForwardingList.isEmpty()) {
                 SingleSubThreadUtil.showToast(mContext, "群发任务完成", Toast.LENGTH_SHORT);
                 mIsTaskFinished = true;
                 if (mListener != null) {
@@ -162,7 +166,8 @@ public class ForwardingTask extends Task {
                 return;
             }
 
-            mToForwardingSet.remove(mCurSendingTarget);
+            mToForwardingList.remove(mCurSendingTarget);
+            mUserGroup.getUserItems().remove(mCurSendingTarget);
             chatPage.performBack();
         }
     }
@@ -172,12 +177,13 @@ public class ForwardingTask extends Task {
     }
 
     private void removeUserItemByFullnickname(String fullNickname) {
-        Iterator<UserItem> itemIterator = mToForwardingSet.iterator();
+        Iterator<UserItem> itemIterator = mToForwardingList.iterator();
 
         while (itemIterator.hasNext()) {
             UserItem item = itemIterator.next();
             if (item.fullNickName.equals(fullNickname)) {
                 itemIterator.remove();
+                mUserGroup.getUserItems().remove(item);
                 return;
             }
         }
