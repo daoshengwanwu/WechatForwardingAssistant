@@ -71,7 +71,7 @@ public class ForwardingTask extends Task {
             return;
         }
 
-        if (mOriginCount - mToForwardingList.size() == 1 && mToForwardingList.size() > 0) {
+        if ((mOriginCount - mToForwardingList.size() == 1) && mToForwardingList.size() > 0) {
             ShareData.getInstance().pauseForwardingTask();
             SingleSubThreadUtil.showToast(mContext, "已自动暂停", Toast.LENGTH_LONG);
             mOriginCount = -1;
