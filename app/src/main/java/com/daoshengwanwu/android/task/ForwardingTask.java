@@ -10,6 +10,7 @@ import com.daoshengwanwu.android.model.ShareData;
 import com.daoshengwanwu.android.model.UserGroup;
 import com.daoshengwanwu.android.model.item.UserItem;
 import com.daoshengwanwu.android.page.*;
+import com.daoshengwanwu.android.util.ActionPerformer;
 import com.daoshengwanwu.android.util.SingleSubThreadUtil;
 
 import java.util.ArrayList;
@@ -98,7 +99,7 @@ public class ForwardingTask extends Task {
             ContactPage.FindResult findResult = contactPage.findFirstInfoInSpecificSet(mToForwardingList);
             if (findResult != null) {
                 SystemClock.sleep(100);
-                if (findResult.info.performAction(AccessibilityNodeInfo.ACTION_CLICK)) {
+                if (ActionPerformer.performAction(findResult.info, AccessibilityNodeInfo.ACTION_CLICK, "对联系人界面的item执行点击")) {
                     mCurSendingTarget = findResult.item;
                 }
             }
