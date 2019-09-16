@@ -46,6 +46,7 @@ public final class UserItem implements Comparable<UserItem> {
 
     public final String surname;
     public final String name;
+    public final String pinyin;
 
 
     public UserItem(String nickName, String labelText) {
@@ -54,6 +55,8 @@ public final class UserItem implements Comparable<UserItem> {
 
         this.surname = CustomTextUtils.getSurname(nickName);
         this.name = CustomTextUtils.getName(nickName);
+
+        pinyin = converterToPinyin(fullNickName + labelText);
     }
 
     @Override
@@ -82,7 +85,6 @@ public final class UserItem implements Comparable<UserItem> {
             return 1;
         }
 
-        return converterToPinyin(fullNickName + labelText)
-                .compareTo(converterToPinyin(o.fullNickName + o.labelText));
+        return pinyin.compareTo(o.pinyin);
     }
 }
