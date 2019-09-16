@@ -143,7 +143,7 @@ public class ForwardingTask extends Task {
 
             if (!personalIntroductionPage.performClickSendMessageInfo()) {
                 personalIntroductionPage.bindData(rootInfo);
-                execute(rootInfo);
+                personalIntroductionPage.performClickSendMessageInfo();
             }
 
             return;
