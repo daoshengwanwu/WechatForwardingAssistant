@@ -13,8 +13,6 @@ import com.daoshengwanwu.android.page.*;
 import com.daoshengwanwu.android.util.ActionPerformer;
 import com.daoshengwanwu.android.util.SingleSubThreadUtil;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -42,8 +40,7 @@ public class ForwardingTask extends Task {
 
         mContext = context;
         mUserGroup = group;
-        mToForwardingList = new ArrayList<>(mUserGroup.getUserItems());
-        Collections.sort(mToForwardingList);
+        mToForwardingList = mUserGroup.getUserItems();
 
         mContent = content;
         mListener = listener;
@@ -168,7 +165,6 @@ public class ForwardingTask extends Task {
             }
 
             mToForwardingList.remove(mCurSendingTarget);
-            mUserGroup.getUserItems().remove(mCurSendingTarget);
             chatPage.performBack();
         }
     }

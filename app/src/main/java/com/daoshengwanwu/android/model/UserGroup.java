@@ -10,7 +10,8 @@ import java.util.*;
 public class UserGroup {
     private final UUID mUUID;
     private String mGroupName;
-    private final Set<UserItem> mUserItems = new HashSet<>();
+    private final Set<UserItem> mMergeSet = new HashSet<>();
+    private final List<UserItem> mUserItemList = new ArrayList<>();
 
 
     UserGroup(String groupName) {
@@ -21,19 +22,37 @@ public class UserGroup {
     UserGroup(UserGroup group) {
         mUUID = UUID.fromString(group.mUUID.toString());
         mGroupName = group.mGroupName;
-        mUserItems.addAll(group.getUserItems());
+        mUserItemList.addAll(group.getUserItems());
     }
 
     public void mergeUserItems(UserGroup group) {
-        mUserItems.addAll(group.getUserItems());
+        mMergeSet.clear();
+        mMergeSet.addAll(mUserItemList);
+        mMergeSet.addAll(group.mUserItemList);
+
+        mUserItemList.clear();
+        mUserItemList.addAll(mMergeSet);
+
+        mMergeSet.clear();
+
+        sortUserItems();
     }
 
     public void mergeUserItems(Set<UserItem> userItems) {
-        mUserItems.addAll(userItems);
+        mMergeSet.clear();
+        mMergeSet.addAll(mUserItemList);
+        mMergeSet.addAll(userItems);
+
+        mUserItemList.clear();
+        mUserItemList.addAll(mMergeSet);
+
+        mMergeSet.clear();
+
+        sortUserItems();
     }
 
-    public Set<UserItem> getUserItems() {
-        return mUserItems;
+    public List<UserItem> getUserItems() {
+        return mUserItemList;
     }
 
     public UUID getUUID() {
@@ -49,7 +68,7 @@ public class UserGroup {
     }
 
     public UserItem getUserItem(String fullNickname, String labelText) {
-        for (UserItem item : mUserItems) {
+        for (UserItem item : mUserItemList) {
             if (item.fullNickName.equals(fullNickname) && item.labelText.equals(labelText)) {
                 return item;
             }
@@ -59,16 +78,20 @@ public class UserGroup {
     }
 
     public void removeUserItem(String fullNickname, String labelText) {
-        mUserItems.remove(getUserItem(fullNickname, labelText));
+        mUserItemList.remove(getUserItem(fullNickname, labelText));
     }
 
     public int size() {
-        return mUserItems.size();
+        return mUserItemList.size();
     }
 
     @NonNull
     @Override
     public String toString() {
-        return mGroupName + mUserItems.toString();
+        return mGroupName + mUserItemList.toString();
+    }
+
+    private void sortUserItems() {
+        Collections.sort(mUserItemList);
     }
 }

@@ -64,10 +64,20 @@ public class ForwardingProcessActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_forwarding_process);
 
-        UUID groupId = UUID.fromString(getIntent().getStringExtra(EXTRA_GROUP_ID));
-        mUserGroup = mUserGroupLab.getCloneUserItemsByUUID(groupId);
-        mForwardingContent = getIntent().getStringExtra(EXTRA_FORWARDING_CONTENT);
+        setupView();
+        initData();
+    }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (ShareData.getInstance().mIsForwardingPause) {
+            mStatus = ForwardingStatus.PAUSED;
+        }
+        updateView();
+    }
+
+    private void setupView() {
         mStatusTV = findViewById(R.id.status_tv);
         mStartStopBtn = findViewById(R.id.start_stop_btn);
         mPauseResumeBtn = findViewById(R.id.pause_resume_btn);
@@ -133,13 +143,10 @@ public class ForwardingProcessActivity extends AppCompatActivity {
         });
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        if (ShareData.getInstance().mIsForwardingPause) {
-            mStatus = ForwardingStatus.PAUSED;
-        }
-        updateView();
+    private void initData() {
+        UUID groupId = UUID.fromString(getIntent().getStringExtra(EXTRA_GROUP_ID));
+        mUserGroup = mUserGroupLab.getCloneUserItemsByUUID(groupId);
+        mForwardingContent = getIntent().getStringExtra(EXTRA_FORWARDING_CONTENT);
     }
 
     private void updateView() {
@@ -175,7 +182,6 @@ public class ForwardingProcessActivity extends AppCompatActivity {
         }
 
         mRemainNumTV.setText("剩余人数： " + (mUserGroup == null ? 0 : mUserGroup.size()));
-
         mAdapter.updateData();
     }
 
@@ -211,8 +217,7 @@ public class ForwardingProcessActivity extends AppCompatActivity {
             if (mUserGroup == null) {
                 mUserItems = new ArrayList<>();
             } else {
-                mUserItems = new ArrayList<>(mUserGroup.getUserItems());
-                Collections.sort(mUserItems);
+                mUserItems = mUserGroup.getUserItems();
             }
 
             notifyDataSetChanged();

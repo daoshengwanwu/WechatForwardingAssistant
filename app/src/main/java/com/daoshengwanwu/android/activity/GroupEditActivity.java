@@ -314,7 +314,7 @@ public class GroupEditActivity extends AppCompatActivity {
                             @Override
                             public void onClick(View v) {
                                 mUserGroup.removeUserItem(mUserItem.fullNickName, mUserItem.labelText);
-                                mUserItems = new ArrayList<>(mUserGroup.getUserItems());
+                                mUserItems = mUserGroup.getUserItems();
                                 updateView();
                                 window.dismiss();
                             }
