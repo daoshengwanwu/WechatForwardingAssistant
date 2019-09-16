@@ -181,7 +181,6 @@ public class ForwardingTask extends Task {
             UserItem item = itemIterator.next();
             if (item.fullNickName.equals(fullNickname)) {
                 itemIterator.remove();
-                mUserGroup.getUserItems().remove(item);
                 return;
             }
         }
