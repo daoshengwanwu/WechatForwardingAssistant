@@ -33,7 +33,11 @@ public final class UserItem implements Comparable<UserItem> {
                     e.printStackTrace();
                 }
             } else {
-                pinyinName.append(nameChar[i]);
+                if (nameChar[i] >= '0' && nameChar[i] <= '9') {
+                    pinyinName.append((char)(nameChar[i] + 75));
+                } else {
+                    pinyinName.append(nameChar[i]);
+                }
             }
         }
 
