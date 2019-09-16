@@ -98,6 +98,7 @@ public class ForwardingTask extends Task {
                 SystemClock.sleep(100);
                 if (ActionPerformer.performAction(findResult.info, AccessibilityNodeInfo.ACTION_CLICK, "对联系人界面的item执行点击")) {
                     mCurSendingTarget = findResult.item;
+                    return;
                 }
             }
 
