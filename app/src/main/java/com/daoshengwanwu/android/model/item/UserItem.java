@@ -60,7 +60,7 @@ public final class UserItem implements Comparable<UserItem> {
         this.surname = CustomTextUtils.getSurname(nickName);
         this.name = CustomTextUtils.getName(nickName);
 
-        pinyin = converterToPinyin(fullNickName + labelText);
+        pinyin = converterToPinyin(fullNickName + labelText).toLowerCase();
     }
 
     @Override
