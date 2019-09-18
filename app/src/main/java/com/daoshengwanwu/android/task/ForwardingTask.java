@@ -95,7 +95,7 @@ public class ForwardingTask extends Task {
 
             ContactPage.FindResult findResult = contactPage.findFirstInfoInSpecificSet(mToForwardingList);
             if (findResult != null) {
-                SystemClock.sleep(100);
+                SystemClock.sleep(50);
                 if (ActionPerformer.performAction(findResult.info, AccessibilityNodeInfo.ACTION_CLICK, "对联系人界面的item执行点击")) {
                     mCurSendingTarget = findResult.item;
                     return;
@@ -113,7 +113,7 @@ public class ForwardingTask extends Task {
 
             if (mCurScrollDirection == Direction.FORWARD) {
                 if (contactPage.performForwardingScrollListView()) {
-                    SystemClock.sleep(200);
+                    SystemClock.sleep(50);
                     return;
                 }
 
@@ -121,7 +121,7 @@ public class ForwardingTask extends Task {
                 execute(rootInfo);
             } else {
                 if (contactPage.performBackwordScrollListView()) {
-                    SystemClock.sleep(200);
+                    SystemClock.sleep(50);
                     return;
                 }
 

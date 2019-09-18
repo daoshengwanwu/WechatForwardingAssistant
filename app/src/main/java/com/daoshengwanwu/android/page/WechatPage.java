@@ -3,6 +3,8 @@ package com.daoshengwanwu.android.page;
 
 import android.view.accessibility.AccessibilityNodeInfo;
 import androidx.annotation.NonNull;
+
+import com.daoshengwanwu.android.util.ActionPerformer;
 import com.daoshengwanwu.android.util.CustomCollectionUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -25,7 +27,7 @@ public class WechatPage extends Page {
         }
 
         AccessibilityNodeInfo titleInfo = rst.get(0);
-        String title = String.valueOf(titleInfo.getText());
+        String title = ActionPerformer.getText(titleInfo, "WechatPage isSelf 中 getText()");
 
         return title.startsWith("微信");
     }
@@ -52,10 +54,9 @@ public class WechatPage extends Page {
     }
 
     public boolean switchToContactPage() {
-        if (mContactTabInfo == null) {
-            return false;
-        }
-
-        return mContactTabInfo.performAction(AccessibilityNodeInfo.ACTION_CLICK);
+        return ActionPerformer.performAction(
+                mContactTabInfo,
+                AccessibilityNodeInfo.ACTION_CLICK,
+                "微信界面点击联系人tab");
     }
 }

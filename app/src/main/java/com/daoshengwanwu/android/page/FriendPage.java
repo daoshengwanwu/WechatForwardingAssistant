@@ -4,6 +4,8 @@ package com.daoshengwanwu.android.page;
 import android.text.TextUtils;
 import android.view.accessibility.AccessibilityNodeInfo;
 import androidx.annotation.NonNull;
+
+import com.daoshengwanwu.android.util.ActionPerformer;
 import com.daoshengwanwu.android.util.CustomCollectionUtils;
 
 import java.util.ArrayList;
@@ -86,17 +88,22 @@ public class FriendPage extends Page {
 
         if (mCommentContainerInfo != null &&
                 mYesInfo != null &&
-                ((mYesInfo.getText() + "").equals("赞") || (mYesInfo.getText() + "").equals("取消")) &&
+                (ActionPerformer.getText(mYesInfo, "朋友圈界面获取赞按钮的text").equals("赞") ||
+                ActionPerformer.getText(mYesInfo, "朋友圈界面获取赞按钮的text").equals("取消")) &&
                 mCommentInfo != null &&
-                (mCommentInfo.getText() + "").equals("评论")) {
+                ActionPerformer.getText(mCommentInfo, "评论Info获取Text").equals("评论")) {
 
             return;
         }
 
-        for (FriendItem item : mFriendItems) {
-            item.tDotInfo.performAction(AccessibilityNodeInfo.ACTION_CLICK);
+        if (mFriendItems == null || mFriendItems.size() <= 0) {
             return;
         }
+
+        ActionPerformer.performAction(
+                mFriendItems.get(0).tDotInfo,
+                AccessibilityNodeInfo.ACTION_CLICK,
+                "朋友圈界面点击三个点");
     }
 
 

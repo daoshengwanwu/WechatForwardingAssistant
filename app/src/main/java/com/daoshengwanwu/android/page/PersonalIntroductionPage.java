@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import android.view.accessibility.AccessibilityNodeInfo;
 import androidx.annotation.NonNull;
 import com.daoshengwanwu.android.model.item.UserItem;
+import com.daoshengwanwu.android.util.ActionPerformer;
 import com.daoshengwanwu.android.util.CustomCollectionUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -81,19 +82,25 @@ public class PersonalIntroductionPage extends Page {
     }
 
     public String getTitle() {
-        return mTitleInfo.getText() + "";
+        return ActionPerformer.getText(mTitleInfo, "PersonalIntroductionPage.getTitle()");
     }
 
     public String getLabelText() {
-        return mLabelInfo == null ? "" : mLabelInfo.getText() + "";
+        return ActionPerformer.getText(mLabelInfo, "PersonalIntroductionPage.getLabelText()");
     }
 
     public void performBack() {
-        mBackInfo.performAction(AccessibilityNodeInfo.ACTION_CLICK);
+        ActionPerformer.performAction(
+                mBackInfo,
+                AccessibilityNodeInfo.ACTION_CLICK,
+                "PersonalIntroductionPage 执行点击后退按钮");
     }
 
     public boolean performClickSendMessageInfo() {
-        return mSendMessageInfo.performAction(AccessibilityNodeInfo.ACTION_CLICK);
+        return ActionPerformer.performAction(
+                mSendMessageInfo,
+                AccessibilityNodeInfo.ACTION_CLICK,
+                "PersonalIntroductionPage 点击发消息按钮");
     }
 
     public boolean isLabelTextInToForwardingSet(Set<UserItem> toForwardingSet) {

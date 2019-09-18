@@ -8,6 +8,7 @@ import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import com.daoshengwanwu.android.model.item.UserItem;
+import com.daoshengwanwu.android.util.ActionPerformer;
 import com.daoshengwanwu.android.util.CustomCollectionUtils;
 import com.daoshengwanwu.android.util.SingleSubThreadUtil;
 import org.jetbrains.annotations.NotNull;
@@ -30,7 +31,7 @@ public class LabelMembersPage extends Page {
             return false;
         }
         AccessibilityNodeInfo titleInfo = rst.get(0);
-        String title = String.valueOf(titleInfo.getText());
+        String title = String.valueOf(ActionPerformer.getText(titleInfo, "标签界面获取title"));
         if (!"编辑标签".equals(title)) {
             return false;
         }
@@ -40,7 +41,7 @@ public class LabelMembersPage extends Page {
             return false;
         }
         AccessibilityNodeInfo saveBtnInfo = rst.get(0);
-        title = String.valueOf(saveBtnInfo.getText());
+        title = String.valueOf(ActionPerformer.getText(saveBtnInfo, "标签界面保存按钮获取title"));
 
         return "保存".equals(title) && saveBtnInfo.isClickable();
     }
@@ -54,14 +55,14 @@ public class LabelMembersPage extends Page {
     }
 
     public String getLabelText() {
-        return mLabelInfo == null ? "" : mLabelInfo.getText() + "";
+        return ActionPerformer.getText(mLabelInfo, "标签界面获取LabelText");
     }
 
     public Set<UserItem> getUserItems(String labelText) {
         Set<UserItem> rst = new HashSet<>();
 
         for (AccessibilityNodeInfo info : mTextInfos) {
-            String title = info.getText() + "";
+            String title = ActionPerformer.getText(info, "标签界面获取item的标签");
             if (!TextUtils.isEmpty(title)) {
                 rst.add(new UserItem(title, labelText));
             }
@@ -71,13 +72,18 @@ public class LabelMembersPage extends Page {
     }
 
     public boolean scrollListView_forward() {
-        return mListInfo.performAction(AccessibilityNodeInfo.ACTION_SCROLL_FORWARD);
+        return ActionPerformer.performAction(
+                mListInfo,
+                AccessibilityNodeInfo.ACTION_SCROLL_FORWARD,
+                "标签界面执行FORWARD滚动事件");
     }
 
     public void back() {
-        mBackInfo.performAction(AccessibilityNodeInfo.ACTION_CLICK);
+        ActionPerformer.performAction(
+                mBackInfo,
+                AccessibilityNodeInfo.ACTION_CLICK,
+                "标签界面点击后退按钮");
     }
-
 
     private LabelMembersPage() {
         super(PageId.PAGE_LABEL_MEMBERS);

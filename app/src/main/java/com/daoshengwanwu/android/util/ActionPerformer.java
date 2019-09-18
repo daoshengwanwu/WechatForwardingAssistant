@@ -42,4 +42,13 @@ public class ActionPerformer {
 
         return false;
     }
+
+    public static String getText(AccessibilityNodeInfo info, String des) {
+        if (info == null) {
+            Log.d(TAG, "getText: 失败: info为null" + des);
+            return "";
+        }
+
+        return info.getText() == null ? "" : info.getText().toString();
+    }
 }

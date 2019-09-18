@@ -3,6 +3,8 @@ package com.daoshengwanwu.android.page;
 
 import android.view.accessibility.AccessibilityNodeInfo;
 import androidx.annotation.NonNull;
+
+import com.daoshengwanwu.android.util.ActionPerformer;
 import com.daoshengwanwu.android.util.CustomCollectionUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -20,7 +22,7 @@ public class ExplorePage extends Page {
         }
 
         AccessibilityNodeInfo titleInfo = rst.get(0);
-        String title = String.valueOf(titleInfo.getText());
+        String title = String.valueOf(ActionPerformer.getText(titleInfo, "发现界面获取title"));
 
         return title.startsWith("发现");
     }
@@ -54,6 +56,9 @@ public class ExplorePage extends Page {
             return false;
         }
 
-        return mContactTabInfo.performAction(AccessibilityNodeInfo.ACTION_CLICK);
+        return ActionPerformer.performAction(
+                mContactTabInfo,
+                AccessibilityNodeInfo.ACTION_CLICK,
+                "发现界面点击联系人tab");
     }
 }

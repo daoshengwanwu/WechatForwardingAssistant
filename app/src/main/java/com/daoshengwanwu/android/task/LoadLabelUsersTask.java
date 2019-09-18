@@ -2,6 +2,7 @@ package com.daoshengwanwu.android.task;
 
 
 import android.content.Context;
+import android.os.SystemClock;
 import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
@@ -75,11 +76,7 @@ public class LoadLabelUsersTask extends Task {
             lPage.back();
         }
 
-        try {
-            Thread.sleep(200);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        SystemClock.sleep(50);
     }
 
 

@@ -4,6 +4,7 @@ package com.daoshengwanwu.android.page;
 import android.view.accessibility.AccessibilityNodeInfo;
 import androidx.annotation.NonNull;
 import com.daoshengwanwu.android.model.item.UserItem;
+import com.daoshengwanwu.android.util.ActionPerformer;
 import com.daoshengwanwu.android.util.CustomCollectionUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -23,7 +24,7 @@ public class ContactPage extends Page {
         }
 
         AccessibilityNodeInfo titleInfo = rst.get(0);
-        String title = String.valueOf(titleInfo.getText());
+        String title = ActionPerformer.getText(titleInfo, "ContactPage.isSelf::getTitle");
 
         return title.startsWith("通讯录");
     }
@@ -51,11 +52,17 @@ public class ContactPage extends Page {
     }
 
     public boolean performForwardingScrollListView() {
-        return mListInfo.performAction(AccessibilityNodeInfo.ACTION_SCROLL_FORWARD);
+        return ActionPerformer.performAction(
+                mListInfo,
+                AccessibilityNodeInfo.ACTION_SCROLL_FORWARD,
+                "联系人界面执行FORWARD滑动事件");
     }
 
     public boolean performBackwordScrollListView() {
-        return mListInfo.performAction(AccessibilityNodeInfo.ACTION_SCROLL_BACKWARD);
+        return ActionPerformer.performAction(
+                mListInfo,
+                AccessibilityNodeInfo.ACTION_SCROLL_BACKWARD,
+                "联系人界面执行BACKWARD滑动事件");
     }
 
     public FindResult findFirstInfoInSpecificSet(List<UserItem> list) {
@@ -64,7 +71,7 @@ public class ContactPage extends Page {
         }
 
         for (AccessibilityNodeInfo info : mContactInfos) {
-            String title = info.getText() + "";
+            String title = ActionPerformer.getText(info, "ContactPage.findFirstInfoInSpecificSet.getTitle");
             UserItem item = getByFullNickname(list, title);
             if (item != null) {
                 return new FindResult(info.getParent().getParent(), item);
