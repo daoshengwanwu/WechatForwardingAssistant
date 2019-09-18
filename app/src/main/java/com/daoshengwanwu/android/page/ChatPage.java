@@ -89,12 +89,12 @@ public class ChatPage extends Page {
         Bundle arguments = new Bundle();
         arguments.putCharSequence(AccessibilityNodeInfo.ACTION_ARGUMENT_SET_TEXT_CHARSEQUENCE, text);
 
-        return true;
-//        return ActionPerformer.performAction(
-//                mEditTextInfo,
-//                AccessibilityNodeInfo.ACTION_SET_TEXT,
-//                arguments,
-//                "聊天界面设置输入框内容");
+//        return true;
+        return ActionPerformer.performAction(
+                mEditTextInfo,
+                AccessibilityNodeInfo.ACTION_SET_TEXT,
+                arguments,
+                "聊天界面设置输入框内容");
     }
 
     public boolean performClickSendButn(AccessibilityNodeInfo rootInfo) {
@@ -102,8 +102,8 @@ public class ChatPage extends Page {
             bindData(rootInfo);
         }
 
-        return true;
-//        return ActionPerformer.performAction(mSendingBtnInfo, AccessibilityNodeInfo.ACTION_CLICK, "聊天界面点击发送按钮");
+//        return true;
+        return ActionPerformer.performAction(mSendingBtnInfo, AccessibilityNodeInfo.ACTION_CLICK, "聊天界面点击发送按钮");
     }
 
     public boolean isWithCheckBox() {
