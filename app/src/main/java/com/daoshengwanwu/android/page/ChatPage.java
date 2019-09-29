@@ -25,7 +25,7 @@ public class ChatPage extends Page {
     //================================================================================
     public static boolean isSelf(@NonNull AccessibilityNodeInfo rootInfo) {
         //第一个有id的FrameLayout
-        List<AccessibilityNodeInfo> rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/f2z");
+        List<AccessibilityNodeInfo> rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/fcs");
         if (CustomCollectionUtils.isListEmpty(rst)) {
             return false;
         }
@@ -56,31 +56,31 @@ public class ChatPage extends Page {
         List<AccessibilityNodeInfo> rst;
 
         // 后退LinearLayout
-        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/l3");
+        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/lq");
         if (!CustomCollectionUtils.isListEmpty(rst)) {
             mBackInfo = rst.get(0);
         }
 
         // 左上角联系人名字TextView
-        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/l5");
+        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/ls");
         if (!CustomCollectionUtils.isListEmpty(rst)) {
             mTitleInfo = rst.get(0);
         }
 
         // EditText
-        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/aom");
+        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/aqc");
         if (!CustomCollectionUtils.isListEmpty(rst)) {
             mEditTextInfo = rst.get(0);
         }
 
         // 发送按钮
-        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/aot");
+        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/aqj");
         if (!CustomCollectionUtils.isListEmpty(rst)) {
             mSendingBtnInfo = rst.get(0);
         }
 
         // 多选之后的CheckBox
-        mCheckBoxInfos = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/a9");
+        mCheckBoxInfos = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/a_");
     }
     //================================================================================
     //============================= Common End =======================================

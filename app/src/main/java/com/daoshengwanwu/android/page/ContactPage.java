@@ -45,10 +45,10 @@ public class ContactPage extends Page {
     @Override
     public void bindData(@NotNull AccessibilityNodeInfo rootInfo) {
         // 每一个item的有字的View
-        mContactInfos = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/ol");
+        mContactInfos = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/p_");
 
         // ListView
-        List<AccessibilityNodeInfo> rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/nn");
+        List<AccessibilityNodeInfo> rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/ob");
         if (!CustomCollectionUtils.isListEmpty(rst)) {
             mListInfo = rst.get(0);
         }

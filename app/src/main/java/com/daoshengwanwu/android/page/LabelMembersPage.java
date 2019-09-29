@@ -38,7 +38,7 @@ public class LabelMembersPage extends Page {
         }
 
         // 保存按钮
-        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/kz");
+        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/lm");
         if (CustomCollectionUtils.isListEmpty(rst)) {
             return false;
         }
@@ -95,13 +95,13 @@ public class LabelMembersPage extends Page {
     public void bindData(@NotNull AccessibilityNodeInfo rootInfo) {
         List<AccessibilityNodeInfo> rst;
         // 标签名字EditText
-        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/li");
+        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/m6");
         if (!CustomCollectionUtils.isListEmpty(rst)) {
             mLabelInfo = rst.get(0);
         }
 
         // 返回按钮的LinearLayout
-        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/lb");
+        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/lz");
         if (!CustomCollectionUtils.isListEmpty(rst)) {
             mBackInfo = rst.get(0);
         }
@@ -113,7 +113,7 @@ public class LabelMembersPage extends Page {
         }
 
         // 每一个item图片下边的TextView
-        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/e_x");
+        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/eif");
         mTextInfos = rst;
     }
 }
