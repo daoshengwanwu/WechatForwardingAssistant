@@ -21,18 +21,19 @@ public class PersonalIntroductionPage extends Page {
 
 
     public static boolean isSelf(@NonNull AccessibilityNodeInfo rootInfo) {
-        //title
+        //title,也就是显示备注或者昵称的View
         List<AccessibilityNodeInfo> rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/b7r");
         if (CustomCollectionUtils.isListEmpty(rst)) {
             return false;
         }
 
-        //头像
+        //头像ImageView
         rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/b7q");
         if (CustomCollectionUtils.isListEmpty(rst)) {
             return false;
         }
 
+        //微信id TextView
         rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/b7z");
         if (CustomCollectionUtils.isListEmpty(rst)) {
             return false;
@@ -61,20 +62,25 @@ public class PersonalIntroductionPage extends Page {
     public void bindData(@NotNull AccessibilityNodeInfo rootInfo) {
         List<AccessibilityNodeInfo> rst;
 
+        //后退LinearLayout
         rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/lb");
         if (!CustomCollectionUtils.isListEmpty(rst)) {
             mBackInfo = rst.get(0);
         }
 
+        // 标签TextView
         rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/dwb");
         if (!CustomCollectionUtils.isListEmpty(rst)) {
             mLabelInfo = rst.get(0);
         }
 
+        // 发送消息TextView
         rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/cw");
         if (!CustomCollectionUtils.isListEmpty(rst)) {
             mSendMessageInfo = rst.get(0).getParent();
         }
+
+        // title,也就是显示备注或者昵称的View
         rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/b7r");
         if (!CustomCollectionUtils.isListEmpty(rst)) {
             mTitleInfo = rst.get(0);

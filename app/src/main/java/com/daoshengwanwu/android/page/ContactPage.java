@@ -18,6 +18,7 @@ public class ContactPage extends Page {
 
 
     public static boolean isSelf(@NonNull AccessibilityNodeInfo rootInfo) {
+        // 左上角通讯录TextView
         List<AccessibilityNodeInfo> rst = rootInfo.findAccessibilityNodeInfosByViewId("android:id/text1");
         if (CustomCollectionUtils.isListEmpty(rst)) {
             return false;
@@ -43,8 +44,10 @@ public class ContactPage extends Page {
 
     @Override
     public void bindData(@NotNull AccessibilityNodeInfo rootInfo) {
+        // 每一个item的有字的View
         mContactInfos = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/ol");
 
+        // ListView
         List<AccessibilityNodeInfo> rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/nn");
         if (!CustomCollectionUtils.isListEmpty(rst)) {
             mListInfo = rst.get(0);

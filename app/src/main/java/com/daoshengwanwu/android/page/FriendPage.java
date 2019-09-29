@@ -22,6 +22,7 @@ public class FriendPage extends Page {
 
 
     public static boolean isSelf(AccessibilityNodeInfo rootInfo) {
+        // 第一个有id的FrameLayout
         List<AccessibilityNodeInfo> rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/f2z");
         if (CustomCollectionUtils.isListEmpty(rst)) {
             return false;
@@ -52,7 +53,9 @@ public class FriendPage extends Page {
     public void bindData(@NonNull AccessibilityNodeInfo rootInfo) {
         mFriendItems.clear();
 
+        // 三个点ImageView
         List<AccessibilityNodeInfo> tDotInfos = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/eop");
+        // title ImageView
         List<AccessibilityNodeInfo> titleInfos = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/b9i");
 
         int i = 1;
@@ -61,6 +64,7 @@ public class FriendPage extends Page {
             i++;
         }
 
+        //点击三个按钮后弹出的LinearLayout
         List<AccessibilityNodeInfo> rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/mv");
         if (!CustomCollectionUtils.isListEmpty(rst)) {
             mCommentContainerInfo = rst.get(0);
@@ -68,6 +72,7 @@ public class FriendPage extends Page {
             mCommentContainerInfo = null;
         }
 
+        //赞TextView
         rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/eoc");
         if (!CustomCollectionUtils.isListEmpty(rst)) {
             mYesInfo = rst.get(0);
@@ -75,6 +80,7 @@ public class FriendPage extends Page {
             mYesInfo = null;
         }
 
+        //评论TextView
         rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/eof");
         if (!CustomCollectionUtils.isListEmpty(rst)) {
             mCommentInfo = rst.get(0);

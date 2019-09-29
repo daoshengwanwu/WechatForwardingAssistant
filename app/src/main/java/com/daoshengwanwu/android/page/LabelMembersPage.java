@@ -26,6 +26,7 @@ public class LabelMembersPage extends Page {
 
 
     public static boolean isSelf(@NonNull AccessibilityNodeInfo rootInfo) {
+        // 编辑标签 TextView
         List<AccessibilityNodeInfo> rst = rootInfo.findAccessibilityNodeInfosByViewId("android:id/text1");
         if (CustomCollectionUtils.isListEmpty(rst)) {
             return false;
@@ -36,6 +37,7 @@ public class LabelMembersPage extends Page {
             return false;
         }
 
+        // 保存按钮
         rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/kz");
         if (CustomCollectionUtils.isListEmpty(rst)) {
             return false;
@@ -92,21 +94,25 @@ public class LabelMembersPage extends Page {
     @Override
     public void bindData(@NotNull AccessibilityNodeInfo rootInfo) {
         List<AccessibilityNodeInfo> rst;
+        // 标签名字EditText
         rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/li");
         if (!CustomCollectionUtils.isListEmpty(rst)) {
             mLabelInfo = rst.get(0);
         }
 
+        // 返回按钮的LinearLayout
         rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/lb");
         if (!CustomCollectionUtils.isListEmpty(rst)) {
             mBackInfo = rst.get(0);
         }
 
+        // ListView
         rst = rootInfo.findAccessibilityNodeInfosByViewId("android:id/list");
         if (!CustomCollectionUtils.isListEmpty(rst)) {
             mListInfo = rst.get(0);
         }
 
+        // 每一个item图片下边的TextView
         rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/e_x");
         mTextInfos = rst;
     }

@@ -21,6 +21,7 @@ public class WechatPage extends Page {
 
 
     public static boolean isSelf(@NonNull AccessibilityNodeInfo rootInfo) {
+        // 消息记录界面的左上角标题TextView
         List<AccessibilityNodeInfo> rst = rootInfo.findAccessibilityNodeInfosByViewId("android:id/text1");
         if (CustomCollectionUtils.isListEmpty(rst)) {
             return false;
@@ -45,6 +46,7 @@ public class WechatPage extends Page {
     public void bindData(@NotNull AccessibilityNodeInfo rootInfo) {
         List<AccessibilityNodeInfo> rst;
 
+        // 导航栏的ImageView
         rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/sh");
         if (CustomCollectionUtils.isListEmpty(rst) || rst.size() != 4) {
             return;

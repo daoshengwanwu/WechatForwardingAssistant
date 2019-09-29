@@ -16,13 +16,14 @@ public class ExplorePage extends Page {
 
 
     public static boolean isSelf(@NonNull AccessibilityNodeInfo rootInfo) {
+        // 发现页面左上角title的TextView
         List<AccessibilityNodeInfo> rst = rootInfo.findAccessibilityNodeInfosByViewId("android:id/text1");
         if (CustomCollectionUtils.isListEmpty(rst)) {
             return false;
         }
 
         AccessibilityNodeInfo titleInfo = rst.get(0);
-        String title = String.valueOf(ActionPerformer.getText(titleInfo, "发现界面获取title"));
+        String title = ActionPerformer.getText(titleInfo, "发现界面获取title");
 
         return title.startsWith("发现");
     }
@@ -43,6 +44,7 @@ public class ExplorePage extends Page {
     public void bindData(@NotNull AccessibilityNodeInfo rootInfo) {
         List<AccessibilityNodeInfo> rst;
 
+        // 导航栏的Item的ImageView
         rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/sh");
         if (CustomCollectionUtils.isListEmpty(rst) || rst.size() != 4) {
             return;

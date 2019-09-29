@@ -24,6 +24,7 @@ public class ChatPage extends Page {
     //============================= Common Start =====================================
     //================================================================================
     public static boolean isSelf(@NonNull AccessibilityNodeInfo rootInfo) {
+        //第一个有id的FrameLayout
         List<AccessibilityNodeInfo> rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/f2z");
         if (CustomCollectionUtils.isListEmpty(rst)) {
             return false;
@@ -54,26 +55,31 @@ public class ChatPage extends Page {
     public void bindData(@NotNull AccessibilityNodeInfo rootInfo) {
         List<AccessibilityNodeInfo> rst;
 
+        // 后退LinearLayout
         rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/l3");
         if (!CustomCollectionUtils.isListEmpty(rst)) {
             mBackInfo = rst.get(0);
         }
 
+        // 左上角联系人名字TextView
         rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/l5");
         if (!CustomCollectionUtils.isListEmpty(rst)) {
             mTitleInfo = rst.get(0);
         }
 
+        // EditText
         rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/aom");
         if (!CustomCollectionUtils.isListEmpty(rst)) {
             mEditTextInfo = rst.get(0);
         }
 
+        // 发送按钮
         rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/aot");
         if (!CustomCollectionUtils.isListEmpty(rst)) {
             mSendingBtnInfo = rst.get(0);
         }
 
+        // 多选之后的CheckBox
         mCheckBoxInfos = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/a9");
     }
     //================================================================================
