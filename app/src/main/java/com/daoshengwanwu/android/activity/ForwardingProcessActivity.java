@@ -110,6 +110,7 @@ public class ForwardingProcessActivity extends AppCompatActivity {
                                     @Override
                                     public void onForwardingTaskFinished() {
                                         mStatus = ForwardingStatus.FINISHED;
+                                        mShareData.clearData();
                                         updateView();
                                     }
                                 });
