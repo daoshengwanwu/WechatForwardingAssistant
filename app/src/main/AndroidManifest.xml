@@ -14,7 +14,8 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
         <activity android:name=".activity.YesActivity"
-        android:label="点赞">
+        android:label="点赞"
+                android:icon="@drawable/icon_yes">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -23,7 +24,8 @@
         </activity>
         <activity
                 android:name=".activity.CleanActivity"
-                android:label="清理">
+                android:label="清理"
+                android:icon="@drawable/icon_checkbox">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -34,7 +36,8 @@
         </activity>
         <activity
                 android:name=".activity.UITaskListActivity"
-                android:label="群发">
+                android:label="群发"
+                android:icon="@drawable/icon_forwarding">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
