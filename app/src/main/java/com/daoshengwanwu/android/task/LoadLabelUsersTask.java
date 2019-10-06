@@ -76,7 +76,7 @@ public class LoadLabelUsersTask extends Task {
             lPage.back();
         }
 
-        SystemClock.sleep(50);
+        SystemClock.sleep(80);
     }
 
 

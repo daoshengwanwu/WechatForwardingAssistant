@@ -55,7 +55,6 @@ public class AuxiliaryService extends AccessibilityService {
         if (source == null || rootInfo == null) {
             return;
         }
-
         curActivatedTask.execute(rootInfo);
     }
 
