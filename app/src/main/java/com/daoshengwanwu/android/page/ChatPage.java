@@ -17,6 +17,7 @@ public class ChatPage extends Page {
     private AccessibilityNodeInfo mTitleInfo;
     private AccessibilityNodeInfo mEditTextInfo;
     private AccessibilityNodeInfo mSendingBtnInfo;
+    private AccessibilityNodeInfo mMaxSelectDialogTextViewInfo;
     private List<AccessibilityNodeInfo> mCheckBoxInfos;
 
 
@@ -24,19 +25,32 @@ public class ChatPage extends Page {
     //============================= Common Start =====================================
     //================================================================================
     public static boolean isSelf(@NonNull AccessibilityNodeInfo rootInfo) {
+        boolean firstJudgement = true;
+
         //第一个有id的FrameLayout
         List<AccessibilityNodeInfo> rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/fcs");
         if (CustomCollectionUtils.isListEmpty(rst)) {
-            return false;
+            firstJudgement = false;
+        } else {
+            AccessibilityNodeInfo desInfo = rst.get(0).getParent();
+            if (desInfo == null) {
+                firstJudgement = false;
+            } else {
+                String description = String.valueOf(desInfo.getContentDescription());
+                firstJudgement = description.startsWith("当前所在页面,与") && description.endsWith("的聊天");
+            }
         }
 
-        AccessibilityNodeInfo desInfo = rst.get(0).getParent();
-        if (desInfo == null) {
-            return false;
+        boolean secondJudgement = false;
+        // 最多可选择100条信息dialog的textview
+        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/djf");
+        if (!CustomCollectionUtils.isListEmpty(rst)) {
+            AccessibilityNodeInfo nodeInfo = rst.get(0);
+            secondJudgement = nodeInfo != null &&
+                    "最多可选择100条消息".equals(ActionPerformer.getText(nodeInfo, "获取最多选择100条信息弹框的文字"));
         }
 
-        String description = String.valueOf(desInfo.getContentDescription());
-        return description.startsWith("当前所在页面,与") && description.endsWith("的聊天");
+        return firstJudgement || secondJudgement;
     }
 
     public static ChatPage generateFrom(AccessibilityNodeInfo rootInfo) {
@@ -81,6 +95,12 @@ public class ChatPage extends Page {
 
         // 多选之后的CheckBox
         mCheckBoxInfos = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/a_");
+
+        // 最多可选择100条信息dialog的textview
+        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/djf");
+        if (!CustomCollectionUtils.isListEmpty(rst)) {
+            mMaxSelectDialogTextViewInfo = rst.get(0);
+        }
     }
     //================================================================================
     //============================= Common End =======================================
@@ -95,7 +115,6 @@ public class ChatPage extends Page {
         Bundle arguments = new Bundle();
         arguments.putCharSequence(AccessibilityNodeInfo.ACTION_ARGUMENT_SET_TEXT_CHARSEQUENCE, text);
 
-//        return true;
         return ActionPerformer.performAction(
                 mEditTextInfo,
                 AccessibilityNodeInfo.ACTION_SET_TEXT,
@@ -108,12 +127,16 @@ public class ChatPage extends Page {
             bindData(rootInfo);
         }
 
-//        return true;
         return ActionPerformer.performAction(mSendingBtnInfo, AccessibilityNodeInfo.ACTION_CLICK, "聊天界面点击发送按钮");
     }
 
     public boolean isWithCheckBox() {
         return mCheckBoxInfos != null && mCheckBoxInfos.size() > 0;
+    }
+
+    public boolean isWithMaxCheckDialog() {
+        return mMaxSelectDialogTextViewInfo != null &&
+                "最多可选择100条消息".equals(ActionPerformer.getText(mMaxSelectDialogTextViewInfo, "获取最多选择100条信息弹框的文字"));
     }
 
     public String getTitle() {

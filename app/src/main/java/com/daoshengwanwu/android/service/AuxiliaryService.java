@@ -83,10 +83,9 @@ public class AuxiliaryService extends AccessibilityService {
             return;
         }
 
-        AccessibilityNodeInfo source = event.getSource();
         AccessibilityNodeInfo rootInfo = getRootInActiveWindow();
 
-        if (source == null || rootInfo == null) {
+        if (rootInfo == null) {
             return;
         }
 

@@ -8,6 +8,9 @@ import com.daoshengwanwu.android.page.Page;
 
 
 public class CleanTask extends Task {
+    private boolean mIsMax = false;
+
+
     public CleanTask() {
         super(TaskId.TASK_CLEAN);
     }
@@ -21,9 +24,16 @@ public class CleanTask extends Task {
 
         ChatPage chatPage = (ChatPage) page;
         if (!chatPage.isWithCheckBox()) {
-            return;
+            if (!chatPage.isWithMaxCheckDialog()) {
+                mIsMax = false;
+                return;
+            } else {
+                mIsMax = true;
+            }
         }
 
-        chatPage.performAllCheck();
+        if (!mIsMax) {
+            chatPage.performAllCheck();
+        }
     }
 }
