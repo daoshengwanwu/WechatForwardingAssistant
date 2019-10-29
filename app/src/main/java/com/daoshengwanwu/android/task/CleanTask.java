@@ -24,12 +24,9 @@ public class CleanTask extends Task {
 
         ChatPage chatPage = (ChatPage) page;
         if (!chatPage.isWithCheckBox()) {
-            if (!chatPage.isWithMaxCheckDialog()) {
-                mIsMax = false;
-                return;
-            } else {
-                mIsMax = true;
-            }
+            mIsMax = chatPage.isWithMaxCheckDialog();
+
+            return;
         }
 
         if (!mIsMax) {

@@ -25,7 +25,7 @@ public class ChatPage extends Page {
     //============================= Common Start =====================================
     //================================================================================
     public static boolean isSelf(@NonNull AccessibilityNodeInfo rootInfo) {
-        boolean firstJudgement = true;
+        boolean firstJudgement;
 
         //第一个有id的FrameLayout
         List<AccessibilityNodeInfo> rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/fcs");

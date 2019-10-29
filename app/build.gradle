@@ -10,8 +10,8 @@ android {
         applicationId "com.daoshengwanwu.android"
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 8195
-        versionName "191027_7.0.7"
+        versionCode 8196
+        versionName "191029_7.0.7"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
