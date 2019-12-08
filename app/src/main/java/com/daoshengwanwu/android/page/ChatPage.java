@@ -28,7 +28,7 @@ public class ChatPage extends Page {
         boolean firstJudgement;
 
         //第一个有id的FrameLayout
-        List<AccessibilityNodeInfo> rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/fcs");
+        List<AccessibilityNodeInfo> rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/fdg");
         if (CustomCollectionUtils.isListEmpty(rst)) {
             firstJudgement = false;
         } else {
@@ -43,7 +43,7 @@ public class ChatPage extends Page {
 
         boolean secondJudgement = false;
         // 最多可选择100条信息dialog的textview
-        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/djf");
+        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/djx");
         if (!CustomCollectionUtils.isListEmpty(rst)) {
             AccessibilityNodeInfo nodeInfo = rst.get(0);
             secondJudgement = nodeInfo != null &&
@@ -70,34 +70,34 @@ public class ChatPage extends Page {
         List<AccessibilityNodeInfo> rst;
 
         // 后退LinearLayout
-        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/lq");
+        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/lr");
         if (!CustomCollectionUtils.isListEmpty(rst)) {
             mBackInfo = rst.get(0);
         }
 
         // 左上角联系人名字TextView
-        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/ls");
+        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/lt");
         if (!CustomCollectionUtils.isListEmpty(rst)) {
             mTitleInfo = rst.get(0);
         }
 
         // EditText
-        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/aqc");
+        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/aqe");
         if (!CustomCollectionUtils.isListEmpty(rst)) {
             mEditTextInfo = rst.get(0);
         }
 
         // 发送按钮
-        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/aqj");
+        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/aql");
         if (!CustomCollectionUtils.isListEmpty(rst)) {
             mSendingBtnInfo = rst.get(0);
         }
 
         // 多选之后的CheckBox
-        mCheckBoxInfos = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/a_");
+        mCheckBoxInfos = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/aa");
 
         // 最多可选择100条信息dialog的textview
-        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/djf");
+        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/djx");
         if (!CustomCollectionUtils.isListEmpty(rst)) {
             mMaxSelectDialogTextViewInfo = rst.get(0);
         }
