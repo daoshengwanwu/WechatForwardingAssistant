@@ -2,9 +2,15 @@ package com.daoshengwanwu.android.model;
 
 
 import androidx.annotation.NonNull;
+
 import com.daoshengwanwu.android.model.item.UserItem;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 
 
 public class UserGroup {

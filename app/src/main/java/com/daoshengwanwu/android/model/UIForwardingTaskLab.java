@@ -3,10 +3,15 @@ package com.daoshengwanwu.android.model;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 public class UIForwardingTaskLab {
     private static UIForwardingTaskLab sInstance = new UIForwardingTaskLab();

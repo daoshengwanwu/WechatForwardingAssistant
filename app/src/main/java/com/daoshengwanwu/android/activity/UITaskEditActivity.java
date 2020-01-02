@@ -3,18 +3,23 @@ package com.daoshengwanwu.android.activity;
 
 import android.content.Context;
 import android.content.Intent;
-import android.text.Editable;
-import android.text.TextWatcher;
+import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import android.os.Bundle;
+
 import com.daoshengwanwu.android.R;
-import com.daoshengwanwu.android.model.*;
+import com.daoshengwanwu.android.model.ForwardingContent;
+import com.daoshengwanwu.android.model.ForwardingContentLab;
+import com.daoshengwanwu.android.model.UIForwardingTask;
+import com.daoshengwanwu.android.model.UIForwardingTaskLab;
+import com.daoshengwanwu.android.model.UserGroup;
+import com.daoshengwanwu.android.model.UserGroupLab;
 
 import java.util.UUID;
 

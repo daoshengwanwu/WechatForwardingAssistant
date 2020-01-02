@@ -3,13 +3,19 @@ package com.daoshengwanwu.android.activity;
 
 import android.content.Context;
 import android.content.Intent;
-import android.view.*;
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import android.os.Bundle;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.daoshengwanwu.android.R;
 import com.daoshengwanwu.android.model.ForwardingContent;
 import com.daoshengwanwu.android.model.ForwardingContentLab;

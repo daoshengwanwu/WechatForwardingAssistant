@@ -3,15 +3,14 @@ package com.daoshengwanwu.android.page;
 
 import android.text.TextUtils;
 import android.view.accessibility.AccessibilityNodeInfo;
+
 import androidx.annotation.NonNull;
 
 import com.daoshengwanwu.android.util.ActionPerformer;
 import com.daoshengwanwu.android.util.CustomCollectionUtils;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 
 public class FriendPage extends Page {

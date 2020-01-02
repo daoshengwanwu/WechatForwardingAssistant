@@ -1,16 +1,15 @@
 package com.daoshengwanwu.android.page;
 
 
-import android.content.Context;
-import android.os.SystemClock;
 import android.text.TextUtils;
 import android.view.accessibility.AccessibilityNodeInfo;
-import android.widget.Toast;
+
 import androidx.annotation.NonNull;
+
 import com.daoshengwanwu.android.model.item.UserItem;
 import com.daoshengwanwu.android.util.ActionPerformer;
 import com.daoshengwanwu.android.util.CustomCollectionUtils;
-import com.daoshengwanwu.android.util.SingleSubThreadUtil;
+
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashSet;

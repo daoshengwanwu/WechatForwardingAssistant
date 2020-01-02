@@ -4,18 +4,28 @@ package com.daoshengwanwu.android.activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.view.*;
-import android.widget.*;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.PopupWindow;
+import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import android.os.Bundle;
-import androidx.appcompat.widget.ForwardingListener;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.daoshengwanwu.android.R;
 import com.daoshengwanwu.android.model.ForwardingContentLab;
 import com.daoshengwanwu.android.model.ShareData;
@@ -24,7 +34,10 @@ import com.daoshengwanwu.android.model.UserGroupLab;
 import com.daoshengwanwu.android.model.item.UserItem;
 import com.daoshengwanwu.android.task.LoadLabelUsersTask;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 
 
 public class GroupEditActivity extends AppCompatActivity {

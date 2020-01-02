@@ -2,7 +2,12 @@ package com.daoshengwanwu.android.model;
 
 
 import android.content.Context;
-import com.daoshengwanwu.android.task.*;
+
+import com.daoshengwanwu.android.task.CleanTask;
+import com.daoshengwanwu.android.task.ForwardingTask;
+import com.daoshengwanwu.android.task.LoadLabelUsersTask;
+import com.daoshengwanwu.android.task.Task;
+import com.daoshengwanwu.android.task.YesTask;
 
 
 public class ShareData {

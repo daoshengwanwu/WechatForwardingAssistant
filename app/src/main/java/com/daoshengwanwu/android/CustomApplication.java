@@ -2,6 +2,7 @@ package com.daoshengwanwu.android;
 
 
 import android.app.Application;
+
 import com.daoshengwanwu.android.model.ForwardingContentLab;
 import com.daoshengwanwu.android.model.UIForwardingTaskLab;
 import com.daoshengwanwu.android.model.UserGroupLab;

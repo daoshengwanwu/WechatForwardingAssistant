@@ -3,6 +3,7 @@ package com.daoshengwanwu.android.model.item;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
 import com.daoshengwanwu.android.util.CustomTextUtils;
 
 import net.sourceforge.pinyin4j.PinyinHelper;

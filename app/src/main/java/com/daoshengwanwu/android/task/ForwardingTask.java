@@ -5,11 +5,18 @@ import android.content.Context;
 import android.os.SystemClock;
 import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.Toast;
+
 import androidx.annotation.NonNull;
+
 import com.daoshengwanwu.android.model.ShareData;
 import com.daoshengwanwu.android.model.UserGroup;
 import com.daoshengwanwu.android.model.item.UserItem;
-import com.daoshengwanwu.android.page.*;
+import com.daoshengwanwu.android.page.ChatPage;
+import com.daoshengwanwu.android.page.ContactPage;
+import com.daoshengwanwu.android.page.ExplorePage;
+import com.daoshengwanwu.android.page.Page;
+import com.daoshengwanwu.android.page.PersonalIntroductionPage;
+import com.daoshengwanwu.android.page.WechatPage;
 import com.daoshengwanwu.android.util.ActionPerformer;
 import com.daoshengwanwu.android.util.SingleSubThreadUtil;
 

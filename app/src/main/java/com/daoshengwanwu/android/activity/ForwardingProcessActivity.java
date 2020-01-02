@@ -3,27 +3,29 @@ package com.daoshengwanwu.android.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import android.os.Bundle;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.daoshengwanwu.android.R;
 import com.daoshengwanwu.android.model.ShareData;
 import com.daoshengwanwu.android.model.UserGroup;
 import com.daoshengwanwu.android.model.UserGroupLab;
 import com.daoshengwanwu.android.model.item.UserItem;
 import com.daoshengwanwu.android.task.ForwardingTask;
+
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 

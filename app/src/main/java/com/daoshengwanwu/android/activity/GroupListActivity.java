@@ -3,20 +3,29 @@ package com.daoshengwanwu.android.activity;
 
 import android.content.Context;
 import android.content.Intent;
-import android.view.*;
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import android.os.Bundle;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.daoshengwanwu.android.R;
 import com.daoshengwanwu.android.model.UserGroup;
 import com.daoshengwanwu.android.model.UserGroupLab;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 
 public class GroupListActivity extends AppCompatActivity {
