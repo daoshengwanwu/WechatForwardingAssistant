@@ -59,7 +59,11 @@ public class UITaskListActivity extends AppCompatActivity {
             startActivity(UITaskEditActivity.newIntent(this, null));
         }
 
-        return super.onOptionsItemSelected(item);
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+        }
+
+        return true;
     }
 
     private class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {

@@ -62,7 +62,7 @@ public class GroupListActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.add: {
-                UserGroup group = UserGroupLab.getInstance().createUserGroup(this, "");
+                UserGroup group = UserGroupLab.getInstance().createUserGroup(this, "新建分组#" + UserGroupLab.getInstance().size());
                 mAdapter.updateView();
                 Intent intent = GroupEditActivity.newIntent(this, group.getUUID());
                 startActivity(intent);
@@ -88,7 +88,11 @@ public class GroupListActivity extends AppCompatActivity {
             } break;
         }
 
-        return super.onOptionsItemSelected(item);
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+        }
+
+        return true;
     }
 
     @Override

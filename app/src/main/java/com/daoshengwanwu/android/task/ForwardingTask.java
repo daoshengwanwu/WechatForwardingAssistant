@@ -178,7 +178,11 @@ public class ForwardingTask extends Task {
     }
 
     private String getToSendText() {
-        return mContent.replaceAll("xing", mCurSendingTarget.surname).replaceAll("name", mCurSendingTarget.name);
+        return mContent
+                .replaceAll("(?<!\\\\)xing", mCurSendingTarget.surname)
+                .replaceAll("(?<!\\\\)name", mCurSendingTarget.name)
+                .replaceAll("\\\\name", "name")
+                .replaceAll("\\\\xing", "xing");
     }
 
     private void removeUserItemByFullnickname(String fullNickname) {

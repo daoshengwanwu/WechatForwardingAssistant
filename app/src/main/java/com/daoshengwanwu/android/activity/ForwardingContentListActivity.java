@@ -71,7 +71,11 @@ public class ForwardingContentListActivity extends AppCompatActivity {
             }
         }
 
-        return super.onOptionsItemSelected(item);
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+        }
+
+        return true;
     }
 
     @Override

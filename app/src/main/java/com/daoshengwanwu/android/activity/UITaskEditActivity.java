@@ -175,7 +175,11 @@ public class UITaskEditActivity extends AppCompatActivity {
             setUIForwardingTaskNameAndSaveTaskToLab(true);
         }
 
-        return super.onOptionsItemSelected(item);
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+        }
+
+        return true;
     }
 
     private boolean isSavable() {

@@ -98,6 +98,6 @@ public class ForwardingEditActivity extends AppCompatActivity {
             finish();
         }
 
-        return super.onOptionsItemSelected(item);
+        return true;
     }
 }

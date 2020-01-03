@@ -68,6 +68,10 @@ public class UserGroupLab {
         return new ArrayList<>(mUUIDSetMap.values());
     }
 
+    public int size() {
+        return mUUIDSetMap.size();
+    }
+
     public void removeUserGroups(Context context, Collection<UserGroup> groups) {
         if (groups == null) {
             return;

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -47,6 +48,15 @@ public class ForwardingProcessActivity extends AppCompatActivity {
     private RecyclerView mRecyclerView;
 
     private ShareData mShareData = ShareData.getInstance();
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+        }
+
+        return true;
+    }
 
     private Adapter mAdapter = new Adapter();
 

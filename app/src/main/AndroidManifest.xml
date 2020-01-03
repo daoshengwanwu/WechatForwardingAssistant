@@ -13,6 +13,7 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
+
         <activity android:name=".activity.YesActivity"
         android:label="点赞"
                 android:icon="@drawable/icon_yes">
@@ -22,6 +23,7 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+
         <activity
                 android:name=".activity.CleanActivity"
                 android:label="清理"
@@ -32,8 +34,12 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".activity.UITaskEditActivity">
+
+        <activity android:name=".activity.UITaskEditActivity"
+            android:label="任务编辑界面"
+            android:parentActivityName=".activity.UITaskListActivity">
         </activity>
+
         <activity
                 android:name=".activity.UITaskListActivity"
                 android:label="群发"
@@ -44,20 +50,32 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".activity.ForwardingEditActivity">
+
+        <activity android:name=".activity.ForwardingEditActivity"
+            android:label="群发内容编辑"
+            android:parentActivityName=".activity.ForwardingContentListActivity">
         </activity>
-        <activity android:name=".activity.ForwardingContentListActivity">
+
+        <activity android:name=".activity.ForwardingContentListActivity"
+            android:label="群发内容列表"
+            android:parentActivityName=".activity.UITaskEditActivity">
         </activity>
+
         <activity
                 android:name=".activity.GroupListActivity"
-                android:label="分组列表页面">
+                android:label="分组列表页面"
+                android:parentActivityName=".activity.UITaskEditActivity">
         </activity>
+
         <activity
                 android:name=".activity.ForwardingProcessActivity"
+                android:parentActivityName=".activity.UITaskEditActivity"
                 android:label="进度控制">
         </activity>
+
         <activity
                 android:name=".activity.GroupEditActivity"
+                android:parentActivityName=".activity.GroupListActivity"
                 android:label="分组编辑">
         </activity>
 
@@ -66,6 +84,7 @@
                 android:enabled="true"
                 android:exported="true"
                 android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
+
             <intent-filter>
                 <action android:name="android.accessibilityservice.AccessibilityService"/>
             </intent-filter>
@@ -73,6 +92,7 @@
             <meta-data
                     android:name="android.accessibilityservice"
                     android:resource="@xml/auxiliary_service_configuration"/>
+
         </service>
     </application>
 
