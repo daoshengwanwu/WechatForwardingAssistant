@@ -1,14 +1,18 @@
 package com.daoshengwanwu.android.activity;
 
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -40,7 +44,9 @@ public class UITaskEditActivity extends AppCompatActivity {
     public static Intent newIntent(Context context, UUID uuid) {
         Intent intent = new Intent(context, UITaskEditActivity.class);
 
-        intent.putExtra(EXTRA_UUID, uuid.toString());
+        if (uuid != null) {
+            intent.putExtra(EXTRA_UUID, uuid.toString());
+        }
 
         return intent;
     }
@@ -50,7 +56,14 @@ public class UITaskEditActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_uitask_edit);
 
-        mUIForwardingTask = UIForwardingTaskLab.getInstance().getUIForwardingTask(UUID.fromString(getIntent().getStringExtra(EXTRA_UUID)));
+        String uuidStr = getIntent().getStringExtra(EXTRA_UUID);
+        if (uuidStr != null) {
+            mUIForwardingTask = UIForwardingTaskLab.getInstance().getUIForwardingTask(UUID.fromString(uuidStr));
+        }
+
+        if (mUIForwardingTask == null) {
+            mUIForwardingTask = new UIForwardingTask(null, new ForwardingContent(""), "");
+        }
 
         mSelContentBtn = findViewById(R.id.btn_sel_content);
         mSelGroupBtn = findViewById(R.id.btn_sel_group);
@@ -74,8 +87,13 @@ public class UITaskEditActivity extends AppCompatActivity {
         mStartBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mUIForwardingTask.getForwardingContent() != null && mUIForwardingTask.getUserGroup() != null) {
+                if (mUIForwardingTask.getForwardingContent() != null &&
+                        mUIForwardingTask.getUserGroup() != null) {
+
                     startActivity(ForwardingProcessActivity.newIntent(UITaskEditActivity.this, mUIForwardingTask.getUserGroup().getUUID(), mUIForwardingTask.getForwardingContent().getContent()));
+
+                } else {
+                    Toast.makeText(UITaskEditActivity.this, "请指定群发内容和群发分组之后再开启群发", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -114,7 +132,7 @@ public class UITaskEditActivity extends AppCompatActivity {
             } break;
         }
 
-        setUIForwardingTaskName();
+        setUIForwardingTaskNameAndSaveTaskToLab(false);
     }
 
     @Override
@@ -124,15 +142,43 @@ public class UITaskEditActivity extends AppCompatActivity {
     }
 
     @Override
+    public void onBackPressed() {
+        if (mUIForwardingTask != null &&
+            UIForwardingTaskLab.getInstance().getUIForwardingTask(mUIForwardingTask.getId()) == null) {
+
+            new AlertDialog.Builder(this)
+                    .setTitle("是否保存内容")
+                    .setNegativeButton("放弃", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            finish();
+                        }
+                    })
+                    .setPositiveButton("保存", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            setUIForwardingTaskNameAndSaveTaskToLab(true);
+                            finish();
+                        }
+                    })
+                    .create()
+                    .show();
+        } else {
+            finish();
+        }
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.save) {
             mUIForwardingTask.getForwardingContent().setContent(mEditText.getText().toString());
-            setUIForwardingTaskName();
+            setUIForwardingTaskNameAndSaveTaskToLab(true);
         }
+
         return super.onOptionsItemSelected(item);
     }
 
-    private void setUIForwardingTaskName() {
+    private void setUIForwardingTaskNameAndSaveTaskToLab(boolean isSave) {
         ForwardingContent content = mUIForwardingTask.getForwardingContent();
         UserGroup group = mUIForwardingTask.getUserGroup();
 
@@ -148,18 +194,28 @@ public class UITaskEditActivity extends AppCompatActivity {
 
         mUIForwardingTask.setTaskName(name);
 
-        UIForwardingTaskLab.getInstance().putForwrdingTaskLab(this, mUIForwardingTask);
+        if (isSave) {
+            UIForwardingTaskLab.getInstance().putForwrdingTaskLab(this, mUIForwardingTask);
+            finish();
+        }
     }
 
     private void updateViews() {
-        if (mUIForwardingTask.getForwardingContent() != null) {
+        if (mUIForwardingTask.getForwardingContent() != null &&
+                !TextUtils.isEmpty(mUIForwardingTask.getForwardingContent().getContent())) {
+
             mEditText.setVisibility(View.VISIBLE);
-            mStartBtn.setVisibility(View.VISIBLE);
             mEditText.setText(mUIForwardingTask.getForwardingContent().getContent());
         }
 
         if (mUIForwardingTask.getUserGroup() != null) {
             mSelGroupBtn.setText(mUIForwardingTask.getUserGroup().getGroupName());
+        }
+
+        if (mUIForwardingTask.getForwardingContent() != null &&
+            mUIForwardingTask.getUserGroup() != null) {
+
+            mStartBtn.setVisibility(View.VISIBLE);
         }
     }
 }

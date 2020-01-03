@@ -54,12 +54,11 @@ public class UITaskListActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.add_ui_task) {
-            UIForwardingTask task = new UIForwardingTask(null, null, "");
-            mUIForwardingTaskLab.putForwrdingTaskLab(this, task);
             mAdapter.updateDataAndViews();
 
-            startActivity(UITaskEditActivity.newIntent(this, task.getId()));
+            startActivity(UITaskEditActivity.newIntent(this, null));
         }
+
         return super.onOptionsItemSelected(item);
     }
 
