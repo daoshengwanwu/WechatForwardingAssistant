@@ -35,6 +35,7 @@ import com.daoshengwanwu.android.model.item.UserItem;
 import com.daoshengwanwu.android.task.LoadLabelUsersTask;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -120,6 +121,15 @@ public class GroupEditActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void finish() {
+        if (mUserGroup.getUserItems().size() <= 0) {
+            UserGroupLab.getInstance().removeUserGroups(getApplicationContext(), Arrays.asList(new UserGroup[] { mUserGroup }));
+        }
+
+        super.finish();
     }
 
     @Override

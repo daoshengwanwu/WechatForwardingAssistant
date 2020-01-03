@@ -29,13 +29,6 @@ import java.util.Set;
 
 
 public class GroupListActivity extends AppCompatActivity {
-    @Override
-    protected void onStart() {
-        super.onStart();
-        mAdapter.updateView();
-        UserGroupLab.getInstance().saveAllGroupToSP(this);
-    }
-
     private Adapter mAdapter = new Adapter();
     private RecyclerView mRecyclerView;
     private Set<UserGroup> mSelectedUserGroups = new HashSet<>();
@@ -44,8 +37,7 @@ public class GroupListActivity extends AppCompatActivity {
 
 
     public static Intent newIntent(Context context) {
-        Intent intent = new Intent(context, GroupListActivity.class);
-        return intent;
+        return new Intent(context, GroupListActivity.class);
     }
 
     @Override
@@ -57,6 +49,13 @@ public class GroupListActivity extends AppCompatActivity {
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mAdapter.updateView();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mAdapter.updateView();
+        UserGroupLab.getInstance().saveAllGroupToSP(this);
     }
 
     @Override

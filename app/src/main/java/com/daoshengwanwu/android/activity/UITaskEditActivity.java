@@ -179,6 +179,7 @@ public class UITaskEditActivity extends AppCompatActivity {
     }
 
     private boolean isSavable() {
+        setUIForwardingTaskNameAndSaveTaskToLab(false);
         return mUIForwardingTask != null &&
                 !": ".equals(mUIForwardingTask.getTaskName());
     }
