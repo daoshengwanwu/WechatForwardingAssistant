@@ -57,10 +57,8 @@ public class ForwardingContentListActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.add_content) {
-            ForwardingContent forwardingContent = new ForwardingContent("");
-            mForwardingContentLab.putForwardingContent(this, forwardingContent);
             mAdapter.updateDataAndViews();
-            startActivity(ForwardingEditActivity.newIntent(this, forwardingContent.getId()));
+            startActivity(ForwardingEditActivity.newIntent(this, null));
         }
 
         if (item.getItemId() == R.id.switch_mode) {
@@ -79,7 +77,7 @@ public class ForwardingContentListActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        mAdapter.notifyDataSetChanged();
+        mAdapter.updateDataAndViews();
     }
 
     private class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {

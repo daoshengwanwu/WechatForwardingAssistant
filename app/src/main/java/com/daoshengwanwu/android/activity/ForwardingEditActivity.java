@@ -5,11 +5,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.daoshengwanwu.android.R;
@@ -28,7 +30,9 @@ public class ForwardingEditActivity extends AppCompatActivity {
     public static Intent newIntent(Context context, UUID id) {
         Intent intent = new Intent(context, ForwardingEditActivity.class);
 
-        intent.putExtra(EXTRA_UUID, id.toString());
+        if (id != null) {
+            intent.putExtra(EXTRA_UUID, id.toString());
+        }
 
         return intent;
     }
@@ -39,7 +43,14 @@ public class ForwardingEditActivity extends AppCompatActivity {
         setContentView(R.layout.activity_forwarding_edit);
 
         Intent intent = getIntent();
-        mForwardingContent = ForwardingContentLab.getInstance().getForwardingContent(UUID.fromString(intent.getStringExtra(EXTRA_UUID)));
+        String uuidStr = intent.getStringExtra(EXTRA_UUID);
+        if (!TextUtils.isEmpty(uuidStr)) {
+            mForwardingContent = ForwardingContentLab.getInstance().getForwardingContent(UUID.fromString(uuidStr));
+        }
+
+        if (mForwardingContent == null) {
+            mForwardingContent = new ForwardingContent("");
+        }
 
         mEditText = findViewById(R.id.edit_text);
         mEditText.setText(mForwardingContent.getContent());
@@ -60,7 +71,10 @@ public class ForwardingEditActivity extends AppCompatActivity {
             }
         });
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
     }
 
 
@@ -73,12 +87,17 @@ public class ForwardingEditActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.save) {
-            ForwardingContentLab.getInstance().putForwardingContent(this, mForwardingContent);
+            if (!TextUtils.isEmpty(mForwardingContent.getContent())) {
+                ForwardingContentLab.getInstance().putForwardingContent(this, mForwardingContent);
+            }
+
             finish();
         }
+
         if (item.getItemId() == android.R.id.home) {
             finish();
         }
+
         return super.onOptionsItemSelected(item);
     }
 }
