@@ -143,7 +143,7 @@ public class UITaskEditActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (mUIForwardingTask != null &&
+        if (mUIForwardingTask != null && isSavable() &&
             UIForwardingTaskLab.getInstance().getUIForwardingTask(mUIForwardingTask.getId()) == null) {
 
             new AlertDialog.Builder(this)
@@ -178,6 +178,11 @@ public class UITaskEditActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    private boolean isSavable() {
+        return mUIForwardingTask != null &&
+                !": ".equals(mUIForwardingTask.getTaskName());
+    }
+
     private void setUIForwardingTaskNameAndSaveTaskToLab(boolean isSave) {
         ForwardingContent content = mUIForwardingTask.getForwardingContent();
         UserGroup group = mUIForwardingTask.getUserGroup();
@@ -195,8 +200,12 @@ public class UITaskEditActivity extends AppCompatActivity {
         mUIForwardingTask.setTaskName(name);
 
         if (isSave) {
-            UIForwardingTaskLab.getInstance().putForwrdingTaskLab(this, mUIForwardingTask);
-            finish();
+            if (isSavable()) {
+                UIForwardingTaskLab.getInstance().putForwrdingTaskLab(this, mUIForwardingTask);
+                finish();
+            } else {
+                Toast.makeText(this, "请不要保存空任务", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
