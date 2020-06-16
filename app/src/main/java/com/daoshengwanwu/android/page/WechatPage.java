@@ -49,7 +49,7 @@ public class WechatPage extends Page {
         List<AccessibilityNodeInfo> rst;
 
         // 导航栏的ImageView
-        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/cio");
+        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/cnh");
         if (CustomCollectionUtils.isListEmpty(rst) || rst.size() != 4) {
             return;
         }

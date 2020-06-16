@@ -25,19 +25,19 @@ public class PersonalIntroductionPage extends Page {
 
     public static boolean isSelf(@NonNull AccessibilityNodeInfo rootInfo) {
         //title,也就是显示备注或者昵称的View
-        List<AccessibilityNodeInfo> rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/azc");
+        List<AccessibilityNodeInfo> rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/b28");
         if (CustomCollectionUtils.isListEmpty(rst)) {
             return false;
         }
 
         //头像ImageView
-        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/az3");
+        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/b1y");
         if (CustomCollectionUtils.isListEmpty(rst)) {
             return false;
         }
 
         //微信id TextView
-        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/azk");
+        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/b2f");
         if (CustomCollectionUtils.isListEmpty(rst)) {
             return false;
         }
@@ -72,19 +72,19 @@ public class PersonalIntroductionPage extends Page {
         }
 
         // 标签TextView
-        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/ax8");
+        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/b03");
         if (!CustomCollectionUtils.isListEmpty(rst)) {
             mLabelInfo = rst.get(0);
         }
 
         // 发送消息TextView
-        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/fwd");
+        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/g6f");
         if (!CustomCollectionUtils.isListEmpty(rst)) {
             mSendMessageInfo = rst.get(0).getParent();
         }
 
         // title,也就是显示备注或者昵称的View
-        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/azc");
+        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/b28");
         if (!CustomCollectionUtils.isListEmpty(rst)) {
             mTitleInfo = rst.get(0);
         }

@@ -94,7 +94,7 @@ public class LabelMembersPage extends Page {
     public void bindData(@NotNull AccessibilityNodeInfo rootInfo) {
         List<AccessibilityNodeInfo> rst;
         // 标签名字EditText
-        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/bem");
+        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/bhn");
         if (!CustomCollectionUtils.isListEmpty(rst)) {
             mLabelInfo = rst.get(0);
         }
@@ -112,7 +112,7 @@ public class LabelMembersPage extends Page {
         }
 
         // 每一个item图片下边的TextView
-        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/evd");
+        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/f3v");
         mTextInfos = rst;
     }
 }
