@@ -2,12 +2,15 @@ package com.daoshengwanwu.android.model;
 
 
 import android.content.Context;
+import android.widget.Toast;
 
 import com.daoshengwanwu.android.task.CleanTask;
 import com.daoshengwanwu.android.task.ForwardingTask;
 import com.daoshengwanwu.android.task.LoadLabelUsersTask;
+import com.daoshengwanwu.android.task.SelectReceiverTask;
 import com.daoshengwanwu.android.task.Task;
 import com.daoshengwanwu.android.task.YesTask;
+import com.daoshengwanwu.android.util.SingleSubThreadUtil;
 
 
 public class ShareData {
@@ -44,6 +47,11 @@ public class ShareData {
             ForwardingTask.OnForwardingTaskFinishedListener listener) {
 
         mActiveTask = new ForwardingTask(context, group, content, listener);
+    }
+
+    public void activeSelectReceiverTask(final Context context, UserGroup group) {
+        mActiveTask = new SelectReceiverTask(group, context);
+        SingleSubThreadUtil.showToast(context, "激活选择收信人任务", Toast.LENGTH_LONG);
     }
 
     public void activeYesTask() {

@@ -41,6 +41,10 @@ public abstract class Page {
             case PAGE_FRIEND: {
                 return FriendPage.generateFrom(rootInfo);
             }
+
+            case PAGE_SELECT_RECEIVER: {
+                return SelectReceiverPage.generateFrom(rootInfo);
+            }
         }
 
         return UnknownPage.generateFrom(rootInfo);
@@ -61,6 +65,8 @@ public abstract class Page {
             return PageId.PAGE_WECHAT;
         } else if (FriendPage.isSelf(rootInfo)) {
             return PageId.PAGE_FRIEND;
+        } else if (SelectReceiverPage.isSelf(rootInfo)) {
+            return PageId.PAGE_SELECT_RECEIVER;
         }
 
         return PageId.PAGE_UNKNOWN;
@@ -84,6 +90,7 @@ public abstract class Page {
         PAGE_CHAT,
         PAGE_LABEL_MEMBERS,
         PAGE_PERSONAL_INTRODUCTION,
+        PAGE_SELECT_RECEIVER,
         PAGE_FRIEND;
     }
 }

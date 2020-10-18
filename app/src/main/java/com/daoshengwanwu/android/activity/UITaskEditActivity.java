@@ -20,6 +20,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.daoshengwanwu.android.R;
 import com.daoshengwanwu.android.model.ForwardingContent;
 import com.daoshengwanwu.android.model.ForwardingContentLab;
+import com.daoshengwanwu.android.model.ShareData;
 import com.daoshengwanwu.android.model.UIForwardingTask;
 import com.daoshengwanwu.android.model.UIForwardingTaskLab;
 import com.daoshengwanwu.android.model.UserGroup;
@@ -38,6 +39,7 @@ public class UITaskEditActivity extends AppCompatActivity {
     private Button mSelGroupBtn;
     private Button mSelContentBtn;
     private Button mStartBtn;
+    private Button mSelReceiverBtn;
     private EditText mEditText;
 
 
@@ -69,6 +71,7 @@ public class UITaskEditActivity extends AppCompatActivity {
         mSelGroupBtn = findViewById(R.id.btn_sel_group);
         mStartBtn = findViewById(R.id.btn_start_forwarding);
         mEditText = findViewById(R.id.edit_text);
+        mSelReceiverBtn = findViewById(R.id.btn_start_select_receiver);
 
         mSelContentBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -94,6 +97,15 @@ public class UITaskEditActivity extends AppCompatActivity {
 
                 } else {
                     Toast.makeText(UITaskEditActivity.this, "请指定群发内容和群发分组之后再开启群发", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        mSelReceiverBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mUIForwardingTask.getUserGroup() != null) {
+                    ShareData.getInstance().activeSelectReceiverTask(UITaskEditActivity.this.getApplicationContext(), mUIForwardingTask.getUserGroup());
                 }
             }
         });
@@ -226,10 +238,13 @@ public class UITaskEditActivity extends AppCompatActivity {
             mSelGroupBtn.setText(mUIForwardingTask.getUserGroup().getGroupName());
         }
 
-        if (mUIForwardingTask.getForwardingContent() != null &&
-            mUIForwardingTask.getUserGroup() != null) {
+        if (mUIForwardingTask.getUserGroup() != null) {
 
-            mStartBtn.setVisibility(View.VISIBLE);
+            if (!TextUtils.isEmpty(mUIForwardingTask.getForwardingContent().getContent())) {
+                mStartBtn.setVisibility(View.VISIBLE);
+            }
+
+            mSelReceiverBtn.setVisibility(View.VISIBLE);
         }
     }
 }

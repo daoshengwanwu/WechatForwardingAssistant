@@ -35,4 +35,11 @@ android:orientation="vertical">
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
+    <Button
+        android:id="@+id/btn_start_select_receiver"
+        android:text="开始选择收信人"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
 </LinearLayout>

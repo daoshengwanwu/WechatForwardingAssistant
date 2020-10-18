@@ -2,12 +2,14 @@ package com.daoshengwanwu.android.model;
 
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.daoshengwanwu.android.model.item.UserItem;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -25,10 +27,24 @@ public class UserGroup {
         mGroupName = groupName;
     }
 
-    UserGroup(UserGroup group) {
+    public UserGroup(UserGroup group) {
         mUUID = UUID.fromString(group.mUUID.toString());
         mGroupName = group.mGroupName;
         mUserItemList.addAll(group.getUserItems());
+    }
+
+    public boolean containsFullNickNameItem(@Nullable String fullNickName) {
+        if (fullNickName == null) {
+            return false;
+        }
+
+        for (UserItem item : mUserItemList) {
+            if (fullNickName.equals(item.fullNickName)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public void mergeUserItems(UserGroup group) {
@@ -85,6 +101,21 @@ public class UserGroup {
 
     public void removeUserItem(String fullNickname, String labelText) {
         mUserItemList.remove(getUserItem(fullNickname, labelText));
+    }
+
+    public void removeUserItem(String fullNickName)  {
+        if (fullNickName == null) {
+            return;
+        }
+
+        Iterator<UserItem> itemIterator = mUserItemList.iterator();
+        while (itemIterator.hasNext()) {
+            UserItem item = itemIterator.next();
+            if (fullNickName.equals(item.fullNickName)) {
+                itemIterator.remove();
+                return;
+            }
+        }
     }
 
     public int size() {

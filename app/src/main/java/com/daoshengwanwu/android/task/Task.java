@@ -26,6 +26,7 @@ public abstract class Task {
         TASK_FORWARDING,
         TASK_LOAD_LABEL_USERS,
         TASK_CLEAN,
-        TASK_YES;
+        TASK_YES,
+        TASK_SELECT_RECEIVER;
     }
 }
