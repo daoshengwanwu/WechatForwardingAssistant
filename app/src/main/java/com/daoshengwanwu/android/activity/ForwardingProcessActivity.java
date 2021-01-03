@@ -9,6 +9,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,6 +46,9 @@ public class ForwardingProcessActivity extends AppCompatActivity {
     private Button mStartStopBtn;
     private Button mPauseResumeBtn;
     private TextView mRemainNumTV;
+    private EditText mBundleSizeET;
+    private EditText mPauseTimeET;
+    private EditText mDeltaTimeET;
     private RecyclerView mRecyclerView;
 
     private ShareData mShareData = ShareData.getInstance();
@@ -89,12 +93,46 @@ public class ForwardingProcessActivity extends AppCompatActivity {
         updateView();
     }
 
+    private int getEditTextInteger(EditText editText) {
+        if (editText == null) {
+            return 0;
+        }
+
+        final CharSequence text = editText.getText();
+        if (text == null) {
+            return 0;
+        }
+
+        try {
+            return Integer.parseInt(text.toString());
+        } catch (Throwable e) {
+            return 0;
+        }
+    }
+
+    public void pauseForwarding() {
+        mShareData.pauseForwardingTask();
+        mStatus = ForwardingStatus.PAUSED;
+        updateView();
+        Toast.makeText(ForwardingProcessActivity.this, "已暂停", Toast.LENGTH_SHORT).show();
+    }
+
+    public void resumeForwarding() {
+        mShareData.resumeForwardingTask();
+        mStatus = ForwardingStatus.PROCESSING;
+        updateView();
+        Toast.makeText(ForwardingProcessActivity.this, "继续群发", Toast.LENGTH_SHORT).show();
+    }
+
     private void setupView() {
         mStatusTV = findViewById(R.id.status_tv);
         mStartStopBtn = findViewById(R.id.start_stop_btn);
         mPauseResumeBtn = findViewById(R.id.pause_resume_btn);
         mRemainNumTV = findViewById(R.id.remaining_num_tv);
         mRecyclerView = findViewById(R.id.remaining_item_rv);
+        mBundleSizeET = findViewById(R.id.et_bundle_size);
+        mPauseTimeET = findViewById(R.id.et_pause_time);
+        mDeltaTimeET = findViewById(R.id.et_delta_time);
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerView.setAdapter(mAdapter);
@@ -114,10 +152,16 @@ public class ForwardingProcessActivity extends AppCompatActivity {
                     case FINISHED:
                     case STOPED:
                     case NOT_START: {
-                        mShareData.activeForwardingTask(
-                                ForwardingProcessActivity.this,
+                        int bundleSize = getEditTextInteger(mBundleSizeET);
+                        int pauseTime = getEditTextInteger(mPauseTimeET);
+                        int deltaTime = getEditTextInteger(mDeltaTimeET);
+
+                        mShareData.activeForwardingTask(ForwardingProcessActivity.this,
                                 mUserGroup,
                                 mForwardingContent,
+                                bundleSize,
+                                pauseTime,
+                                deltaTime,
                                 new ForwardingTask.OnForwardingTaskFinishedListener() {
                                     @Override
                                     public void onForwardingTaskFinished() {
@@ -126,6 +170,7 @@ public class ForwardingProcessActivity extends AppCompatActivity {
                                         updateView();
                                     }
                                 });
+
                         mStatus = ForwardingStatus.PROCESSING;
                         updateView();
                         Toast.makeText(ForwardingProcessActivity.this, "已激活群发", Toast.LENGTH_SHORT).show();
@@ -139,17 +184,11 @@ public class ForwardingProcessActivity extends AppCompatActivity {
             public void onClick(View v) {
                 switch (mStatus) {
                     case PROCESSING: {
-                        mShareData.pauseForwardingTask();
-                        mStatus = ForwardingStatus.PAUSED;
-                        updateView();
-                        Toast.makeText(ForwardingProcessActivity.this, "已暂停", Toast.LENGTH_SHORT).show();
+                        pauseForwarding();
                     } break;
 
                     case PAUSED: {
-                        mShareData.resumeForwardingTask();
-                        mStatus = ForwardingStatus.PROCESSING;
-                        updateView();
-                        Toast.makeText(ForwardingProcessActivity.this, "继续群发", Toast.LENGTH_SHORT).show();
+                        resumeForwarding();
                     }
                 }
             }

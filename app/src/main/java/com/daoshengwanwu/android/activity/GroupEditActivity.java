@@ -164,7 +164,7 @@ public class GroupEditActivity extends AppCompatActivity {
         mImportBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String labelName = mLabelNameET.getText() + "";
+                final String labelName = mLabelNameET.getText() + "";
 
                 if (TextUtils.isEmpty(labelName)) {
                     Toast.makeText(GroupEditActivity.this, "请输入正确的标签名称", Toast.LENGTH_SHORT).show();
@@ -178,12 +178,20 @@ public class GroupEditActivity extends AppCompatActivity {
 
                     @Override
                     public void onLabelUsersInfoLoadFinished(Set<UserItem> labelUsersInfo) {
+                        final String groupName = mUserGroup.getGroupName();
+                        if (groupName == null || groupName.startsWith("新建分组#")) {
+                            mUserGroup.setGroupName(labelName);
+                        } else {
+                            mUserGroup.setGroupName(groupName + "," + labelName);
+                        }
+
                         mUserGroup.mergeUserItems(labelUsersInfo);
                         UserGroupLab.getInstance().putOrMergeUserItems(GroupEditActivity.this, mUserGroup);
                         updateView();
                         Toast.makeText(GroupEditActivity.this, "导入联系人成功", Toast.LENGTH_SHORT).show();
                     }
                 });
+
                 Toast.makeText(GroupEditActivity.this, "激活成功，现在请手动切换到微信的" + labelName + "标签页下", Toast.LENGTH_SHORT).show();
             }
         });

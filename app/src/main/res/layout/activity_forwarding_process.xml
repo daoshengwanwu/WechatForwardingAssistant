@@ -35,19 +35,64 @@
             android:id="@+id/pause_resume_btn"
             app:layout_constraintTop_toTopOf="@+id/start_stop_btn" app:layout_constraintBottom_toBottomOf="@+id/start_stop_btn"
             app:layout_constraintStart_toEndOf="@+id/start_stop_btn" android:layout_marginStart="8dp"/>
-    <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            app:layout_constraintTop_toBottomOf="@+id/start_stop_btn" app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginStart="8dp" android:id="@+id/remaining_num_tv"/>
 
-    <androidx.recyclerview.widget.RecyclerView android:layout_width="0dp"
-                                               android:layout_height="0dp"
-                                               app:layout_constraintEnd_toEndOf="parent"
-                                               app:layout_constraintBottom_toBottomOf="parent"
-                                               android:layout_marginTop="8dp"
-                                               app:layout_constraintTop_toBottomOf="@+id/remaining_num_tv"
-                                               app:layout_constraintStart_toStartOf="parent"
-                                               android:id="@+id/remaining_item_rv"></androidx.recyclerview.widget.RecyclerView>
+    <TextView
+        android:id="@+id/remaining_num_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/start_stop_btn">
+
+        <EditText
+            android:id="@+id/et_bundle_size"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:inputType="number"
+            android:digits="0123456789"
+            android:maxLength="3"
+            android:hint="_?条停顿一次" />
+
+        <EditText
+            android:id="@+id/et_pause_time"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:inputType="number"
+            android:digits="0123456789"
+            android:maxLength="3"
+            android:hint="停顿时长(秒)" />
+
+        <EditText
+            android:id="@+id/et_delta_time"
+            android:layout_width="70dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:inputType="number"
+            android:digits="0123456789"
+            android:maxLength="3"
+            android:layout_height="match_parent"
+            android:hint="每条发送最小间隔(秒)" />
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/remaining_item_rv"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/remaining_num_tv"></androidx.recyclerview.widget.RecyclerView>
 </androidx.constraintlayout.widget.ConstraintLayout>

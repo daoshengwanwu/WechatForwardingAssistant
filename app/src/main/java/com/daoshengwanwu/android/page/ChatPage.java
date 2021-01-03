@@ -84,9 +84,16 @@ public class ChatPage extends Page {
         }
 
         // EditText
-        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/al_");
+        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/ixy");
         if (!CustomCollectionUtils.isListEmpty(rst)) {
             mEditTextInfo = rst.get(0);
+        }
+
+        if (mEditTextInfo == null) {
+            rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/iy0");
+            if (!CustomCollectionUtils.isListEmpty(rst)) {
+                mEditTextInfo = rst.get(0);
+            }
         }
 
         // 发送按钮
@@ -114,6 +121,19 @@ public class ChatPage extends Page {
     }
 
     public boolean setEditTextText(String text) {
+        if (mEditTextInfo == null) {
+            return false;
+        }
+
+        final CharSequence className = mEditTextInfo.getClassName();
+        if (className == null || className.toString().equals("android.widget.FrameLayout")) {
+            mEditTextInfo = mEditTextInfo.getChild(0);
+        }
+
+        if (mEditTextInfo == null) {
+            return false;
+        }
+
         Bundle arguments = new Bundle();
         arguments.putCharSequence(AccessibilityNodeInfo.ACTION_ARGUMENT_SET_TEXT_CHARSEQUENCE, text);
 

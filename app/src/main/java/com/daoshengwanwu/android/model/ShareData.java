@@ -4,6 +4,7 @@ package com.daoshengwanwu.android.model;
 import android.content.Context;
 import android.widget.Toast;
 
+import com.daoshengwanwu.android.activity.ForwardingProcessActivity;
 import com.daoshengwanwu.android.task.CleanTask;
 import com.daoshengwanwu.android.task.ForwardingTask;
 import com.daoshengwanwu.android.task.LoadLabelUsersTask;
@@ -41,12 +42,15 @@ public class ShareData {
     }
 
     public void activeForwardingTask(
-            final Context context,
+            final ForwardingProcessActivity context,
             UserGroup group,
             final String content,
+            final int bundleSize,
+            final int pauseTime,
+            final int deltaTime,
             ForwardingTask.OnForwardingTaskFinishedListener listener) {
 
-        mActiveTask = new ForwardingTask(context, group, content, listener);
+        mActiveTask = new ForwardingTask(context, group, bundleSize, pauseTime, deltaTime, content, listener);
     }
 
     public void activeSelectReceiverTask(final Context context, UserGroup group) {

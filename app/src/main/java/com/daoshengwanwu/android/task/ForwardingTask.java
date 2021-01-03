@@ -1,13 +1,15 @@
 package com.daoshengwanwu.android.task;
 
 
-import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
 import android.os.SystemClock;
 import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
+import com.daoshengwanwu.android.activity.ForwardingProcessActivity;
 import com.daoshengwanwu.android.model.ShareData;
 import com.daoshengwanwu.android.model.UserGroup;
 import com.daoshengwanwu.android.model.item.UserItem;
@@ -25,7 +27,9 @@ import java.util.List;
 
 
 public class ForwardingTask extends Task {
-    private Context mContext;
+    private static final Handler MAIN_HANDLER = new Handler(Looper.getMainLooper());
+
+    private ForwardingProcessActivity mContext;
     private List<UserItem> mToForwardingList;
     private UserGroup mUserGroup;
     private UserItem mCurSendingTarget;
@@ -34,12 +38,20 @@ public class ForwardingTask extends Task {
     private boolean mIsForwrdingAlreadyStarted = false;
     private String mContent = "";
     private OnForwardingTaskFinishedListener mListener;
-    private int mOriginCount;
+    private boolean mAlreadyPause;
+    private long mLastForwardingTime;
+    private final int mOriginCount;
+    private final int mBundleSize;
+    private final int mPauseTime;
+    private final int mDeltaTime;
 
 
     public ForwardingTask(
-            @NonNull Context context,
+            @NonNull ForwardingProcessActivity context,
             @NonNull UserGroup group,
+            int bundleSize,
+            int pauseTime,
+            int deltaTime,
             String content,
             OnForwardingTaskFinishedListener listener) {
 
@@ -47,6 +59,9 @@ public class ForwardingTask extends Task {
 
         mContext = context;
         mUserGroup = group;
+        mBundleSize = bundleSize;
+        mPauseTime = pauseTime;
+        mDeltaTime = deltaTime;
         mToForwardingList = mUserGroup.getUserItems();
 
         mContent = content;
@@ -76,10 +91,10 @@ public class ForwardingTask extends Task {
             return;
         }
 
-        if ((mOriginCount - mToForwardingList.size() == 1) && mToForwardingList.size() > 0) {
+        if (!mAlreadyPause && (mOriginCount - mToForwardingList.size() == 1) && mToForwardingList.size() > 0) {
             ShareData.getInstance().pauseForwardingTask();
             SingleSubThreadUtil.showToast(mContext, "已自动暂停", Toast.LENGTH_LONG);
-            mOriginCount = -1;
+            mAlreadyPause = true;
             return;
         }
 
@@ -168,12 +183,31 @@ public class ForwardingTask extends Task {
                 return;
             }
 
+            long delta = System.currentTimeMillis() - mLastForwardingTime;
+            if (delta < mDeltaTime * 1000L) {
+                SystemClock.sleep(mDeltaTime * 1000L - delta);
+            }
+
             if (!chatPage.performClickSendButn(rootInfo)) {
                 return;
             }
 
+            mLastForwardingTime = System.currentTimeMillis();
             mToForwardingList.remove(mCurSendingTarget);
             chatPage.performBack();
+
+            int alreadySendNum = mOriginCount - mToForwardingList.size();
+            if (mBundleSize > 0 && alreadySendNum % mBundleSize == 0) {
+                mContext.pauseForwarding();
+                SingleSubThreadUtil.showToast(mContext, "已自动暂停, 将在" + mPauseTime + "秒后自动恢复，或者手动点击继续", Toast.LENGTH_LONG);
+
+                MAIN_HANDLER.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        mContext.resumeForwarding();
+                    }
+                }, mPauseTime * 1000L);
+            }
         }
     }
 
