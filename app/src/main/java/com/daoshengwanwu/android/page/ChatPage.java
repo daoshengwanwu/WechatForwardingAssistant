@@ -96,6 +96,13 @@ public class ChatPage extends Page {
             }
         }
 
+        if (mEditTextInfo == null) {
+            rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/iy1");
+            if (!CustomCollectionUtils.isListEmpty(rst)) {
+                mEditTextInfo = rst.get(0);
+            }
+        }
+
         // 发送按钮
         rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/anv");
         if (!CustomCollectionUtils.isListEmpty(rst)) {

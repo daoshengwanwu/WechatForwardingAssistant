@@ -61,8 +61,9 @@
             android:gravity="center"
             android:inputType="number"
             android:digits="0123456789"
+            android:textSize="12sp"
             android:maxLength="3"
-            android:hint="_?条停顿一次" />
+            android:hint="？条停顿一次" />
 
         <EditText
             android:id="@+id/et_pause_time"
@@ -73,12 +74,14 @@
             android:inputType="number"
             android:digits="0123456789"
             android:maxLength="3"
+            android:textSize="12sp"
             android:hint="停顿时长(秒)" />
 
         <EditText
             android:id="@+id/et_delta_time"
             android:layout_width="70dp"
             android:layout_weight="1"
+            android:textSize="12sp"
             android:gravity="center"
             android:inputType="number"
             android:digits="0123456789"
