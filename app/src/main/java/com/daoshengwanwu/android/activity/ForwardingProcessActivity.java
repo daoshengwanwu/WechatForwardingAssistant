@@ -259,6 +259,7 @@ public class ForwardingProcessActivity extends AppCompatActivity {
 
                         mShareData.activeForwardingTask(ForwardingProcessActivity.this,
                                 mUserGroup,
+                                mRegPatterns,
                                 mForwardingContent,
                                 bundleSize,
                                 pauseTime,

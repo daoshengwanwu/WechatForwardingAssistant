@@ -13,6 +13,9 @@ import com.daoshengwanwu.android.task.Task;
 import com.daoshengwanwu.android.task.YesTask;
 import com.daoshengwanwu.android.util.SingleSubThreadUtil;
 
+import java.util.List;
+import java.util.regex.Pattern;
+
 
 public class ShareData {
     private static final ShareData sInstance = new ShareData();
@@ -44,13 +47,14 @@ public class ShareData {
     public void activeForwardingTask(
             final ForwardingProcessActivity context,
             UserGroup group,
+            List<Pattern> regPatterns,
             final String content,
             final int bundleSize,
             final int pauseTime,
             final int deltaTime,
             ForwardingTask.OnForwardingTaskFinishedListener listener) {
 
-        mActiveTask = new ForwardingTask(context, group, bundleSize, pauseTime, deltaTime, content, listener);
+        mActiveTask = new ForwardingTask(context, group, regPatterns, bundleSize, pauseTime, deltaTime, content, listener);
     }
 
     public void activeSelectReceiverTask(final Context context, UserGroup group) {

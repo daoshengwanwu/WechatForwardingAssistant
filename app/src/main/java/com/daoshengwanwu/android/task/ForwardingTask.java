@@ -22,8 +22,10 @@ import com.daoshengwanwu.android.page.WechatPage;
 import com.daoshengwanwu.android.util.ActionPerformer;
 import com.daoshengwanwu.android.util.SingleSubThreadUtil;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.regex.Pattern;
 
 
 public class ForwardingTask extends Task {
@@ -31,6 +33,8 @@ public class ForwardingTask extends Task {
 
     private ForwardingProcessActivity mContext;
     private List<UserItem> mToForwardingList;
+    private List<Pattern> mRegPatterns;
+    private List<String> mAlreadySentList = new ArrayList<>();
     private UserGroup mUserGroup;
     private UserItem mCurSendingTarget;
     private int mCurScrollDirection = Direction.FORWARD;
@@ -49,6 +53,7 @@ public class ForwardingTask extends Task {
     public ForwardingTask(
             @NonNull ForwardingProcessActivity context,
             @NonNull UserGroup group,
+            List<Pattern> regPatterns,
             int bundleSize,
             int pauseTime,
             int deltaTime,
@@ -63,6 +68,7 @@ public class ForwardingTask extends Task {
         mPauseTime = pauseTime;
         mDeltaTime = deltaTime;
         mToForwardingList = mUserGroup.getUserItems();
+        mRegPatterns = regPatterns;
 
         mContent = content;
         mListener = listener;
@@ -115,7 +121,17 @@ public class ForwardingTask extends Task {
         if (page.getPageId() == Page.PageId.PAGE_CONTACT) {
             ContactPage contactPage = (ContactPage) page;
 
-            ContactPage.FindResult findResult = contactPage.findFirstInfoInSpecificSet(mToForwardingList);
+            ContactPage.FindResult findResult = null;
+            final List<ContactPage.FindResult> findResults = contactPage.findAllInfo(mToForwardingList, mRegPatterns);
+            for (ContactPage.FindResult result : findResults) {
+                if (containsResult(result)) {
+                    continue;
+                }
+
+                findResult = result;
+                break;
+            }
+
             if (findResult != null) {
                 SystemClock.sleep(80);
                 if (ActionPerformer.performAction(findResult.info, AccessibilityNodeInfo.ACTION_CLICK, "对联系人界面的item执行点击")) {
@@ -124,7 +140,7 @@ public class ForwardingTask extends Task {
                 }
             }
 
-            if (mToForwardingList.isEmpty()) {
+            if (mToForwardingList.isEmpty() && mRegPatterns.isEmpty()) {
                 SingleSubThreadUtil.showToast(mContext, "群发任务完成", Toast.LENGTH_SHORT);
                 mIsTaskFinished = true;
                 if (mListener != null) {
@@ -139,6 +155,8 @@ public class ForwardingTask extends Task {
                     return;
                 }
 
+                mRegPatterns.clear();
+
                 mCurScrollDirection = Direction.BACKWARD;
                 execute(rootInfo);
             } else {
@@ -146,6 +164,8 @@ public class ForwardingTask extends Task {
                     SystemClock.sleep(80);
                     return;
                 }
+
+                mRegPatterns.clear();
 
                 mCurScrollDirection = Direction.FORWARD;
                 execute(rootInfo);
@@ -157,7 +177,10 @@ public class ForwardingTask extends Task {
         if (page.getPageId()== Page.PageId.PAGE_PERSONAL_INTRODUCTION) {
             PersonalIntroductionPage personalIntroductionPage = (PersonalIntroductionPage) page;
 
-            if (!personalIntroductionPage.getLabelText().contains(mCurSendingTarget.labelText)) {
+            final String pageLabel = personalIntroductionPage.getLabelText();
+            final String pageTitle = personalIntroductionPage.getTitle();
+
+            if (!pageLabel.contains(mCurSendingTarget.labelText) && !hasRegMatch(pageTitle)) {
                 removeUserItemByFullnickname(mCurSendingTarget.fullNickName);
                 personalIntroductionPage.performBack();
                 return;
@@ -175,7 +198,7 @@ public class ForwardingTask extends Task {
             ChatPage chatPage = (ChatPage) page;
 
             String title = chatPage.getTitle();
-            if (mCurSendingTarget == null || !title.equals(mCurSendingTarget.fullNickName)) {
+            if (mCurSendingTarget == null || (!title.equals(mCurSendingTarget.fullNickName) && !hasRegMatch(title))) {
                 return;
             }
 
@@ -194,6 +217,7 @@ public class ForwardingTask extends Task {
 
             mLastForwardingTime = System.currentTimeMillis();
             mToForwardingList.remove(mCurSendingTarget);
+            mAlreadySentList.add(mCurSendingTarget.name);
             chatPage.performBack();
 
             int alreadySendNum = mOriginCount - mToForwardingList.size();
@@ -209,6 +233,34 @@ public class ForwardingTask extends Task {
                 }, mPauseTime * 1000L);
             }
         }
+    }
+
+    private boolean containsResult(ContactPage.FindResult result) {
+        for (String name : mAlreadySentList) {
+            try {
+                if (name != null && name.equals(result.item.fullNickName)) {
+                    return true;
+                }
+            } catch (Throwable e) {
+                // ignore
+            }
+        }
+
+        return false;
+    }
+
+    private boolean hasRegMatch(String title) {
+        for (Pattern pattern : mRegPatterns) {
+            try {
+                if (pattern.matcher(title).matches()) {
+                    return true;
+                }
+            } catch (Throwable e) {
+                // ignore
+            }
+        }
+
+        return false;
     }
 
     private String getToSendText() {

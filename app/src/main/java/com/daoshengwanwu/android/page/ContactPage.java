@@ -1,6 +1,7 @@
 package com.daoshengwanwu.android.page;
 
 
+import android.text.TextUtils;
 import android.view.accessibility.AccessibilityNodeInfo;
 
 import androidx.annotation.NonNull;
@@ -11,8 +12,10 @@ import com.daoshengwanwu.android.util.CustomCollectionUtils;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 
 public class ContactPage extends Page {
@@ -85,6 +88,49 @@ public class ContactPage extends Page {
         }
 
         return null;
+    }
+
+    public List<FindResult> findAllInfo(List<UserItem> list, List<Pattern> regs) {
+        if (mContactInfos == null) {
+            return new ArrayList<>();
+        }
+
+        List<FindResult> results = new ArrayList<>();
+
+        for (AccessibilityNodeInfo info : mContactInfos) {
+            String title = ActionPerformer.getText(info, "ContactPage.findAllInfo");
+
+            UserItem item = null;
+            if (matches(title, regs)) {
+                item = new UserItem(title, "");
+            } else {
+                item = getByFullNickname(list, title);
+            }
+
+            if (item != null) {
+                results.add(new FindResult(info.getParent().getParent(), item));
+            }
+        }
+
+        return results;
+    }
+
+    private boolean matches(String title, List<Pattern> regs) {
+        if (TextUtils.isEmpty(title) || regs == null) {
+            return false;
+        }
+
+        for (Pattern pattern : regs) {
+            try {
+                if (pattern.matcher(title).matches()) {
+                    return true;
+                }
+            } catch (Throwable e) {
+                // ignore
+            }
+        }
+
+        return false;
     }
 
     private boolean contains(Set<UserItem> userItemSet, String fullNickname) {
