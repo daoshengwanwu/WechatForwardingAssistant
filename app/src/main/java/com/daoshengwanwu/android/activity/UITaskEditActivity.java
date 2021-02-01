@@ -185,6 +185,7 @@ public class UITaskEditActivity extends AppCompatActivity {
         if (item.getItemId() == R.id.save) {
             mUIForwardingTask.getForwardingContent().setContent(mEditText.getText().toString());
             setUIForwardingTaskNameAndSaveTaskToLab(true);
+            return true;
         }
 
         if (item.getItemId() == android.R.id.home) {
