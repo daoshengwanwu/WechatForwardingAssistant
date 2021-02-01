@@ -31,12 +31,12 @@ import java.util.regex.Pattern;
 public class ForwardingTask extends Task {
     private static final Handler MAIN_HANDLER = new Handler(Looper.getMainLooper());
 
-    private ForwardingProcessActivity mContext;
-    private List<UserItem> mToForwardingList;
-    private List<Pattern> mRegPatterns;
-    private List<String> mAlreadySentList = new ArrayList<>();
+    private ForwardingProcessActivity mContext; // 群发进度管理界面
+    private List<UserItem> mToForwardingList; // 指定的要群发的用户
+    private List<Pattern> mRegPatterns; // 指定的正则匹配项（如果正则匹配成功，则发送消息)
+    private List<String> mAlreadySentList = new ArrayList<>(); // 已经发送过的人的名单
     private UserGroup mUserGroup;
-    private UserItem mCurSendingTarget;
+    private UserItem mCurSendingTarget; // 当前正在发送的用户
     private int mCurScrollDirection = Direction.FORWARD;
     private boolean mIsTaskFinished = false;
     private boolean mIsForwrdingAlreadyStarted = false;
