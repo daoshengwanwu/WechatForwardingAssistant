@@ -36,14 +36,6 @@
             app:layout_constraintTop_toTopOf="@+id/start_stop_btn" app:layout_constraintBottom_toBottomOf="@+id/start_stop_btn"
             app:layout_constraintStart_toEndOf="@+id/start_stop_btn" android:layout_marginStart="8dp"/>
 
-    <TextView
-        android:id="@+id/remaining_num_tv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
-
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="0dp"
@@ -90,12 +82,46 @@
             android:hint="每条发送最小间隔(秒)" />
     </LinearLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/remaining_item_rv"
+    <LinearLayout
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/remaining_num_tv"></androidx.recyclerview.widget.RecyclerView>
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout">
+
+        <LinearLayout
+            android:id="@+id/ll_reg_rv_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="正则匹配项" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_reg"
+                android:layout_width="match_parent"
+                android:layout_height="150dp"/>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/remaining_num_tv"
+            android:layout_width="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/remaining_item_rv"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+    </LinearLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

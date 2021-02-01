@@ -2,18 +2,22 @@ package com.daoshengwanwu.android.activity;
 
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -24,20 +28,37 @@ import com.daoshengwanwu.android.model.UserGroup;
 import com.daoshengwanwu.android.model.UserGroupLab;
 import com.daoshengwanwu.android.model.item.UserItem;
 import com.daoshengwanwu.android.task.ForwardingTask;
+import com.daoshengwanwu.android.util.SingleSubThreadUtil;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
+import java.util.regex.Pattern;
 
 
 public class ForwardingProcessActivity extends AppCompatActivity {
     private static final String EXTRA_GROUP_ID = "extra_group_id";
     private static final String EXTRA_FORWARDING_CONTENT = "extra_forwarding_content";
 
+
+    public static Intent newIntent(Context context, UUID groupId, String forwardingContent) {
+        Intent intent = new Intent(context, ForwardingProcessActivity.class);
+
+        intent.putExtra(EXTRA_GROUP_ID, groupId.toString());
+        intent.putExtra(EXTRA_FORWARDING_CONTENT, forwardingContent);
+
+        return intent;
+    }
+
+
     private UserGroupLab mUserGroupLab = UserGroupLab.getInstance();
     private UserGroup mUserGroup;
+    private final List<Pattern> mRegPatterns = new ArrayList<>();
     private String mForwardingContent;
 
     private ForwardingStatus mStatus = ForwardingStatus.NOT_START;
@@ -50,8 +71,13 @@ public class ForwardingProcessActivity extends AppCompatActivity {
     private EditText mPauseTimeET;
     private EditText mDeltaTimeET;
     private RecyclerView mRecyclerView;
+    private LinearLayout mRegRVContainer;
+    private RecyclerView mRegRV;
+    private final Adapter mAdapter = new Adapter();
+    private final RegAdapter mRegAdapter = new RegAdapter();
 
     private ShareData mShareData = ShareData.getInstance();
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -59,21 +85,18 @@ public class ForwardingProcessActivity extends AppCompatActivity {
             finish();
         }
 
+        if (item.getItemId() == R.id.add_reg_user) {
+            addRegUser();
+        }
+
         return true;
     }
 
-    private Adapter mAdapter = new Adapter();
-
-
-    public static Intent newIntent(Context context, UUID groupId, String forwardingContent) {
-        Intent intent = new Intent(context, ForwardingProcessActivity.class);
-
-        intent.putExtra(EXTRA_GROUP_ID, groupId.toString());
-        intent.putExtra(EXTRA_FORWARDING_CONTENT, forwardingContent);
-
-        return intent;
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_forwarding_progress, menu);
+        return super.onCreateOptionsMenu(menu);
     }
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,10 +110,81 @@ public class ForwardingProcessActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+
         if (ShareData.getInstance().mIsForwardingPause) {
             mStatus = ForwardingStatus.PAUSED;
         }
+
         updateView();
+    }
+
+    private void modifyRegItem(final int position) {
+        final EditText contentView = new EditText(this);
+        ViewGroup.LayoutParams layoutParams = contentView.getLayoutParams();
+        if (layoutParams == null) {
+            layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        }
+        contentView.setLayoutParams(layoutParams);
+        contentView.setHint("在此输入正则表达式");
+        try {
+            contentView.setText(mRegPatterns.get(position).toString());
+        } catch (Throwable e) {
+            // ignore
+        }
+
+        final AlertDialog alertDialog = new AlertDialog.Builder(this)
+                .setTitle("编辑正则匹配项")
+                .setView(contentView)
+                .create();
+
+        alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "取消", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                alertDialog.dismiss();
+            }
+        });
+
+        alertDialog.setButton(DialogInterface.BUTTON_POSITIVE, "添加", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                if (mStatus != ForwardingStatus.NOT_START &&
+                        mStatus != ForwardingStatus.FINISHED &&
+                        mStatus != ForwardingStatus.STOPED) {
+
+                    // 当前群发任务已经开始，不可以再添加匹配项
+                    SingleSubThreadUtil.showToast(getApplicationContext(), "当前群发任务已开始，不可再添加匹配项", Toast.LENGTH_LONG);
+                    return;
+
+                }
+
+                try {
+                    final String regStr = contentView.getText().toString();
+                    Pattern pattern = Pattern.compile(regStr);
+                    mRegPatterns.set(position, pattern);
+                    alertDialog.dismiss();
+                    updateView();
+                } catch (Throwable e) {
+                    SingleSubThreadUtil.showToast(ForwardingProcessActivity.this, "请检查正则表达式是否正确: " + e.getMessage(), Toast.LENGTH_SHORT);
+                }
+            }
+        });
+
+        alertDialog.show();
+    }
+
+    private void addRegUser() {
+        if (mStatus != ForwardingStatus.NOT_START &&
+            mStatus != ForwardingStatus.FINISHED &&
+            mStatus != ForwardingStatus.STOPED) {
+
+            // 当前群发任务已经开始，不可以再添加匹配项
+            SingleSubThreadUtil.showToast(getApplicationContext(), "当前群发任务已开始，不可再添加匹配项", Toast.LENGTH_LONG);
+            return;
+
+        }
+
+        mRegPatterns.add(Pattern.compile(""));
+        modifyRegItem(mRegPatterns.size() - 1);
     }
 
     private int getEditTextInteger(EditText editText) {
@@ -114,6 +208,7 @@ public class ForwardingProcessActivity extends AppCompatActivity {
         mShareData.pauseForwardingTask();
         mStatus = ForwardingStatus.PAUSED;
         updateView();
+
         Toast.makeText(ForwardingProcessActivity.this, "已暂停", Toast.LENGTH_SHORT).show();
     }
 
@@ -121,6 +216,7 @@ public class ForwardingProcessActivity extends AppCompatActivity {
         mShareData.resumeForwardingTask();
         mStatus = ForwardingStatus.PROCESSING;
         updateView();
+
         Toast.makeText(ForwardingProcessActivity.this, "继续群发", Toast.LENGTH_SHORT).show();
     }
 
@@ -133,9 +229,14 @@ public class ForwardingProcessActivity extends AppCompatActivity {
         mBundleSizeET = findViewById(R.id.et_bundle_size);
         mPauseTimeET = findViewById(R.id.et_pause_time);
         mDeltaTimeET = findViewById(R.id.et_delta_time);
+        mRegRV = findViewById(R.id.rv_reg);
+        mRegRVContainer = findViewById(R.id.ll_reg_rv_container);
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerView.setAdapter(mAdapter);
+
+        mRegRV.setLayoutManager(new LinearLayoutManager(this));
+        mRegRV.setAdapter(mRegAdapter);
 
         mStartStopBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -202,6 +303,12 @@ public class ForwardingProcessActivity extends AppCompatActivity {
     }
 
     private void updateView() {
+        if (mRegPatterns.size() > 0) {
+            mRegRVContainer.setVisibility(View.VISIBLE);
+        } else {
+            mRegRVContainer.setVisibility(View.GONE);
+        }
+
         mStatusTV.setText(mStatus.toString());
 
         switch (mStatus) {
@@ -235,6 +342,7 @@ public class ForwardingProcessActivity extends AppCompatActivity {
 
         mRemainNumTV.setText("剩余人数： " + (mUserGroup == null ? 0 : mUserGroup.size()));
         mAdapter.updateData();
+        mRegAdapter.notifyDataSetChanged();
     }
 
 
@@ -260,6 +368,50 @@ public class ForwardingProcessActivity extends AppCompatActivity {
         }
     }
 
+
+    private class RegAdapter extends RecyclerView.Adapter<RegAdapter.ViewHolder> {
+        @NonNull
+        @Override
+        public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_user_group_edit, parent, false);
+            return new ViewHolder(itemView);
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+            holder.bindData(mRegPatterns.get(position));
+        }
+
+        @Override
+        public int getItemCount() {
+            return mRegPatterns.size();
+        }
+
+
+        class ViewHolder extends RecyclerView.ViewHolder {
+            private TextView mFullNameTV;
+            private TextView mDetailTV;
+
+
+            public ViewHolder(@NonNull View itemView) {
+                super(itemView);
+
+                mFullNameTV = itemView.findViewById(R.id.full_name_tv);
+                mDetailTV = itemView.findViewById(R.id.detail_tv);
+
+                itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        modifyRegItem(getAdapterPosition());
+                    }
+                });
+            }
+
+            private void bindData(Pattern pattern) {
+                mFullNameTV.setText(pattern.toString());
+            }
+        }
+    }
 
     private class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
         private List<UserItem> mUserItems = new ArrayList<>();
