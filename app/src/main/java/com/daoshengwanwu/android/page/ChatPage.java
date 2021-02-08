@@ -30,7 +30,7 @@ public class ChatPage extends Page {
         boolean firstJudgement;
 
         //第一个有id的FrameLayout
-        List<AccessibilityNodeInfo> rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/g2s");
+        List<AccessibilityNodeInfo> rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/iew");
         if (CustomCollectionUtils.isListEmpty(rst)) {
             firstJudgement = false;
         } else {
@@ -44,12 +44,12 @@ public class ChatPage extends Page {
         }
 
         boolean secondJudgement = false;
-        // 最多可选择100条信息dialog的textview
-        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/dos");
+        // 最多可选择99条信息dialog的textview
+        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/ffh");
         if (!CustomCollectionUtils.isListEmpty(rst)) {
             AccessibilityNodeInfo nodeInfo = rst.get(0);
             secondJudgement = nodeInfo != null &&
-                    "最多可选择100条消息".equals(ActionPerformer.getText(nodeInfo, "获取最多选择100条信息弹框的文字"));
+                    "最多可选择99条消息".equals(ActionPerformer.getText(nodeInfo, "获取最多选择99条信息弹框的文字"));
         }
 
         return firstJudgement || secondJudgement;
@@ -72,48 +72,48 @@ public class ChatPage extends Page {
         List<AccessibilityNodeInfo> rst;
 
         // 后退LinearLayout
-        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/rr");
+        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/un");
         if (!CustomCollectionUtils.isListEmpty(rst)) {
             mBackInfo = rst.get(0);
         }
 
         // 左上角联系人名字TextView
-        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/gas");
+        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/ipt");
         if (!CustomCollectionUtils.isListEmpty(rst)) {
             mTitleInfo = rst.get(0);
         }
 
         // EditText
-        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/ixy");
+        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/auj");
         if (!CustomCollectionUtils.isListEmpty(rst)) {
             mEditTextInfo = rst.get(0);
         }
 
         if (mEditTextInfo == null) {
-            rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/iy0");
+            rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/auj");
             if (!CustomCollectionUtils.isListEmpty(rst)) {
                 mEditTextInfo = rst.get(0);
             }
         }
 
         if (mEditTextInfo == null) {
-            rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/iy1");
+            rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/auj");
             if (!CustomCollectionUtils.isListEmpty(rst)) {
                 mEditTextInfo = rst.get(0);
             }
         }
 
         // 发送按钮
-        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/anv");
+        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/ay5");
         if (!CustomCollectionUtils.isListEmpty(rst)) {
             mSendingBtnInfo = rst.get(0);
         }
 
         // 多选之后的CheckBox
-        mCheckBoxInfos = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/al6");
+        mCheckBoxInfos = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/aue");
 
-        // 最多可选择100条信息dialog的textview
-        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/dos");
+        // 最多可选择99条信息dialog的textview
+        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/ffh");
         if (!CustomCollectionUtils.isListEmpty(rst)) {
             mMaxSelectDialogTextViewInfo = rst.get(0);
         }
@@ -165,7 +165,7 @@ public class ChatPage extends Page {
 
     public boolean isWithMaxCheckDialog() {
         return mMaxSelectDialogTextViewInfo != null &&
-                "最多可选择100条消息".equals(ActionPerformer.getText(mMaxSelectDialogTextViewInfo, "获取最多选择100条信息弹框的文字"));
+                "最多可选择99条消息".equals(ActionPerformer.getText(mMaxSelectDialogTextViewInfo, "获取最多选择99条信息弹框的文字"));
     }
 
     public String getTitle() {

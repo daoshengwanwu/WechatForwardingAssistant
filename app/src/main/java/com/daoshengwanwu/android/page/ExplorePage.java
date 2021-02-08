@@ -47,7 +47,7 @@ public class ExplorePage extends Page {
         List<AccessibilityNodeInfo> rst;
 
         // 导航栏的Item的ImageView
-        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/cnh");
+        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/dtx");
         if (CustomCollectionUtils.isListEmpty(rst) || rst.size() != 4) {
             return;
         }

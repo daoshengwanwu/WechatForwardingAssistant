@@ -22,7 +22,7 @@ public class FriendPage extends Page {
 
     public static boolean isSelf(AccessibilityNodeInfo rootInfo) {
         // 第一个有id的FrameLayout
-        List<AccessibilityNodeInfo> rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/g2s");
+        List<AccessibilityNodeInfo> rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/iew");
         if (CustomCollectionUtils.isListEmpty(rst)) {
             return false;
         }
@@ -53,9 +53,9 @@ public class FriendPage extends Page {
         mFriendItems.clear();
 
         // 三个点ImageView
-        List<AccessibilityNodeInfo> tDotInfos = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/ik");
+        List<AccessibilityNodeInfo> tDotInfos = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/kn");
         // title TextView
-        List<AccessibilityNodeInfo> titleInfos = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/e3x");
+        List<AccessibilityNodeInfo> titleInfos = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/fzg");
 
         int i = 1;
         while (i < tDotInfos.size()&& i < titleInfos.size()) {
@@ -64,7 +64,7 @@ public class FriendPage extends Page {
         }
 
         //点击三个按钮后弹出的LinearLayout
-        List<AccessibilityNodeInfo> rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/h7");
+        List<AccessibilityNodeInfo> rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/j_");
         if (!CustomCollectionUtils.isListEmpty(rst)) {
             mCommentContainerInfo = rst.get(0);
         } else {
@@ -72,7 +72,7 @@ public class FriendPage extends Page {
         }
 
         //赞TextView
-        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/i9");
+        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/kb");
         if (!CustomCollectionUtils.isListEmpty(rst)) {
             mYesInfo = rst.get(0);
         } else {
@@ -80,7 +80,7 @@ public class FriendPage extends Page {
         }
 
         //评论TextView
-        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/hm");
+        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/jp");
         if (!CustomCollectionUtils.isListEmpty(rst)) {
             mCommentInfo = rst.get(0);
         } else {

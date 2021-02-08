@@ -34,7 +34,7 @@ public class SelectReceiverPage extends Page {
         }
 
         // 搜索EditText
-        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/dxe");
+        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/fqx");
         if (CustomCollectionUtils.isListEmpty(rst)) {
             return false;
         }
@@ -60,13 +60,15 @@ public class SelectReceiverPage extends Page {
             return;
         }
 
-        List<AccessibilityNodeInfo> infos = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/fa_");
+        // ListView
+        List<AccessibilityNodeInfo> infos = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/hhi");
         if (CustomCollectionUtils.isListEmpty(infos)) {
             return;
         }
         mListViewInfo = infos.get(0);
 
-        infos = rootInfo.findAccessibilityNodeInfosByText("com.tencent.mm:id/dm");
+        // 后退按钮LinearLayout
+        infos = rootInfo.findAccessibilityNodeInfosByText("com.tencent.mm:id/eh");
         if (CustomCollectionUtils.isListEmpty(infos)) {
             return;
         }
@@ -104,14 +106,16 @@ public class SelectReceiverPage extends Page {
             return;
         }
 
-        List<AccessibilityNodeInfo> infos = mListViewInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/gbv");
+        // title TextView
+        List<AccessibilityNodeInfo> infos = mListViewInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/ir3");
         for (AccessibilityNodeInfo info : infos) {
             AccessibilityNodeInfo relativeNodeInfo = info.getParent();
             if (relativeNodeInfo == null) {
                 continue;
             }
 
-            List<AccessibilityNodeInfo> rst = relativeNodeInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/fa4");
+            // CheckBox
+            List<AccessibilityNodeInfo> rst = relativeNodeInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/hhc");
             if (CustomCollectionUtils.isListEmpty(rst)) {
                 continue;
             }
