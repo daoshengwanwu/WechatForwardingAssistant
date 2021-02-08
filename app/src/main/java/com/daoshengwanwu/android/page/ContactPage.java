@@ -90,6 +90,26 @@ public class ContactPage extends Page {
         return null;
     }
 
+    public List<UserItem> findAllMatchUsers(Pattern pattern) {
+        if (pattern == null || mContactInfos == null) {
+            return new ArrayList<>();
+        }
+
+        List<UserItem> result = new ArrayList<>();
+        for (AccessibilityNodeInfo info : mContactInfos) {
+            String title = ActionPerformer.getText(info, "ContactPage.findAllMatchUsers");
+            if (TextUtils.isEmpty(title)) {
+                continue;
+            }
+
+            if (pattern.matcher(title).matches()) {
+                result.add(new UserItem(title, ""));
+            }
+        }
+
+        return result;
+    }
+
     public List<FindResult> findAllInfo(List<UserItem> list, List<Pattern> regs) {
         if (mContactInfos == null) {
             return new ArrayList<>();

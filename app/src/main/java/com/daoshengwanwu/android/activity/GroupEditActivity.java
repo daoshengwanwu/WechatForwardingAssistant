@@ -33,12 +33,14 @@ import com.daoshengwanwu.android.model.UserGroup;
 import com.daoshengwanwu.android.model.UserGroupLab;
 import com.daoshengwanwu.android.model.item.UserItem;
 import com.daoshengwanwu.android.task.LoadLabelUsersTask;
+import com.daoshengwanwu.android.task.RegLoadUsersTask;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import java.util.regex.Pattern;
 
 
 public class GroupEditActivity extends AppCompatActivity {
@@ -48,6 +50,7 @@ public class GroupEditActivity extends AppCompatActivity {
     private EditText mKeywordET;
     private EditText mLabelNameET;
     private Button mImportBtn;
+    private Button mRegImportBtn;
     private TextView mUserCountTV;
     private RecyclerView mRecyclerView;
 
@@ -154,6 +157,7 @@ public class GroupEditActivity extends AppCompatActivity {
         mKeywordET = findViewById(R.id.search_keyword_et);
         mLabelNameET = findViewById(R.id.label_name_et);
         mImportBtn = findViewById(R.id.import_btn);
+        mRegImportBtn = findViewById(R.id.btn_reg_import);
         mRecyclerView = findViewById(R.id.users_rv);
         mUserCountTV = findViewById(R.id.user_count_tv);
 
@@ -193,6 +197,52 @@ public class GroupEditActivity extends AppCompatActivity {
                 });
 
                 Toast.makeText(GroupEditActivity.this, "激活成功，现在请手动切换到微信的" + labelName + "标签页下", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        mRegImportBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final String regStr = mLabelNameET.getText() + "";
+
+                if (TextUtils.isEmpty(regStr)) {
+                    Toast.makeText(GroupEditActivity.this, "请输入正确的正则表达式", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                Pattern pattern = null;
+                try {
+                    pattern = Pattern.compile(regStr);
+                } catch (Throwable e) {
+                    // ignore
+                }
+
+                if (pattern == null) {
+                    Toast.makeText(GroupEditActivity.this, "请输入正确的正则表达式", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                mShareData.activeLoadForwardingUserWithRegTask(
+                        GroupEditActivity.this,
+                        pattern,
+                        new RegLoadUsersTask.OnUsersInfoLoadFinishedListener() {
+                            @Override
+                            public void onUsersInfoLoadFinished(Set<UserItem> labelUsersInfo) {
+                                final String groupName = mUserGroup.getGroupName();
+                                if (groupName == null || groupName.startsWith("新建分组#")) {
+                                    mUserGroup.setGroupName(regStr);
+                                } else if (!groupName.contains(regStr)) {
+                                    mUserGroup.setGroupName(groupName + "," + regStr);
+                                }
+
+                                mUserGroup.mergeUserItems(labelUsersInfo);
+                                UserGroupLab.getInstance().putOrMergeUserItems(GroupEditActivity.this, mUserGroup);
+                                updateView();
+                                Toast.makeText(GroupEditActivity.this, "导入联系人成功", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+
+                Toast.makeText(GroupEditActivity.this, "激活成功，现在请手动切换到微信的联系人页下", Toast.LENGTH_SHORT).show();
             }
         });
 

@@ -8,6 +8,7 @@ import com.daoshengwanwu.android.activity.ForwardingProcessActivity;
 import com.daoshengwanwu.android.task.CleanTask;
 import com.daoshengwanwu.android.task.ForwardingTask;
 import com.daoshengwanwu.android.task.LoadLabelUsersTask;
+import com.daoshengwanwu.android.task.RegLoadUsersTask;
 import com.daoshengwanwu.android.task.SelectReceiverTask;
 import com.daoshengwanwu.android.task.Task;
 import com.daoshengwanwu.android.task.YesTask;
@@ -96,5 +97,9 @@ public class ShareData {
 
     public void activeLoadToForwardingTask(final Context context, String labelTitle, LoadLabelUsersTask.OnLabelUsersInfoLoadFinishedListener listener) {
         mActiveTask = new LoadLabelUsersTask(context, labelTitle, listener);
+    }
+
+    public void activeLoadForwardingUserWithRegTask(final Context context, Pattern pattern, RegLoadUsersTask.OnUsersInfoLoadFinishedListener listener) {
+        mActiveTask = new RegLoadUsersTask(context, pattern, listener);
     }
 }

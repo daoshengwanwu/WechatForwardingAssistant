@@ -4,6 +4,7 @@ package com.daoshengwanwu.android.task;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.SystemClock;
+import android.text.TextUtils;
 import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.Toast;
 
@@ -178,9 +179,8 @@ public class ForwardingTask extends Task {
             PersonalIntroductionPage personalIntroductionPage = (PersonalIntroductionPage) page;
 
             final String pageLabel = personalIntroductionPage.getLabelText();
-            final String pageTitle = personalIntroductionPage.getTitle();
 
-            if (!pageLabel.contains(mCurSendingTarget.labelText) && !hasRegMatch(pageTitle)) {
+            if (!pageLabel.contains(mCurSendingTarget.labelText) && !TextUtils.isEmpty(mCurSendingTarget.labelText)) {
                 removeUserItemByFullnickname(mCurSendingTarget.fullNickName);
                 personalIntroductionPage.performBack();
                 return;

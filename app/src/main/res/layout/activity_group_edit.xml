@@ -28,18 +28,32 @@
             app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
             android:hint="在此输入搜索关键字" android:layout_marginStart="4dp"
             app:layout_constraintStart_toStartOf="@+id/guideline"/>
+
     <EditText
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:inputType="textPersonName"
-            android:ems="10"
-            android:maxLines="1"
-            android:id="@+id/label_name_et" android:layout_marginTop="8dp"
-            app:layout_constraintTop_toBottomOf="@+id/group_name_et" app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginStart="8dp" android:layout_marginEnd="8dp"
-            app:layout_constraintEnd_toStartOf="@+id/import_btn" android:hint="在此输入标签名称"/>
+        android:id="@+id/label_name_et"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:ems="10"
+        android:hint="在此输入标签名称"
+        android:inputType="textPersonName"
+        android:maxLines="1"
+        app:layout_constraintEnd_toStartOf="@+id/btn_reg_import"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/group_name_et" />
+
     <Button
-            android:text="导入"
+        android:id="@+id/btn_reg_import"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="正则导入"
+        app:layout_constraintBottom_toBottomOf="@+id/import_btn"
+        app:layout_constraintEnd_toStartOf="@+id/import_btn"
+        app:layout_constraintTop_toTopOf="@+id/import_btn" />
+
+    <Button
+            android:text="标签导入"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/import_btn"

@@ -27,6 +27,7 @@ public abstract class Task {
         TASK_LOAD_LABEL_USERS,
         TASK_CLEAN,
         TASK_YES,
-        TASK_SELECT_RECEIVER;
+        TASK_SELECT_RECEIVER,
+        TASK_LOAD_USERS_BY_REG;
     }
 }
