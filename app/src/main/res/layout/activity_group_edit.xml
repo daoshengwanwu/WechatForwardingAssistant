@@ -14,8 +14,10 @@
             android:ems="10"
             android:maxLines="1"
             android:id="@+id/group_name_et" android:layout_marginTop="8dp"
+            android:enabled="false"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="8dp" android:hint="在此输入分组名称"
+            app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="8dp"
+        android:hint="分组名称"
             android:layout_marginEnd="4dp" app:layout_constraintEnd_toStartOf="@+id/guideline"/>
     <EditText
             android:layout_width="0dp"
@@ -26,7 +28,7 @@
             android:id="@+id/search_keyword_et"
             app:layout_constraintTop_toTopOf="@+id/group_name_et"
             app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
-            android:hint="在此输入搜索关键字" android:layout_marginStart="4dp"
+            android:hint="搜索关键字" android:layout_marginStart="4dp"
             app:layout_constraintStart_toStartOf="@+id/guideline"/>
 
     <EditText
@@ -36,7 +38,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:ems="10"
-        android:hint="在此输入标签名称"
+        android:hint="标签名或正则式"
         android:inputType="textPersonName"
         android:maxLines="1"
         app:layout_constraintEnd_toStartOf="@+id/btn_reg_import"
