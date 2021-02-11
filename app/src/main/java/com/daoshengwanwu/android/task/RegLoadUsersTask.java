@@ -23,7 +23,7 @@ public class RegLoadUsersTask extends Task {
     private final Set<UserItem> mLoadedUserItems = new HashSet<>();
     private final OnUsersInfoLoadFinishedListener mListener;
 
-    private boolean mHasForwardingScrollFinished = false;
+    private boolean mHasBackwordScrollFinished = false;
 
 
     public RegLoadUsersTask(Context context, Pattern pattern, OnUsersInfoLoadFinishedListener listener) {
@@ -47,12 +47,12 @@ public class RegLoadUsersTask extends Task {
 
         ContactPage contactPage = (ContactPage) curPage;
         mLoadedUserItems.addAll(contactPage.findAllMatchUsers(mPattern));
-        SystemClock.sleep(200);
-        if (!mHasForwardingScrollFinished && !contactPage.performForwardingScrollListView()) {
-            mHasForwardingScrollFinished = true;
+        SystemClock.sleep(25);
+        if (!mHasBackwordScrollFinished && !contactPage.performBackwordScrollListView()) {
+            mHasBackwordScrollFinished = true;
         }
 
-        if (!contactPage.performBackwordScrollListView()) {
+        if (mHasBackwordScrollFinished && !contactPage.performForwardingScrollListView()) {
             mListener.onUsersInfoLoadFinished(mLoadedUserItems);
             ShareData.getInstance().clearData();
         }

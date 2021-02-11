@@ -242,7 +242,7 @@ public class GroupEditActivity extends AppCompatActivity {
                             }
                         });
 
-                Toast.makeText(GroupEditActivity.this, "激活成功，现在请手动切换到微信的联系人页下", Toast.LENGTH_SHORT).show();
+                Toast.makeText(GroupEditActivity.this, "激活成功，现在请手动切换到微信的通讯录页下", Toast.LENGTH_SHORT).show();
             }
         });
 

@@ -13,6 +13,7 @@ import com.daoshengwanwu.android.util.CustomCollectionUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
@@ -120,11 +121,10 @@ public class ContactPage extends Page {
         for (AccessibilityNodeInfo info : mContactInfos) {
             String title = ActionPerformer.getText(info, "ContactPage.findAllInfo");
 
-            UserItem item = null;
-            if (matches(title, regs)) {
+            UserItem item;
+            item = getByFullNickname(list, title);
+            if (item == null && matches(title, regs)) {
                 item = new UserItem(title, "");
-            } else {
-                item = getByFullNickname(list, title);
             }
 
             if (item != null) {

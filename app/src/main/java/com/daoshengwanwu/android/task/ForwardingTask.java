@@ -93,6 +93,7 @@ public class ForwardingTask extends Task {
                     "将在3秒后执行群发任务，如想撤销请离开微信界面并在设置中关闭群发工具", Toast.LENGTH_LONG);
 
             SystemClock.sleep(3000);
+
             mIsForwrdingAlreadyStarted = true;
             execute(rootInfo);
             return;
@@ -147,6 +148,7 @@ public class ForwardingTask extends Task {
                 if (mListener != null) {
                     mListener.onForwardingTaskFinished();
                 }
+
                 return;
             }
 
@@ -157,7 +159,6 @@ public class ForwardingTask extends Task {
                 }
 
                 mRegPatterns.clear();
-
                 mCurScrollDirection = Direction.BACKWARD;
                 execute(rootInfo);
             } else {
@@ -167,7 +168,6 @@ public class ForwardingTask extends Task {
                 }
 
                 mRegPatterns.clear();
-
                 mCurScrollDirection = Direction.FORWARD;
                 execute(rootInfo);
             }
@@ -217,7 +217,7 @@ public class ForwardingTask extends Task {
 
             mLastForwardingTime = System.currentTimeMillis();
             mToForwardingList.remove(mCurSendingTarget);
-            mAlreadySentList.add(mCurSendingTarget.name);
+            mAlreadySentList.add(mCurSendingTarget.fullNickName);
             chatPage.performBack();
 
             int alreadySendNum = mOriginCount - mToForwardingList.size();

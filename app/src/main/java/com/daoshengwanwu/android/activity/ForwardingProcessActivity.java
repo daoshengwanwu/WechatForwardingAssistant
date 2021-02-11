@@ -93,12 +93,6 @@ public class ForwardingProcessActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_forwarding_progress, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_forwarding_process);

@@ -75,7 +75,11 @@ public final class UserItem implements Comparable<UserItem> {
 
     @Override
     public int hashCode() {
-        return fullNickName.hashCode();
+        if (fullNickName != null) {
+            return fullNickName.hashCode();
+        }
+
+        return -1;
     }
 
     @NonNull
