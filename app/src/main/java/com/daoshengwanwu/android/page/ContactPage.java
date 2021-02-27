@@ -111,21 +111,17 @@ public class ContactPage extends Page {
         return result;
     }
 
-    public List<FindResult> findAllInfo(List<UserItem> list, List<Pattern> regs) {
+    public List<FindResult> findAllInfo(List<UserItem> list) {
         if (mContactInfos == null) {
             return new ArrayList<>();
         }
 
         List<FindResult> results = new ArrayList<>();
-
         for (AccessibilityNodeInfo info : mContactInfos) {
             String title = ActionPerformer.getText(info, "ContactPage.findAllInfo");
 
             UserItem item;
             item = getByFullNickname(list, title);
-            if (item == null && matches(title, regs)) {
-                item = new UserItem(title, "");
-            }
 
             if (item != null) {
                 results.add(new FindResult(info.getParent().getParent(), item));
@@ -173,7 +169,7 @@ public class ContactPage extends Page {
         }
 
         for (UserItem item : userItems) {
-            if (item.fullNickName.equals(fullNickname)) {
+            if (item.fullNickName != null && item.fullNickName.startsWith(fullNickname)) {
                 return item;
             }
         }

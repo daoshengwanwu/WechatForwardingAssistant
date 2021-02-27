@@ -47,11 +47,11 @@ public final class UserItem implements Comparable<UserItem> {
 
 
     public final String labelText;
-    public final String fullNickName;
+    public final String fullNickName; // 备注名
 
-    public final String surname;
-    public final String name;
-    public final String pinyin;
+    public final String surname; // 备注的第一个字符
+    public final String name; // 当前包含姓和名
+    public final String pinyin; // 备注的拼音
 
 
     public UserItem(String nickName, String labelText) {

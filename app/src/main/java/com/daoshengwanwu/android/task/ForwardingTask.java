@@ -34,7 +34,6 @@ public class ForwardingTask extends Task {
 
     private ForwardingProcessActivity mContext; // 群发进度管理界面
     private List<UserItem> mToForwardingList; // 指定的要群发的用户
-    private List<Pattern> mRegPatterns; // 指定的正则匹配项（如果正则匹配成功，则发送消息)
     private List<String> mAlreadySentList = new ArrayList<>(); // 已经发送过的人的名单
     private UserGroup mUserGroup;
     private UserItem mCurSendingTarget; // 当前正在发送的用户
@@ -69,7 +68,6 @@ public class ForwardingTask extends Task {
         mPauseTime = pauseTime;
         mDeltaTime = deltaTime;
         mToForwardingList = mUserGroup.getUserItems();
-        mRegPatterns = regPatterns;
 
         mContent = content;
         mListener = listener;
@@ -124,7 +122,7 @@ public class ForwardingTask extends Task {
             ContactPage contactPage = (ContactPage) page;
 
             ContactPage.FindResult findResult = null;
-            final List<ContactPage.FindResult> findResults = contactPage.findAllInfo(mToForwardingList, mRegPatterns);
+            final List<ContactPage.FindResult> findResults = contactPage.findAllInfo(mToForwardingList);
             for (ContactPage.FindResult result : findResults) {
                 if (containsResult(result)) {
                     continue;
@@ -142,7 +140,7 @@ public class ForwardingTask extends Task {
                 }
             }
 
-            if (mToForwardingList.isEmpty() && mRegPatterns.isEmpty()) {
+            if (mToForwardingList.isEmpty()) {
                 SingleSubThreadUtil.showToast(mContext, "群发任务完成", Toast.LENGTH_SHORT);
                 mIsTaskFinished = true;
                 if (mListener != null) {
@@ -158,7 +156,6 @@ public class ForwardingTask extends Task {
                     return;
                 }
 
-                mRegPatterns.clear();
                 mCurScrollDirection = Direction.BACKWARD;
                 execute(rootInfo);
             } else {
@@ -167,7 +164,6 @@ public class ForwardingTask extends Task {
                     return;
                 }
 
-                mRegPatterns.clear();
                 mCurScrollDirection = Direction.FORWARD;
                 execute(rootInfo);
             }
@@ -198,7 +194,7 @@ public class ForwardingTask extends Task {
             ChatPage chatPage = (ChatPage) page;
 
             String title = chatPage.getTitle();
-            if (mCurSendingTarget == null || (!title.equals(mCurSendingTarget.fullNickName) && !hasRegMatch(title))) {
+            if (mCurSendingTarget == null || !title.equals(mCurSendingTarget.fullNickName)) {
                 return;
             }
 
@@ -218,6 +214,7 @@ public class ForwardingTask extends Task {
             mLastForwardingTime = System.currentTimeMillis();
             mToForwardingList.remove(mCurSendingTarget);
             mAlreadySentList.add(mCurSendingTarget.fullNickName);
+            mCurSendingTarget = null;
             chatPage.performBack();
 
             int alreadySendNum = mOriginCount - mToForwardingList.size();
@@ -238,21 +235,7 @@ public class ForwardingTask extends Task {
     private boolean containsResult(ContactPage.FindResult result) {
         for (String name : mAlreadySentList) {
             try {
-                if (name != null && name.equals(result.item.fullNickName)) {
-                    return true;
-                }
-            } catch (Throwable e) {
-                // ignore
-            }
-        }
-
-        return false;
-    }
-
-    private boolean hasRegMatch(String title) {
-        for (Pattern pattern : mRegPatterns) {
-            try {
-                if (pattern.matcher(title).matches()) {
+                if (name != null && name.startsWith(result.item.fullNickName)) {
                     return true;
                 }
             } catch (Throwable e) {
