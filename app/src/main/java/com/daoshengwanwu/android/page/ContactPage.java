@@ -120,6 +120,14 @@ public class ContactPage extends Page {
         for (AccessibilityNodeInfo info : mContactInfos) {
             String title = ActionPerformer.getText(info, "ContactPage.findAllInfo");
 
+            try {
+                if (title.endsWith("…")) {
+                    title = title.substring(0, title.length() - 1);
+                }
+            } catch (Throwable e) {
+                // ignore
+            }
+
             UserItem item;
             item = getByFullNickname(list, title);
 

@@ -55,6 +55,14 @@ public final class UserItem implements Comparable<UserItem> {
 
 
     public UserItem(String nickName, String labelText) {
+        if (nickName != null && nickName.endsWith("…")) {
+            try {
+                nickName = nickName.substring(0, nickName.length() - 1);
+            } catch (Throwable e) {
+                // ignore
+            }
+        }
+
         this.fullNickName = nickName == null ? "" : nickName;
         this.labelText = labelText == null ? "" : labelText;
 
