@@ -28,7 +28,7 @@ public class UserGroup {
     }
 
     public UserGroup(UserGroup group) {
-        mUUID = UUID.fromString(group.mUUID.toString());
+        mUUID = UUID.randomUUID();
         mGroupName = group.mGroupName;
         mUserItemList.addAll(group.getUserItems());
     }

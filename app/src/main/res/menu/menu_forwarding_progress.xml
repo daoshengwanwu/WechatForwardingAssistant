@@ -2,8 +2,8 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item android:id="@+id/add_reg_user"
-          android:title="添加正则匹配项"
+    <item android:id="@+id/save_current_group"
+          android:title="保存当前好友为群组"
           app:showAsAction="withText|ifRoom" />
 
 </menu>

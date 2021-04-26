@@ -5,8 +5,10 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,6 +35,7 @@ import com.daoshengwanwu.android.util.SingleSubThreadUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -85,10 +88,17 @@ public class ForwardingProcessActivity extends AppCompatActivity {
             finish();
         }
 
-        if (item.getItemId() == R.id.add_reg_user) {
-            addRegUser();
+        if (item.getItemId() == R.id.save_current_group) {
+            saveCurrentUserGroup(null);
+            Toast.makeText(this, "保存当前群组成功", Toast.LENGTH_SHORT).show();
         }
 
+        return true;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_forwarding_progress, menu);
         return true;
     }
 
@@ -110,6 +120,30 @@ public class ForwardingProcessActivity extends AppCompatActivity {
         }
 
         updateView();
+    }
+
+    private void saveCurrentUserGroup(final String groupName) {
+        final UserGroup curUserGroup = new UserGroup(mUserGroup);
+        if (curUserGroup ==  null) {
+            return;
+        }
+
+        if (!TextUtils.isEmpty(groupName)) {
+            curUserGroup.setGroupName(groupName);
+        } else {
+            final Calendar calendar = Calendar.getInstance();
+            final int year = calendar.get(Calendar.YEAR);
+            final int month = calendar.get(Calendar.MONTH) + 1;
+            final int day = calendar.get(Calendar.DAY_OF_MONTH);
+            final int hour = calendar.get(Calendar.HOUR_OF_DAY);
+            final int min = calendar.get(Calendar.MINUTE);
+            final int second = calendar.get(Calendar.SECOND);
+
+            String suffix = year + "." + month + "." + day + "," + hour + ":" + min + ":" + second;
+            curUserGroup.setGroupName(curUserGroup.getGroupName() + suffix);
+        }
+
+        mUserGroupLab.updateGroup(getApplicationContext(), curUserGroup);
     }
 
     private void modifyRegItem(final int position) {
