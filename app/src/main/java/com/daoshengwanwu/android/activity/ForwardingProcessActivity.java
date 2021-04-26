@@ -98,8 +98,12 @@ public class ForwardingProcessActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_forwarding_progress, menu);
-        return true;
+        if (mUserGroup != null && mUserGroup.size() > 0) {
+            getMenuInflater().inflate(R.menu.menu_forwarding_progress, menu);
+            return true;
+        }
+
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
@@ -372,6 +376,7 @@ public class ForwardingProcessActivity extends AppCompatActivity {
         mRemainNumTV.setText("剩余人数： " + (mUserGroup == null ? 0 : mUserGroup.size()));
         mAdapter.updateData();
         mRegAdapter.notifyDataSetChanged();
+        supportInvalidateOptionsMenu();
     }
 
 
