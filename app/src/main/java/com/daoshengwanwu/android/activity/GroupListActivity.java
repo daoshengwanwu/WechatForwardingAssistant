@@ -14,6 +14,7 @@ import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -21,11 +22,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.daoshengwanwu.android.R;
 import com.daoshengwanwu.android.model.UserGroup;
 import com.daoshengwanwu.android.model.UserGroupLab;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 
 public class GroupListActivity extends AppCompatActivity {
@@ -86,6 +90,10 @@ public class GroupListActivity extends AppCompatActivity {
                     break;
                 }
             } break;
+
+            case R.id.apply: {
+
+            } break;
         }
 
         if (item.getItemId() == android.R.id.home) {
@@ -99,6 +107,19 @@ public class GroupListActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.group_list_menu, menu);
         return super.onCreateOptionsMenu(menu);
+    }
+
+    private void setSelectedUserGroupsResultAndFinish(@Nullable final List<UUID> userGroups) {
+        if (userGroups != null && userGroups.size() > 0) {
+            final Intent data = new Intent();
+
+            data.putExtra("user_group_uuid", new Gson().toJson(userGroups));
+
+            setResult(RESULT_OK, data);
+            finish();
+        }
+
+        finish();
     }
 
     private class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
@@ -150,12 +171,7 @@ public class GroupListActivity extends AppCompatActivity {
                             startActivity(GroupEditActivity.newIntent(
                                     GroupListActivity.this, mCurGroup.getUUID()));
                         } else if (mCurMode == Mode.MODE_SELECT) {
-                            Intent data = new Intent();
-
-                            data.putExtra("user_group_uuid", mCurGroup.getUUID().toString());
-
-                            setResult(RESULT_OK, data);
-                            finish();
+                            setSelectedUserGroupsResultAndFinish(Arrays.asList(mCurGroup.getUUID()));
                         }
                     }
                 });

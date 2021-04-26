@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -25,7 +26,11 @@ import com.daoshengwanwu.android.model.UIForwardingTask;
 import com.daoshengwanwu.android.model.UIForwardingTaskLab;
 import com.daoshengwanwu.android.model.UserGroup;
 import com.daoshengwanwu.android.model.UserGroupLab;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 
@@ -64,7 +69,12 @@ public class UITaskEditActivity extends AppCompatActivity {
         }
 
         if (mUIForwardingTask == null) {
-            mUIForwardingTask = new UIForwardingTask(null, new ForwardingContent(""), "");
+            mUIForwardingTask = new UIForwardingTask(
+                    getApplicationContext(),
+                    null,
+                    new ForwardingContent(""),
+                    "");
+
         }
 
         mSelContentBtn = findViewById(R.id.btn_sel_content);
@@ -91,12 +101,16 @@ public class UITaskEditActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (mUIForwardingTask.getForwardingContent() != null &&
-                        mUIForwardingTask.getUserGroup() != null) {
+                        mUIForwardingTask.getMergeUserGroup() != null) {
 
-                    startActivity(ForwardingProcessActivity.newIntent(UITaskEditActivity.this, mUIForwardingTask.getUserGroup().getUUID(), mUIForwardingTask.getForwardingContent().getContent()));
+                    startActivity(ForwardingProcessActivity.newIntent(
+                            UITaskEditActivity.this,
+                            mUIForwardingTask.getMergeUserGroup().getUUID(),
+                            mUIForwardingTask.getForwardingContent().getContent()));
 
                 } else {
-                    Toast.makeText(UITaskEditActivity.this, "请指定群发内容和群发分组之后再开启群发", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(UITaskEditActivity.this,
+                            "请指定群发内容和群发分组之后再开启群发", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -104,8 +118,10 @@ public class UITaskEditActivity extends AppCompatActivity {
         mSelReceiverBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (mUIForwardingTask.getUserGroup() != null) {
-                    ShareData.getInstance().activeSelectReceiverTask(UITaskEditActivity.this.getApplicationContext(), mUIForwardingTask.getUserGroup());
+                if (mUIForwardingTask.getMergeUserGroup() != null) {
+                    ShareData.getInstance().activeSelectReceiverTask(
+                            UITaskEditActivity.this.getApplicationContext(),
+                            mUIForwardingTask.getMergeUserGroup());
                 }
             }
         });
@@ -138,13 +154,41 @@ public class UITaskEditActivity extends AppCompatActivity {
                     return;
                 }
 
-                UUID uuid = UUID.fromString(data.getStringExtra("user_group_uuid"));
-                mUIForwardingTask.setUserGroup(UserGroupLab.getInstance().getUserItemsByUUID(uuid));
+                final List<UserGroup> userGroupList = readUserGroupsFromUUIDList(data.getStringExtra("user_group_uuid"));
+                mUIForwardingTask.setUserGroupList(getApplicationContext(), userGroupList);
                 updateViews();
             } break;
         }
 
         setUIForwardingTaskNameAndSaveTaskToLab(false);
+    }
+
+    @Nullable
+    private List<UserGroup> readUserGroupsFromUUIDList(@NonNull final String uuidListStr) {
+        if (TextUtils.isEmpty(uuidListStr)) {
+            return null;
+        }
+
+        try {
+             final List<UUID> uuidList = new Gson().fromJson(uuidListStr, new TypeToken<ArrayList<UUID>>() {}.getType());
+             if (uuidList == null || uuidList.isEmpty()) {
+                 return null;
+             }
+
+             final List<UserGroup> userGroupList = new ArrayList<>();
+             for (UUID uuid : uuidList) {
+                 final UserGroup userGroup = UserGroupLab.getInstance().getUserItemsByUUID(uuid);
+                 if (userGroup == null) {
+                     continue;
+                 }
+
+                 userGroupList.add(userGroup);
+             }
+
+             return userGroupList;
+        } catch (Throwable e) {
+            return null;
+        }
     }
 
     @Override
@@ -203,7 +247,7 @@ public class UITaskEditActivity extends AppCompatActivity {
 
     private void setUIForwardingTaskNameAndSaveTaskToLab(boolean isSave) {
         ForwardingContent content = mUIForwardingTask.getForwardingContent();
-        UserGroup group = mUIForwardingTask.getUserGroup();
+        UserGroup group = mUIForwardingTask.getMergeUserGroup();
 
         String name = "";
 
@@ -235,11 +279,11 @@ public class UITaskEditActivity extends AppCompatActivity {
             mEditText.setText(mUIForwardingTask.getForwardingContent().getContent());
         }
 
-        if (mUIForwardingTask.getUserGroup() != null) {
-            mSelGroupBtn.setText(mUIForwardingTask.getUserGroup().getGroupName());
+        if (mUIForwardingTask.getMergeUserGroup() != null) {
+            mSelGroupBtn.setText(mUIForwardingTask.getMergeUserGroup().getGroupName());
         }
 
-        if (mUIForwardingTask.getUserGroup() != null) {
+        if (mUIForwardingTask.getMergeUserGroup() != null) {
 
             if (!TextUtils.isEmpty(mUIForwardingTask.getForwardingContent().getContent())) {
                 mStartBtn.setVisibility(View.VISIBLE);
