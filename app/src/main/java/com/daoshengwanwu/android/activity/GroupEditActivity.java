@@ -150,7 +150,7 @@ public class GroupEditActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group_edit);
 
-        mUserGroup = UserGroupLab.getInstance().getCloneUserItemsByUUID(
+        mUserGroup = UserGroupLab.getInstance().getUserItemsByUUID(
                 UUID.fromString(getIntent().getStringExtra(EXTRA_GROUP_ID)));
 
         mGroupNameET = findViewById(R.id.group_name_et);
