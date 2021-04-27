@@ -129,7 +129,7 @@ public class ContactPage extends Page {
             }
 
             UserItem item;
-            item = getByFullNickname(list, title);
+            item = getByInfoTitle(list, title);
 
             if (item != null) {
                 results.add(new FindResult(info.getParent().getParent(), item));
@@ -171,18 +171,32 @@ public class ContactPage extends Page {
         return false;
     }
 
-    private UserItem getByFullNickname(List<UserItem> userItems, String fullNickname) {
-        if (userItems == null || fullNickname == null) {
+    private UserItem getByInfoTitle(List<UserItem> userItems, String title) {
+        if (userItems == null || title == null) {
             return null;
         }
 
+        UserItem fuzzyMatch = null; // 模糊匹配
+        UserItem fullMatch = null; // 全量匹配
         for (UserItem item : userItems) {
-            if (item.fullNickName != null && item.fullNickName.startsWith(fullNickname)) {
-                return item;
+            if (item.fullNickName == null) {
+                continue;
+            }
+
+            if (fullMatch == null && item.fullNickName.equals(title)) {
+                fullMatch = item;
+            }
+
+            if (fuzzyMatch == null && item.fullNickName.startsWith(title)) {
+                fuzzyMatch = item;
             }
         }
 
-        return null;
+        if (fullMatch != null) {
+            return fullMatch;
+        }
+
+        return fuzzyMatch;
     }
 
 
