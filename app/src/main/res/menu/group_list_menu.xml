@@ -15,6 +15,6 @@
     <item android:id="@+id/delete"
           android:title="删除选中分组"
           android:icon="@android:drawable/ic_menu_delete"
-          app:showAsAction="never"/>
+          app:showAsAction="withText|ifRoom"/>
 
 </menu>

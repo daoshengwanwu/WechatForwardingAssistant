@@ -71,6 +71,11 @@ public class GroupListActivity extends AppCompatActivity {
             } break;
 
             case R.id.delete: {
+                if (mSelectedUserGroups.size() <= 0) {
+                    Toast.makeText(this, "请先选中群组", Toast.LENGTH_SHORT).show();
+                    break;
+                }
+
                 UserGroupLab.getInstance().removeUserGroups(this, mSelectedUserGroups);
                 mAdapter.updateView();
             } break;
