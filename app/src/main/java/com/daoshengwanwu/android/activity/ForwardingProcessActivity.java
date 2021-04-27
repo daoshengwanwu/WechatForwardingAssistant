@@ -39,6 +39,7 @@ import java.util.Calendar;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 import java.util.UUID;
 import java.util.regex.Pattern;
@@ -143,7 +144,16 @@ public class ForwardingProcessActivity extends AppCompatActivity {
             final int min = calendar.get(Calendar.MINUTE);
             final int second = calendar.get(Calendar.SECOND);
 
-            String suffix = year + "." + month + "." + day + "," + hour + ":" + min + ":" + second;
+            String suffix = "->saved at: " + String.format(
+                    Locale.getDefault(),
+                    "%02d%02d%02d,%02d:%02d:%02d",
+                    year % 100,
+                    month,
+                    day,
+                    hour,
+                    min,
+                    second);
+
             curUserGroup.setGroupName(curUserGroup.getGroupName() + suffix);
         }
 

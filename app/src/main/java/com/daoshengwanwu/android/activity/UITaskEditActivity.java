@@ -134,6 +134,8 @@ public class UITaskEditActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (resultCode != RESULT_OK) {
+            setUIForwardingTaskNameAndSaveTaskToLab(false);
+            updateViews();
             return;
         }
 
@@ -146,7 +148,6 @@ public class UITaskEditActivity extends AppCompatActivity {
                 UUID uuid = UUID.fromString(data.getStringExtra("forwarding_content_uuid"));
                 mUIForwardingTask.setForwardingContent(ForwardingContentLab.getInstance().getForwardingContent(uuid));
 
-                updateViews();
             } break;
 
             case REQUEST_SEL_GROUP: {
@@ -156,11 +157,11 @@ public class UITaskEditActivity extends AppCompatActivity {
 
                 final List<UserGroup> userGroupList = readUserGroupsFromUUIDList(data.getStringExtra("user_group_uuid"));
                 mUIForwardingTask.setUserGroupList(getApplicationContext(), userGroupList);
-                updateViews();
+
             } break;
         }
 
-        setUIForwardingTaskNameAndSaveTaskToLab(false);
+        updateViews();
     }
 
     @Nullable
@@ -249,6 +250,10 @@ public class UITaskEditActivity extends AppCompatActivity {
         ForwardingContent content = mUIForwardingTask.getForwardingContent();
         UserGroup group = mUIForwardingTask.getMergeUserGroup();
 
+        if (group == null || !UserGroupLab.getInstance().contains(group.getUUID())) {
+            group = null;
+        }
+
         String name = "";
 
         if (group != null) {
@@ -279,17 +284,20 @@ public class UITaskEditActivity extends AppCompatActivity {
             mEditText.setText(mUIForwardingTask.getForwardingContent().getContent());
         }
 
-        if (mUIForwardingTask.getMergeUserGroup() != null) {
-            mSelGroupBtn.setText(mUIForwardingTask.getMergeUserGroup().getGroupName());
-        }
+        final UserGroup userGroup = mUIForwardingTask.getMergeUserGroup();
 
-        if (mUIForwardingTask.getMergeUserGroup() != null) {
+        if (userGroup != null && UserGroupLab.getInstance().contains(userGroup.getUUID())) {
+            mSelGroupBtn.setText(mUIForwardingTask.getMergeUserGroup().getGroupName());
 
             if (!TextUtils.isEmpty(mUIForwardingTask.getForwardingContent().getContent())) {
                 mStartBtn.setVisibility(View.VISIBLE);
             }
 
             mSelReceiverBtn.setVisibility(View.VISIBLE);
+        } else {
+            mSelGroupBtn.setText("选择群组");
+            mStartBtn.setVisibility(View.GONE);
+            mSelReceiverBtn.setVisibility(View.GONE);
         }
     }
 }

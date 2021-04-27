@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -33,11 +34,8 @@ import java.util.UUID;
 
 
 public class GroupListActivity extends AppCompatActivity {
-    private Adapter mAdapter = new Adapter();
-    private RecyclerView mRecyclerView;
-    private Set<UserGroup> mSelectedUserGroups = new HashSet<>();
-
-    private Mode mCurMode = Mode.MODE_SELECT;
+    private final Adapter mAdapter = new Adapter();
+    private final Set<UserGroup> mSelectedUserGroups = new HashSet<>();
 
 
     public static Intent newIntent(Context context) {
@@ -49,7 +47,7 @@ public class GroupListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group_list);
 
-        mRecyclerView = findViewById(R.id.recycler_view);
+        RecyclerView mRecyclerView = findViewById(R.id.recycler_view);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mAdapter.updateView();
@@ -77,22 +75,8 @@ public class GroupListActivity extends AppCompatActivity {
                 mAdapter.updateView();
             } break;
 
-            case R.id.switch_mode: {
-                if (mCurMode == Mode.MODE_SELECT) {
-                    mCurMode = Mode.MODE_EDIT;
-                    item.setTitle("退出编辑");
-                    break;
-                }
-
-                if (mCurMode == Mode.MODE_EDIT) {
-                    mCurMode = Mode.MODE_SELECT;
-                    item.setTitle("编辑");
-                    break;
-                }
-            } break;
-
             case R.id.apply: {
-
+                setSelectedUserGroupsResultAndFinish();
             } break;
         }
 
@@ -107,6 +91,23 @@ public class GroupListActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.group_list_menu, menu);
         return super.onCreateOptionsMenu(menu);
+    }
+    
+    private void setSelectedUserGroupsResultAndFinish() {
+        final Set<UserGroup> selectedUserGroupSet = mSelectedUserGroups;
+        if (selectedUserGroupSet == null || selectedUserGroupSet.isEmpty()) {
+            Toast.makeText(this, "请选中至少一个分组", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        
+        final List<UUID> selGroupUUIDList = new ArrayList<>();
+        for (UserGroup userGroup : selectedUserGroupSet) {
+            if (userGroup.getUUID() != null) {
+                selGroupUUIDList.add(userGroup.getUUID());
+            }
+        }
+        
+        setSelectedUserGroupsResultAndFinish(selGroupUUIDList);
     }
 
     private void setSelectedUserGroupsResultAndFinish(@Nullable final List<UUID> userGroups) {
@@ -167,12 +168,9 @@ public class GroupListActivity extends AppCompatActivity {
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (mCurMode == Mode.MODE_EDIT) {
-                            startActivity(GroupEditActivity.newIntent(
-                                    GroupListActivity.this, mCurGroup.getUUID()));
-                        } else if (mCurMode == Mode.MODE_SELECT) {
-                            setSelectedUserGroupsResultAndFinish(Arrays.asList(mCurGroup.getUUID()));
-                        }
+                        startActivity(GroupEditActivity.newIntent(
+                                GroupListActivity.this, mCurGroup.getUUID()));
+
                     }
                 });
 
@@ -201,9 +199,5 @@ public class GroupListActivity extends AppCompatActivity {
                 }
             }
         }
-    }
-
-    private enum Mode {
-        MODE_EDIT, MODE_SELECT
     }
 }

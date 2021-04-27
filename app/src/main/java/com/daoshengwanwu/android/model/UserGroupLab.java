@@ -4,6 +4,8 @@ package com.daoshengwanwu.android.model;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import androidx.annotation.NonNull;
+
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -27,6 +29,14 @@ public class UserGroupLab {
 
     private UserGroupLab() {
 
+    }
+
+    public boolean contains(@NonNull final UUID userGroupUUID) {
+        if (userGroupUUID == null) {
+            return false;
+        }
+
+        return getUserItemsByUUID(userGroupUUID) != null;
     }
 
     public UserGroup createUserGroup(Context context, String groupName) {

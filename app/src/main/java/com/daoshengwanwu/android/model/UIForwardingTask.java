@@ -31,6 +31,12 @@ public class UIForwardingTask {
             return;
         }
 
+        mUserGroupList = userGroupList;
+        if (userGroupList.size() == 1) {
+            mMergeUserGroup = userGroupList.get(0);
+            return;
+        }
+
         String mergeGroupName = "";
         for (UserGroup userGroup : userGroupList) {
             mergeGroupName += userGroup.getGroupName() + ",";
@@ -44,8 +50,7 @@ public class UIForwardingTask {
             mergeGroupName = "empty merge group";
         }
 
-        mUserGroupList = userGroupList;
-        mMergeUserGroup = new UserGroup(mergeGroupName);
+        mMergeUserGroup = new UserGroup("merge:" + mergeGroupName);
         for (UserGroup userGroup : userGroupList) {
             mMergeUserGroup.mergeUserItems(userGroup);
         }
