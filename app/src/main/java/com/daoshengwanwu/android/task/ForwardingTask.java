@@ -79,7 +79,10 @@ public class ForwardingTask extends Task {
             return;
         }
 
-        Page page = Page.generateFrom(rootInfo);
+        final Page page = Page.generateFrom(rootInfo);
+        if (page == null) {
+            return;
+        }
 
         if (!mIsForwrdingAlreadyStarted &&
                 (page.getPageId() == Page.PageId.PAGE_WECHAT ||
@@ -123,7 +126,7 @@ public class ForwardingTask extends Task {
             ContactPage.FindResult findResult = null;
             final List<ContactPage.FindResult> findResults = contactPage.findAllInfo(mToForwardingList);
             for (ContactPage.FindResult result : findResults) {
-                if (containsResult(result)) {
+                if (alreadySent(result)) {
                     continue;
                 }
 
@@ -231,10 +234,10 @@ public class ForwardingTask extends Task {
         }
     }
 
-    private boolean containsResult(ContactPage.FindResult result) {
+    private boolean alreadySent(ContactPage.FindResult result) {
         for (String name : mAlreadySentList) {
             try {
-                if (name != null && name.startsWith(result.item.fullNickName)) {
+                if (name != null && name.equals(result.item.fullNickName)) {
                     return true;
                 }
             } catch (Throwable e) {
