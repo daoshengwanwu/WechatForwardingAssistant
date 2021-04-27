@@ -36,6 +36,11 @@ public class ForwardingTask extends Task {
     private final List<UserItem> mToForwardingList; // 要群发的用户列表
     private final List<String> mAlreadySentList = new ArrayList<>(); // 已经发送过的用户列表
 
+    private final int mOriginCount; // 群发分组最一开始的size，也就是ForwardingTask实例创建的时候，群组的大小
+    private final int mBundleSize; // 每mBundleSize暂停一次
+    private final int mPauseTime; // 每mBundleSize暂停mPauseTime
+    private final int mDeltaTime; // 两次发送消息间，最小间隔时间
+
     private UserItem mCurSendingTarget; // 当前正在发送的用户
     private int mCurScrollDirection = Direction.FORWARD; // 当前列表滑动方向
     private boolean mIsTaskFinished = false; // 群发是否执行完毕
@@ -44,10 +49,7 @@ public class ForwardingTask extends Task {
     private OnForwardingTaskFinishedListener mListener; // 监听群发进度的监听器
     private boolean mAlreadyPause; // 是否已经自动暂停过
     private long mLastForwardingTime; // 上一次发送消息的时间戳
-    private final int mOriginCount; // 群发分组最一开始的size，也就是ForwardingTask实例创建的时候，群组的大小
-    private final int mBundleSize; // 每mBundleSize暂停一次
-    private final int mPauseTime; // 每mBundleSize暂停mPauseTime
-    private final int mDeltaTime; // 两次发送消息间，最小间隔时间
+    private int mSkipCountInCurrentPage; // 当前通讯录页面需要跳过的用户数量
 
 
     public ForwardingTask(
@@ -125,8 +127,14 @@ public class ForwardingTask extends Task {
 
             ContactPage.FindResult findResult = null;
             final List<ContactPage.FindResult> findResults = contactPage.findAllInfo(mToForwardingList);
+            int skipCount = 0;
             for (ContactPage.FindResult result : findResults) {
                 if (alreadySent(result)) {
+                    continue;
+                }
+
+                if (skipCount < mSkipCountInCurrentPage) {
+                    skipCount++;
                     continue;
                 }
 
@@ -154,6 +162,7 @@ public class ForwardingTask extends Task {
 
             if (mCurScrollDirection == Direction.FORWARD) {
                 if (contactPage.performForwardingScrollListView()) {
+                    mSkipCountInCurrentPage = 0;
                     SystemClock.sleep(80);
                     return;
                 }
@@ -162,6 +171,7 @@ public class ForwardingTask extends Task {
                 execute(rootInfo);
             } else {
                 if (contactPage.performBackwordScrollListView()) {
+                    mSkipCountInCurrentPage = 0;
                     SystemClock.sleep(80);
                     return;
                 }
@@ -197,6 +207,8 @@ public class ForwardingTask extends Task {
 
             String title = chatPage.getTitle();
             if (mCurSendingTarget == null || !title.equals(mCurSendingTarget.fullNickName)) {
+                mSkipCountInCurrentPage++;
+                chatPage.performBack();
                 return;
             }
 

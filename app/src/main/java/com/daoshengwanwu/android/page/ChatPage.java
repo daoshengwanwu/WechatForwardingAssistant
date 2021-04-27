@@ -72,12 +72,19 @@ public class ChatPage extends Page {
         List<AccessibilityNodeInfo> rst;
 
         // 后退LinearLayout
-        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/un");
+        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/eh");
         if (!CustomCollectionUtils.isListEmpty(rst)) {
             mBackInfo = rst.get(0);
         }
 
-        // 左上角联系人名字TextView
+        if (mBackInfo == null) {
+            rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/un");
+            if (!CustomCollectionUtils.isListEmpty(rst)) {
+                mBackInfo = rst.get(0);
+            }
+        }
+
+        // 联系人名字TextView
         rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/ipt");
         if (!CustomCollectionUtils.isListEmpty(rst)) {
             mTitleInfo = rst.get(0);

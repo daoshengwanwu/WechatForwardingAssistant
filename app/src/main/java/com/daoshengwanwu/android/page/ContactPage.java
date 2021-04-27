@@ -82,7 +82,7 @@ public class ContactPage extends Page {
 
         for (AccessibilityNodeInfo info : mContactInfos) {
             String title = ActionPerformer.getText(info, "ContactPage.findFirstInfoInSpecificSet.getTitle");
-            UserItem item = getByFullNickname(list, title);
+            UserItem item = getByInfoTitle(list, title);
             if (item != null) {
                 return new FindResult(info.getParent().getParent(), item);
             }
