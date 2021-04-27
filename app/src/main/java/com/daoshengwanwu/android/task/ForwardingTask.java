@@ -32,22 +32,22 @@ import java.util.regex.Pattern;
 public class ForwardingTask extends Task {
     private static final Handler MAIN_HANDLER = new Handler(Looper.getMainLooper());
 
-    private ForwardingProcessActivity mContext; // 群发进度管理界面
-    private List<UserItem> mToForwardingList; // 指定的要群发的用户
-    private List<String> mAlreadySentList = new ArrayList<>(); // 已经发送过的人的名单
-    private UserGroup mUserGroup;
+    private final ForwardingProcessActivity mContext; // 群发进度管理界面
+    private final List<UserItem> mToForwardingList; // 要群发的用户列表
+    private final List<String> mAlreadySentList = new ArrayList<>(); // 已经发送过的用户列表
+
     private UserItem mCurSendingTarget; // 当前正在发送的用户
-    private int mCurScrollDirection = Direction.FORWARD;
-    private boolean mIsTaskFinished = false;
-    private boolean mIsForwrdingAlreadyStarted = false;
-    private String mContent = "";
-    private OnForwardingTaskFinishedListener mListener;
-    private boolean mAlreadyPause;
-    private long mLastForwardingTime;
-    private final int mOriginCount;
-    private final int mBundleSize;
-    private final int mPauseTime;
-    private final int mDeltaTime;
+    private int mCurScrollDirection = Direction.FORWARD; // 当前列表滑动方向
+    private boolean mIsTaskFinished = false; // 群发是否执行完毕
+    private boolean mIsForwrdingAlreadyStarted = false; // 是否已经提醒过群发3s内开始
+    private String mContent = ""; // 要群发的内容
+    private OnForwardingTaskFinishedListener mListener; // 监听群发进度的监听器
+    private boolean mAlreadyPause; // 是否已经自动暂停过
+    private long mLastForwardingTime; // 上一次发送消息的时间戳
+    private final int mOriginCount; // 群发分组最一开始的size，也就是ForwardingTask实例创建的时候，群组的大小
+    private final int mBundleSize; // 每mBundleSize暂停一次
+    private final int mPauseTime; // 每mBundleSize暂停mPauseTime
+    private final int mDeltaTime; // 两次发送消息间，最小间隔时间
 
 
     public ForwardingTask(
@@ -63,11 +63,10 @@ public class ForwardingTask extends Task {
         super(TaskId.TASK_FORWARDING);
 
         mContext = context;
-        mUserGroup = group;
         mBundleSize = bundleSize;
         mPauseTime = pauseTime;
         mDeltaTime = deltaTime;
-        mToForwardingList = mUserGroup.getUserItems();
+        mToForwardingList = group.getUserItems();
 
         mContent = content;
         mListener = listener;
