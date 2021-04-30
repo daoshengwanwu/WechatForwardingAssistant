@@ -124,6 +124,13 @@ public class ContactPage extends Page {
                 if (title.endsWith("…")) {
                     title = title.substring(0, title.length() - 1);
                 }
+
+                if (title != null && title.length() > 0) {
+                    final char lastChar = title.charAt(title.length() - 1);
+                    if (8199 == (int) lastChar) {
+                        title = title.substring(0, title.length() - 1);
+                    }
+                }
             } catch (Throwable e) {
                 // ignore
             }
