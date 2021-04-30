@@ -18,12 +18,16 @@ import java.util.regex.Pattern;
 
 
 public class RegLoadUsersTask extends Task {
+    private static final long FIRST_WAIT_TIME = 2000L;
+
+
     private final Context mContext;
     private final Pattern mPattern;
     private final Set<UserItem> mLoadedUserItems = new HashSet<>();
     private final OnUsersInfoLoadFinishedListener mListener;
 
     private boolean mHasBackwordScrollFinished = false;
+    private boolean mHasWaitFirst = false;
 
 
     public RegLoadUsersTask(Context context, Pattern pattern, OnUsersInfoLoadFinishedListener listener) {
@@ -43,6 +47,11 @@ public class RegLoadUsersTask extends Task {
         Page curPage = Page.generateFrom(rootInfo);
         if (!(curPage instanceof ContactPage)) {
             return;
+        }
+
+        if (!mHasWaitFirst) {
+            SystemClock.sleep(FIRST_WAIT_TIME);
+            mHasWaitFirst = true;
         }
 
         ContactPage contactPage = (ContactPage) curPage;
