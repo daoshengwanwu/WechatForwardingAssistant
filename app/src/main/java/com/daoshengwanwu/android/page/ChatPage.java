@@ -176,7 +176,15 @@ public class ChatPage extends Page {
     }
 
     public String getTitle() {
-        return ActionPerformer.getText(mTitleInfo, "ChatPage.getTitle()");
+        String title = ActionPerformer.getText(mTitleInfo, "ChatPage.getTitle()");
+        if (title != null && title.length() > 0) {
+            final char lastChar = title.charAt(title.length() - 1);
+            if (8199 == (int) lastChar) {
+                title = title.substring(0, title.length() - 1);
+            }
+        }
+
+        return title;
     }
 
     public void performAllCheck() {
