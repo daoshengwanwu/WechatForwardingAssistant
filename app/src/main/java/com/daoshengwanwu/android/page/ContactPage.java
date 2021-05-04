@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import com.daoshengwanwu.android.model.item.UserItem;
 import com.daoshengwanwu.android.util.ActionPerformer;
 import com.daoshengwanwu.android.util.CustomCollectionUtils;
+import com.daoshengwanwu.android.util.CustomTextUtils;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -119,21 +120,7 @@ public class ContactPage extends Page {
         List<FindResult> results = new ArrayList<>();
         for (AccessibilityNodeInfo info : mContactInfos) {
             String title = ActionPerformer.getText(info, "ContactPage.findAllInfo");
-
-            try {
-                if (title.endsWith("…")) {
-                    title = title.substring(0, title.length() - 1);
-                }
-
-                if (title != null && title.length() > 0) {
-                    final char lastChar = title.charAt(title.length() - 1);
-                    if (8199 == (int) lastChar) {
-                        title = title.substring(0, title.length() - 1);
-                    }
-                }
-            } catch (Throwable e) {
-                // ignore
-            }
+            title = CustomTextUtils.getValidRemarkName(title);
 
             UserItem item;
             item = getByInfoTitle(list, title);

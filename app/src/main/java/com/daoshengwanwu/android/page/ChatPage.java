@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 
 import com.daoshengwanwu.android.util.ActionPerformer;
 import com.daoshengwanwu.android.util.CustomCollectionUtils;
+import com.daoshengwanwu.android.util.CustomTextUtils;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -177,12 +178,7 @@ public class ChatPage extends Page {
 
     public String getTitle() {
         String title = ActionPerformer.getText(mTitleInfo, "ChatPage.getTitle()");
-        if (title != null && title.length() > 0) {
-            final char lastChar = title.charAt(title.length() - 1);
-            if (8199 == (int) lastChar) {
-                title = title.substring(0, title.length() - 1);
-            }
-        }
+        title = CustomTextUtils.getValidRemarkName(title);
 
         return title;
     }

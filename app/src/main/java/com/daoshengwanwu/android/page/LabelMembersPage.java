@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import com.daoshengwanwu.android.model.item.UserItem;
 import com.daoshengwanwu.android.util.ActionPerformer;
 import com.daoshengwanwu.android.util.CustomCollectionUtils;
+import com.daoshengwanwu.android.util.CustomTextUtils;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -64,6 +65,7 @@ public class LabelMembersPage extends Page {
 
         for (AccessibilityNodeInfo info : mTextInfos) {
             String title = ActionPerformer.getText(info, "标签界面获取item的标签");
+            title = CustomTextUtils.getValidRemarkName(title);
             if (!TextUtils.isEmpty(title)) {
                 rst.add(new UserItem(title, labelText));
             }
