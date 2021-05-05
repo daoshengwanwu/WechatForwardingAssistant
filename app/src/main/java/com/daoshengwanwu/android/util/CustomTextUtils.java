@@ -15,7 +15,7 @@ public class CustomTextUtils {
 
 
     static {
-        REMARKS_NAME_CHAR_SET.addAll(Arrays.asList('-', '&', '@', '(', ')', '.', ',', ' ', '/', '+'));
+        REMARKS_NAME_CHAR_SET.addAll(Arrays.asList('-', '&', '@', '(', ')', '.', '。', ',', ' ', '/', '+', '"', '”', '“'));
     }
 
 
