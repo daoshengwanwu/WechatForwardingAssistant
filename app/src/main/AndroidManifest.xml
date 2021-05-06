@@ -15,17 +15,17 @@
         android:theme="@style/AppTheme">
 
         <activity android:name=".activity.YesActivity"
-            android:label="点赞"/>
+            android:label="朋友圈点赞" />
 
         <activity android:name=".activity.CleanActivity"
-            android:label="清理" />
+            android:label="聊天消息清理" />
 
         <activity android:name=".activity.UITaskEditActivity"
-            android:label="任务编辑界面"
+            android:label="群发任务编辑"
             android:parentActivityName=".activity.UITaskListActivity" />
 
         <activity android:name=".activity.UITaskListActivity"
-            android:label="群发"
+            android:label="群发任务列表"
             android:icon="@drawable/icon_forwarding" />
 
         <activity android:name=".activity.ForwardingEditActivity"
@@ -37,16 +37,16 @@
             android:parentActivityName=".activity.UITaskEditActivity" />
 
         <activity android:name=".activity.GroupListActivity"
-            android:label="分组列表页面"
+            android:label="群发分组列表"
             android:parentActivityName=".activity.UITaskEditActivity" />
 
         <activity android:name=".activity.ForwardingProcessActivity"
             android:parentActivityName=".activity.UITaskEditActivity"
-            android:label="进度控制" />
+            android:label="群发进度控制" />
 
         <activity android:name=".activity.GroupEditActivity"
             android:parentActivityName=".activity.GroupListActivity"
-            android:label="分组编辑" />
+            android:label="群发分组编辑" />
 
         <service android:name=".service.AuxiliaryService"
             android:enabled="true"
