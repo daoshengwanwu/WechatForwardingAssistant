@@ -1,11 +1,15 @@
 package com.daoshengwanwu.android.activity;
 
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.daoshengwanwu.android.R;
@@ -14,6 +18,21 @@ import com.daoshengwanwu.android.task.Task;
 
 
 public class YesActivity extends AppCompatActivity {
+    public static final void launchYesActivity(@NonNull final Activity activity) {
+        if (activity == null || activity.isFinishing() || activity.isDestroyed()) {
+            return;
+        }
+
+        final Intent intent = new Intent(activity, YesActivity.class);
+
+        try {
+            activity.startActivity(intent);
+        } catch (Throwable e) {
+            Toast.makeText(activity, "启动点赞Activity失败", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+
     private ShareData mShareData = ShareData.getInstance();
 
     private Button mButton;

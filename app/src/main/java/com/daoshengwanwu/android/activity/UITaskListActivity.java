@@ -1,6 +1,8 @@
 package com.daoshengwanwu.android.activity;
 
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -8,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -23,6 +26,21 @@ import java.util.List;
 
 
 public class UITaskListActivity extends AppCompatActivity {
+    public static final void launchForwardingTaskListActivity(@NonNull final Activity activity) {
+        if (activity == null || activity.isFinishing() || activity.isDestroyed()) {
+            return;
+        }
+
+        final Intent intent = new Intent(activity, UITaskListActivity.class);
+
+        try {
+            activity.startActivity(intent);
+        } catch (Throwable e) {
+            Toast.makeText(activity, "启动点赞Activity失败", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+
     private UIForwardingTaskLab mUIForwardingTaskLab = UIForwardingTaskLab.getInstance();
 
     private RecyclerView mRecyclerView;

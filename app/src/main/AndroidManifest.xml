@@ -1,65 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          xmlns:dist="http://schemas.android.com/apk/distribution"
-          package="com.daoshengwanwu.android">
+    xmlns:dist="http://schemas.android.com/apk/distribution"
+    package="com.daoshengwanwu.android">
 
-    <dist:module dist:instant="true"/>
+    <dist:module dist:instant="true" />
 
     <application
         android:name=".CustomApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
-        android:roundIcon="@mipmap/ic_launcher_round"
         android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <activity android:name=".activity.YesActivity"
+        <activity android:name=".activity.LauncherActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".activity.YesActivity"
             android:label="朋友圈点赞" />
-
-        <activity android:name=".activity.CleanActivity"
+        <activity
+            android:name=".activity.CleanActivity"
             android:label="聊天消息清理" />
-
-        <activity android:name=".activity.UITaskEditActivity"
+        <activity
+            android:name=".activity.UITaskEditActivity"
             android:label="群发任务编辑"
             android:parentActivityName=".activity.UITaskListActivity" />
-
-        <activity android:name=".activity.UITaskListActivity"
-            android:label="群发任务列表"
-            android:icon="@drawable/icon_forwarding" />
-
-        <activity android:name=".activity.ForwardingEditActivity"
+        <activity
+            android:name=".activity.UITaskListActivity"
+            android:icon="@drawable/icon_forwarding"
+            android:label="群发任务列表" />
+        <activity
+            android:name=".activity.ForwardingEditActivity"
             android:label="群发内容编辑"
             android:parentActivityName=".activity.ForwardingContentListActivity" />
-
-        <activity android:name=".activity.ForwardingContentListActivity"
+        <activity
+            android:name=".activity.ForwardingContentListActivity"
             android:label="群发内容列表"
             android:parentActivityName=".activity.UITaskEditActivity" />
-
-        <activity android:name=".activity.GroupListActivity"
+        <activity
+            android:name=".activity.GroupListActivity"
             android:label="群发分组列表"
             android:parentActivityName=".activity.UITaskEditActivity" />
+        <activity
+            android:name=".activity.ForwardingProcessActivity"
+            android:label="群发进度控制"
+            android:parentActivityName=".activity.UITaskEditActivity" />
+        <activity
+            android:name=".activity.GroupEditActivity"
+            android:label="群发分组编辑"
+            android:parentActivityName=".activity.GroupListActivity" />
 
-        <activity android:name=".activity.ForwardingProcessActivity"
-            android:parentActivityName=".activity.UITaskEditActivity"
-            android:label="群发进度控制" />
-
-        <activity android:name=".activity.GroupEditActivity"
-            android:parentActivityName=".activity.GroupListActivity"
-            android:label="群发分组编辑" />
-
-        <service android:name=".service.AuxiliaryService"
+        <service
+            android:name=".service.AuxiliaryService"
             android:enabled="true"
             android:exported="true"
             android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
-
             <intent-filter>
-                <action android:name="android.accessibilityservice.AccessibilityService"/>
+                <action android:name="android.accessibilityservice.AccessibilityService" />
             </intent-filter>
 
-            <meta-data android:name="android.accessibilityservice"
-                android:resource="@xml/auxiliary_service_configuration"/>
-
+            <meta-data
+                android:name="android.accessibilityservice"
+                android:resource="@xml/auxiliary_service_configuration" />
         </service>
     </application>
 
