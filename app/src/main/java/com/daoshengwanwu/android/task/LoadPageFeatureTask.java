@@ -13,6 +13,12 @@ public class LoadPageFeatureTask extends Task {
 
     @Override
     public void execute(@NonNull AccessibilityNodeInfo rootInfo) {
-        // 1. 首先确认有没有悬浮窗权限
+        // 1. 首先确认有没有悬浮窗权限, 如果没有悬浮窗权限则跳转至开启悬浮窗权限界面
+        // 2. 
+    }
+
+    
+    public interface OnLoadPageFeatureFinishedListener {
+        void onLoadPageFeatureFinished();
     }
 }

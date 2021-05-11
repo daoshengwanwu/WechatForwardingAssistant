@@ -21,6 +21,9 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".activity.TranslucentOnePixelActivity"
+            android:theme="@style/TranslucentNoActionBar" />
+        <activity
             android:name=".activity.YesActivity"
             android:label="朋友圈点赞" />
         <activity
