@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 
 import com.daoshengwanwu.android.R;
+import com.daoshengwanwu.android.model.ShareData;
 
 
 public class LauncherActivity extends AppCompatActivity {
@@ -47,6 +48,7 @@ public class LauncherActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 UITaskListActivity.launchForwardingTaskListActivity(LauncherActivity.this);
+                ShareData.getInstance().activeLoadPageFeautresTask(LauncherActivity.this);
             }
         });
     }

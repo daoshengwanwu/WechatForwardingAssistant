@@ -7,13 +7,12 @@ import android.view.accessibility.AccessibilityNodeInfo;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.daoshengwanwu.android.model.PageFeature;
 
 
 public class PageUtils {
     // 一个界面的特征包含的ID数量
-    private static final int PAGE_FEATURE_IDENTITY_COUNT = 10;
+    private static final int PAGE_FEATURE_IDENTITY_COUNT = Integer.MAX_VALUE;
 
 
     /**
@@ -22,29 +21,42 @@ public class PageUtils {
      * @return 界面特征，如果失败返回null
      */
     @Nullable
-    public static List<String> gatherPageFeatures(@NonNull final AccessibilityNodeInfo rootInfo) {
+    public static PageFeature gatherPageFeatures(@NonNull final AccessibilityNodeInfo rootInfo) {
         if (rootInfo == null) {
             return null;
         }
 
-        final List<String> result = new ArrayList<>();
-        gatherPageFeaturesInner(rootInfo, result);
+        final PageFeature feature = new PageFeature();
+        gatherPageFeaturesInner(rootInfo, feature);
 
-        return result;
+        return feature;
     }
 
     private static void gatherPageFeaturesInner(@NonNull final AccessibilityNodeInfo info,
-                                         @NonNull final List<String> outViewIdentityNames) {
+                                                @NonNull final PageFeature feature) {
 
-        if (info == null || outViewIdentityNames == null ||
-                outViewIdentityNames.size() >= PAGE_FEATURE_IDENTITY_COUNT) {
+        if (info == null || feature == null ||
+                feature.size() >= PAGE_FEATURE_IDENTITY_COUNT) {
 
             return;
         }
 
-        final String viewIdResourceName = info.getViewIdResourceName();
-        if (!TextUtils.isEmpty(viewIdResourceName)) {
-            outViewIdentityNames.add(viewIdResourceName);
+        if ("android.widget.EditText".equals(feature.getLastFeatureClassName())) {
+            return;
+        }
+
+        feature.addViewFeature(info);
+
+        final String className = info.getClassName() == null ? null : info.getClassName().toString();
+        if (TextUtils.isEmpty(className)) {
+            return;
+        }
+
+        if ("androidx.recyclerview.widget.RecyclerView".equals(className) ||
+            "android.widget.ListView".equals(className) ||
+            "android.support.v7.widget.RecyclerView".equals(className)) {
+
+            return;
         }
 
         final int childCount = info.getChildCount();
@@ -53,7 +65,8 @@ public class PageUtils {
         }
 
         for (int i = 0; i < childCount; i++) {
-            gatherPageFeaturesInner(info.getChild(i), outViewIdentityNames);
+            final AccessibilityNodeInfo child = info.getChild(i);
+            gatherPageFeaturesInner(child, feature);
         }
     }
 }

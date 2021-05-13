@@ -20,6 +20,21 @@ public class CustomTextUtils {
     }
 
 
+    public static String getViewFeatureText(@NonNull final String originFeatureText) {
+        if (originFeatureText == null) {
+            return null;
+        }
+
+        for (int i = 0; i < originFeatureText.length(); i++) {
+            final char c = originFeatureText.charAt(i);
+            if (!isValidViewFeatureCharacter(c)) {
+                return originFeatureText.substring(0, i);
+            }
+        }
+
+        return originFeatureText;
+    }
+
     public static String getValidRemarkName(@NonNull final String originRemarkName) {
         if (originRemarkName == null) {
             return "";
@@ -33,6 +48,14 @@ public class CustomTextUtils {
         }
 
         return originRemarkName;
+    }
+
+    public static boolean isValidViewFeatureCharacter(final char c) {
+        if ('A' <= c && c <= 'Z' || 'a' <= c && c <= 'z') {
+            return true;
+        }
+
+        return 0x4e00 <= c && c <= 0x9FA5;
     }
 
     public static boolean isValidRemarkNameCharacter(final char c) {

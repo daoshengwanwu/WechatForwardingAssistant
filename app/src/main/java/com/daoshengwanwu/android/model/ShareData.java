@@ -8,6 +8,7 @@ import com.daoshengwanwu.android.activity.ForwardingProcessActivity;
 import com.daoshengwanwu.android.task.CleanTask;
 import com.daoshengwanwu.android.task.ForwardingTask;
 import com.daoshengwanwu.android.task.LoadLabelUsersTask;
+import com.daoshengwanwu.android.task.LoadPageFeatureTask;
 import com.daoshengwanwu.android.task.RegLoadUsersTask;
 import com.daoshengwanwu.android.task.SelectReceiverTask;
 import com.daoshengwanwu.android.task.Task;
@@ -61,6 +62,11 @@ public class ShareData {
     public void activeSelectReceiverTask(final Context context, UserGroup group) {
         mActiveTask = new SelectReceiverTask(group, context);
         SingleSubThreadUtil.showToast(context, "激活选择收信人任务", Toast.LENGTH_LONG);
+    }
+
+    public void activeLoadPageFeautresTask(final Context context) {
+        mActiveTask = new LoadPageFeatureTask();
+        SingleSubThreadUtil.showToast(context, "开始收集页面特征", Toast.LENGTH_LONG);
     }
 
     public void activeYesTask() {

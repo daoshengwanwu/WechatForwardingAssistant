@@ -48,7 +48,7 @@ public class AuxiliaryService extends AccessibilityService {
         SingleSubThreadUtil.showToast(this, "成功启动 " +
                 getResources().getString(R.string.app_name) + ".", Toast.LENGTH_SHORT);
 
-        mMainHandler.sendEmptyMessageDelayed(WHAT_BREATH_INTERVAL, 500);
+//        mMainHandler.sendEmptyMessageDelayed(WHAT_BREATH_INTERVAL, 500);
     }
 
     @Override
