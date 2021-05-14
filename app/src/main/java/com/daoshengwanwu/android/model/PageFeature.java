@@ -29,12 +29,7 @@ public class PageFeature {
         final String viewIdResourceName = info.getViewIdResourceName();
         final String text = ActionPerformer.getText(info, "获取特征->获取text");
         final String className = info.getClassName() == null ? "" : info.getClassName().toString();
-        final boolean isWeak;
-        if (CustomTextUtils.canStringParseToIntger(text)) {
-            isWeak = true;
-        } else {
-            isWeak = false;
-        }
+        final boolean isWeak = CustomTextUtils.canStringParseToIntger(text);
 
         if (!TextUtils.isEmpty(viewIdResourceName)) {
             viewFeatures.add(new ViewFeature(viewIdResourceName, text, isWeak));
