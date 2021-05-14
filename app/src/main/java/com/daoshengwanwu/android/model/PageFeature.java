@@ -98,7 +98,7 @@ public class PageFeature {
         return viewFeatures.hashCode();
     }
 
-    private static final class ViewFeature {
+    public static final class ViewFeature {
         private static final Set<String> ID_FEATURE_NEED_TEXT = new HashSet<>();
 
 
