@@ -35,6 +35,15 @@ public class CustomTextUtils {
         return originFeatureText;
     }
 
+    public static boolean canStringParseToIntger(final String str) {
+        try {
+            Integer.parseInt(str);
+            return true;
+        } catch (Throwable e) {
+            return false;
+        }
+    }
+
     public static String getValidRemarkName(@NonNull final String originRemarkName) {
         if (originRemarkName == null) {
             return "";

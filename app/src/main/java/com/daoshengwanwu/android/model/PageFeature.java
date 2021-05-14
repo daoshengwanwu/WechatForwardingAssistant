@@ -29,9 +29,15 @@ public class PageFeature {
         final String viewIdResourceName = info.getViewIdResourceName();
         final String text = ActionPerformer.getText(info, "获取特征->获取text");
         final String className = info.getClassName() == null ? "" : info.getClassName().toString();
+        final boolean isWeak;
+        if (CustomTextUtils.canStringParseToIntger(text)) {
+            isWeak = true;
+        } else {
+            isWeak = false;
+        }
 
         if (!TextUtils.isEmpty(viewIdResourceName)) {
-            viewFeatures.add(new ViewFeature(viewIdResourceName, text));
+            viewFeatures.add(new ViewFeature(viewIdResourceName, text, isWeak));
             lastFeatureClassName = className;
         }
     }
@@ -62,6 +68,21 @@ public class PageFeature {
         return builder.toString();
     }
 
+    public boolean equalsExt(@Nullable PageFeature target) {
+        final Set<ViewFeature> targetFeatures = new LinkedHashSet<>(target.viewFeatures);
+        for (ViewFeature feature : viewFeatures) {
+            targetFeatures.remove(feature);
+        }
+
+        for (ViewFeature feature : targetFeatures) {
+            if (!feature.isWeak) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     @Override
     public boolean equals(@Nullable Object obj) {
         if (!(obj instanceof  PageFeature)) {
@@ -88,11 +109,13 @@ public class PageFeature {
 
         public final String viewIdResourcesName;
         public final String text;
+        public final boolean isWeak;
 
 
-        private ViewFeature(String viewIdResourcesName, String text) {
+        private ViewFeature(String viewIdResourcesName, String text, boolean isWeak) {
             this.viewIdResourcesName = viewIdResourcesName;
             this.text = CustomTextUtils.getViewFeatureText(text);
+            this.isWeak = isWeak;
         }
 
         private boolean isFeatureNeedWithText() {
@@ -107,7 +130,8 @@ public class PageFeature {
         @Override
         public String toString() {
             return "{id: " + viewIdResourcesName + ", text: " +
-                    '"' + text + '"' + (isFeatureNeedWithText() ? " (特征)" : "") + "}";
+                    '"' + text + '"' + (isFeatureNeedWithText() ? " (特征)" : "") + "}" +
+                    (isWeak ? " (弱特征)" : "");
         }
 
         @Override
