@@ -7,16 +7,19 @@ import android.graphics.Region;
 import android.os.Build;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.daoshengwanwu.android.activity.TranslucentOnePixelActivity;
+import com.daoshengwanwu.android.model.ShareData;
 import com.daoshengwanwu.android.util.SingleSubThreadUtil;
 import com.daoshengwanwu.android.util.ViewTreeObserverUtils;
 import com.daoshengwanwu.android.util.WindowUtils;
@@ -58,6 +61,8 @@ public class FloatWindowManager {
     private final WindowManager mWindowManager;
     private final FrameLayout mFloatWindowRootView;
     private final RelativeLayout mFloatWindowContainer;
+    private final TextView mOutputTextTV;
+    private final TextView mInputButtonTV;
 
     private final ViewTreeObserverUtils.OnComputeInternalInsetsListener mComputeInsetsListener;
 
@@ -179,14 +184,24 @@ public class FloatWindowManager {
         final LayoutInflater inflater = LayoutInflater.from(mApplicationContext);
         mFloatWindowRootView = (FrameLayout) inflater.inflate(R.layout.layout_float_window_root, null);
         mFloatWindowContainer = mFloatWindowRootView.findViewById(R.id.rl_float_window_container);
+        mOutputTextTV = mFloatWindowRootView.findViewById(R.id.tv_alert);
+        mInputButtonTV = mFloatWindowRootView.findViewById(R.id.tv_btn);
+
+        mInputButtonTV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SingleSubThreadUtil.showToast(mApplicationContext, "截取画面特征", Toast.LENGTH_LONG);
+                ShareData.getInstance().activeLoadPageFeautresTask(mApplicationContext);
+            }
+        });
 
         mComputeInsetsListener = new ViewTreeObserverUtils.OnComputeInternalInsetsListener() {
             @Override
             public void onComputeInternalInsets(ViewTreeObserverUtils.InternalInsetsInfo inoutInfo) {
-                final int left = (int) mFloatWindowRootView.getX();
-                final int top = (int) mFloatWindowRootView.getTop();
-                final int right = left + mFloatWindowRootView.getWidth();
-                final int bottom = top + mFloatWindowRootView.getHeight();
+                final int left = (int) mFloatWindowContainer.getX();
+                final int top = (int) mFloatWindowContainer.getTop();
+                final int right = left + mFloatWindowContainer.getWidth();
+                final int bottom = top + mFloatWindowContainer.getHeight();
 
                 final Region region = new Region(left, top, right, bottom);
                 inoutInfo.updateRegion(region);

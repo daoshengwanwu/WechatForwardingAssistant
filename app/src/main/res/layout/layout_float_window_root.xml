@@ -21,7 +21,7 @@
             android:padding="16dp"
             android:gravity="center"
             android:textColor="#FFF"
-            tools:text="请到消息列表界面点击截取按钮"/>
+            android:text="请到消息列表界面点击截取按钮"/>
 
         <View
             android:id="@+id/view_split_line"
@@ -39,6 +39,6 @@
             android:textColor="#FFF"
             android:padding="16dp"
             android:layout_height="wrap_content"
-            tools:text="截取"/>
+            android:text="截取"/>
     </RelativeLayout>
 </FrameLayout>
