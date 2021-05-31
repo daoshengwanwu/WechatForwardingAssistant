@@ -2,13 +2,19 @@ package com.daoshengwanwu.android.service;
 
 
 import android.accessibilityservice.AccessibilityService;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.provider.Settings;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
 
 import com.daoshengwanwu.android.R;
 import com.daoshengwanwu.android.model.ShareData;
@@ -17,7 +23,51 @@ import com.daoshengwanwu.android.util.SingleSubThreadUtil;
 
 
 public class AuxiliaryService extends AccessibilityService {
+    private static final String TAG = "AuxiliaryService.TAG";
     private static final int WHAT_BREATH_INTERVAL = 58363;
+
+
+    public static boolean isAccessibilitySettingsOn(@NonNull final Context context) {
+        final String serviceName = context.getPackageName() + "/" + AuxiliaryService.class.getCanonicalName();
+        Log.i(TAG, "service:" + serviceName);
+
+        int accessibilityEnabled;
+        try {
+            accessibilityEnabled = Settings.Secure.getInt(context.getApplicationContext().getContentResolver(),
+                    android.provider.Settings.Secure.ACCESSIBILITY_ENABLED);
+
+            Log.v(TAG, "accessibilityEnabled = " + accessibilityEnabled);
+        } catch (Settings.SettingNotFoundException e) {
+            Log.e(TAG, "Error finding setting, default accessibility to not found: " + e.getMessage());
+            accessibilityEnabled = 0;
+        }
+
+        if (accessibilityEnabled == 1) {
+            Log.v(TAG, "***ACCESSIBILITY IS ENABLED*** -----------------");
+
+            TextUtils.SimpleStringSplitter stringColonSplitter = new TextUtils.SimpleStringSplitter(':');
+            String settingValue = Settings.Secure.getString(context.getApplicationContext().getContentResolver(),
+                    Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES);
+
+            if (settingValue != null) {
+                stringColonSplitter.setString(settingValue);
+                while (stringColonSplitter.hasNext()) {
+                    String accessibilityService = stringColonSplitter.next();
+
+                    Log.v(TAG, "-------------- > accessibilityService :: " + accessibilityService + " " + serviceName);
+                    if (accessibilityService.equalsIgnoreCase(serviceName)) {
+                        Log.v(TAG, "We've found the correct setting - accessibility is switched on!");
+                        return true;
+                    }
+                }
+            }
+
+        } else {
+            Log.v(TAG, "***ACCESSIBILITY IS DISABLED***");
+        }
+
+        return false;
+    }
 
 
     private AccessibilityEvent mLastEvent = null;

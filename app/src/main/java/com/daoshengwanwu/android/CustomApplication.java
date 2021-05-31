@@ -6,6 +6,7 @@ import android.app.Application;
 import com.daoshengwanwu.android.model.ForwardingContentLab;
 import com.daoshengwanwu.android.model.UIForwardingTaskLab;
 import com.daoshengwanwu.android.model.UserGroupLab;
+import com.daoshengwanwu.android.util.SharedPreferencesUtils;
 
 
 public class CustomApplication extends Application {
@@ -13,6 +14,7 @@ public class CustomApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
+        SharedPreferencesUtils.init(this);
         UserGroupLab.getInstance().restoreAllGroupToLab(this);
         ForwardingContentLab.getInstance().restoreAllData(this);
         ForwardingContentLab.getInstance().restoreAllForwardingContent(this);
