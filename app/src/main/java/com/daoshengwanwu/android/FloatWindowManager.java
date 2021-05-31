@@ -83,7 +83,7 @@ public class FloatWindowManager {
     }
 
     public void hide() {
-
+        removeViewFloatWindowManagerRoot();
     }
 
     public boolean isShown() {
