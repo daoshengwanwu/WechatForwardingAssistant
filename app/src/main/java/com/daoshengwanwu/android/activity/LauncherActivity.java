@@ -12,6 +12,7 @@ import android.widget.Button;
 
 import com.daoshengwanwu.android.FloatWindowManager;
 import com.daoshengwanwu.android.R;
+import com.daoshengwanwu.android.model.ShareData;
 import com.daoshengwanwu.android.service.AuxiliaryService;
 import com.daoshengwanwu.android.util.SharedPreferencesUtils;
 
@@ -94,7 +95,11 @@ public class LauncherActivity extends AppCompatActivity {
         mInitAssistantBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                FloatWindowManager.getInstance().show();
+                if (!isWechatAssistantInited()) {
+                    ShareData.getInstance().activeLoadPageFeautresTask(getApplicationContext());
+                } else {
+                    updateView();
+                }
             }
         });
     }

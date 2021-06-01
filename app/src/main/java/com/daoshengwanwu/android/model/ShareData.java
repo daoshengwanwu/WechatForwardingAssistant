@@ -66,7 +66,7 @@ public class ShareData {
 
     public void activeLoadPageFeautresTask(final Context context) {
         mActiveTask = new LoadPageFeatureTask();
-        SingleSubThreadUtil.showToast(context, "开始收集页面特征", Toast.LENGTH_LONG);
+        SingleSubThreadUtil.showToast(context, "开始执行初始化微信助手任务", Toast.LENGTH_LONG);
     }
 
     public void activeYesTask() {
