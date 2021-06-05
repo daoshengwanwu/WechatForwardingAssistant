@@ -82,6 +82,10 @@ public class FloatWindowManager {
         addViewFloatWindowManagerRoot();
     }
 
+    public void setButtonOnClickListener(@Nullable final View.OnClickListener listener) {
+        mInputButtonTV.setOnClickListener(listener);
+    }
+
     public void hide() {
         removeViewFloatWindowManagerRoot();
     }
@@ -186,13 +190,6 @@ public class FloatWindowManager {
         mFloatWindowContainer = mFloatWindowRootView.findViewById(R.id.rl_float_window_container);
         mOutputTextTV = mFloatWindowRootView.findViewById(R.id.tv_alert);
         mInputButtonTV = mFloatWindowRootView.findViewById(R.id.tv_btn);
-
-        mInputButtonTV.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                SingleSubThreadUtil.showToast(mApplicationContext, "截取画面特征", Toast.LENGTH_LONG);
-            }
-        });
 
         mComputeInsetsListener = new ViewTreeObserverUtils.OnComputeInternalInsetsListener() {
             @Override

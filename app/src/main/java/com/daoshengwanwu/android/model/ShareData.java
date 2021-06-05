@@ -71,7 +71,7 @@ public class ShareData {
             return;
         }
 
-        mActiveTask = new LoadPageFeatureTask(new LoadPageFeatureTask.OnLoadPageFeatureFinishedListener() {
+        mActiveTask = new LoadPageFeatureTask(context, new LoadPageFeatureTask.OnLoadPageFeatureFinishedListener() {
             @Override
             public void onLoadPageFeatureFinished() {
                 mActiveTask = null;
