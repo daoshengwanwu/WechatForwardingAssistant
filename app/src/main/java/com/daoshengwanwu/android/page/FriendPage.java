@@ -45,7 +45,7 @@ public class FriendPage extends Page {
 
 
     protected FriendPage() {
-        super(PageId.PAGE_FRIEND);
+        super(PageId.PAGE_FRIEND, "朋友圈");
     }
 
     @Override

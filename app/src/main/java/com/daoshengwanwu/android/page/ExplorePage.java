@@ -39,7 +39,7 @@ public class ExplorePage extends Page {
     }
 
     private ExplorePage() {
-        super(PageId.PAGE_EXPLORE);
+        super(PageId.PAGE_EXPLORE, "发现");
     }
 
     @Override

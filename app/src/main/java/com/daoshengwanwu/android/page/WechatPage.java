@@ -18,7 +18,7 @@ public class WechatPage extends Page {
 
 
     private WechatPage() {
-        super(PageId.PAGE_WECHAT);
+        super(PageId.PAGE_WECHAT, "消息列表");
     }
 
 

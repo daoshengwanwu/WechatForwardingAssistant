@@ -51,7 +51,7 @@ public class SelectReceiverPage extends Page {
     }
 
     protected SelectReceiverPage() {
-        super(PageId.PAGE_SELECT_RECEIVER);
+        super(PageId.PAGE_SELECT_RECEIVER, "选择接收人");
     }
 
     @Override

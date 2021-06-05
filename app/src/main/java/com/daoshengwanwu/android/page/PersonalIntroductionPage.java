@@ -58,7 +58,7 @@ public class PersonalIntroductionPage extends Page {
     }
 
     private PersonalIntroductionPage() {
-        super(PageId.PAGE_PERSONAL_INTRODUCTION);
+        super(PageId.PAGE_PERSONAL_INTRODUCTION, "个人简介");
     }
 
     @Override

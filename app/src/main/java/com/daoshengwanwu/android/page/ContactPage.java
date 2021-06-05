@@ -47,7 +47,7 @@ public class ContactPage extends Page {
     }
 
     private ContactPage() {
-        super(PageId.PAGE_CONTACT);
+        super(PageId.PAGE_CONTACT, "通讯录");
     }
 
     @Override

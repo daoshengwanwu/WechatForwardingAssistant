@@ -65,7 +65,7 @@ public class ChatPage extends Page {
     }
 
     private ChatPage() {
-        super(PageId.PAGE_CHAT);
+        super(PageId.PAGE_CHAT, "聊天");
     }
 
     @Override

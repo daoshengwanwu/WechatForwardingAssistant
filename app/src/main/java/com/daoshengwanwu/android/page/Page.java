@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 
 public abstract class Page {
     @NonNull private final PageId mPageId;
+    @NonNull private final String mPageName;
 
 
     public abstract void bindData(@NonNull AccessibilityNodeInfo rootInfo);
@@ -72,8 +73,13 @@ public abstract class Page {
         return PageId.PAGE_UNKNOWN;
     }
 
-    protected Page(@NonNull PageId pageId) {
+    protected Page(@NonNull PageId pageId, @NonNull String pageName) {
         mPageId = pageId;
+        mPageName = pageName;
+    }
+
+    @NonNull public final String getPageName() {
+        return mPageName;
     }
 
     @NonNull public final PageId getPageId() {

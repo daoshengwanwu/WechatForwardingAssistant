@@ -18,6 +18,6 @@ public class UnknownPage extends Page {
 
 
     private UnknownPage() {
-        super(PageId.PAGE_UNKNOWN);
+        super(PageId.PAGE_UNKNOWN, "未知");
     }
 }

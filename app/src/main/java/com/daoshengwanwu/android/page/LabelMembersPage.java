@@ -89,7 +89,7 @@ public class LabelMembersPage extends Page {
     }
 
     private LabelMembersPage() {
-        super(PageId.PAGE_LABEL_MEMBERS);
+        super(PageId.PAGE_LABEL_MEMBERS, "标签详情");
     }
 
     @Override
