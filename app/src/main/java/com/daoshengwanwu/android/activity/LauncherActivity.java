@@ -96,6 +96,11 @@ public class LauncherActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (!isWechatAssistantInited()) {
+                    final FloatWindowManager floatWindowManager = FloatWindowManager.getInstance();
+                    if (!floatWindowManager.isShown()) {
+                        floatWindowManager.show();
+                    }
+
                     ShareData.getInstance().activeLoadPageFeautresTask(getApplicationContext());
                 } else {
                     updateView();

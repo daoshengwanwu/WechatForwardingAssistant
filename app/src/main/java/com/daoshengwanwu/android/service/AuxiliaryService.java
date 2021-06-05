@@ -15,6 +15,7 @@ import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.daoshengwanwu.android.R;
 import com.daoshengwanwu.android.model.ShareData;
@@ -26,6 +27,23 @@ public class AuxiliaryService extends AccessibilityService {
     private static final String TAG = "AuxiliaryService.TAG";
     private static final int WHAT_BREATH_INTERVAL = 58363;
 
+    private static volatile AuxiliaryService sInstance = null;
+
+
+    @Nullable
+    public static AuxiliaryService getServiceInstance() {
+        return sInstance;
+    }
+
+    @Nullable
+    public static AccessibilityEvent getLastEvent() {
+        final AuxiliaryService serviceInstance = getServiceInstance();
+        if (serviceInstance == null){
+            return null;
+        }
+
+        return serviceInstance.mLastEvent;
+    }
 
     public static boolean isAccessibilitySettingsOn(@NonNull final Context context) {
         final String serviceName = context.getPackageName() + "/" + AuxiliaryService.class.getCanonicalName();
@@ -70,7 +88,7 @@ public class AuxiliaryService extends AccessibilityService {
     }
 
 
-    private AccessibilityEvent mLastEvent = null;
+    private volatile AccessibilityEvent mLastEvent = null;
     private final Handler mMainHandler = new Handler(Looper.getMainLooper()) {
         @Override
         public void handleMessage(Message msg) {
@@ -98,7 +116,8 @@ public class AuxiliaryService extends AccessibilityService {
         SingleSubThreadUtil.showToast(this, "成功启动 " +
                 getResources().getString(R.string.app_name) + ".", Toast.LENGTH_SHORT);
 
-//        mMainHandler.sendEmptyMessageDelayed(WHAT_BREATH_INTERVAL, 500);
+        // 暂时停止轮询
+        // mMainHandler.sendEmptyMessageDelayed(WHAT_BREATH_INTERVAL, 500);
     }
 
     @Override
@@ -114,6 +133,20 @@ public class AuxiliaryService extends AccessibilityService {
     @Override
     public void onInterrupt() {
         //do nothing
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+
+        sInstance = this;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        sInstance = null;
     }
 
     @Override
