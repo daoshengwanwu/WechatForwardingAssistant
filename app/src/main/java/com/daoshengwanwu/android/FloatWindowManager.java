@@ -191,7 +191,6 @@ public class FloatWindowManager {
             @Override
             public void onClick(View view) {
                 SingleSubThreadUtil.showToast(mApplicationContext, "截取画面特征", Toast.LENGTH_LONG);
-                ShareData.getInstance().activeLoadPageFeautresTask(mApplicationContext);
             }
         });
 

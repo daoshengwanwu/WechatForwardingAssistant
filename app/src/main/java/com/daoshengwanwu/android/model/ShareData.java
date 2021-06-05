@@ -13,6 +13,7 @@ import com.daoshengwanwu.android.task.RegLoadUsersTask;
 import com.daoshengwanwu.android.task.SelectReceiverTask;
 import com.daoshengwanwu.android.task.Task;
 import com.daoshengwanwu.android.task.YesTask;
+import com.daoshengwanwu.android.util.SharedPreferencesUtils;
 import com.daoshengwanwu.android.util.SingleSubThreadUtil;
 
 import java.util.List;
@@ -65,7 +66,19 @@ public class ShareData {
     }
 
     public void activeLoadPageFeautresTask(final Context context) {
-        mActiveTask = new LoadPageFeatureTask();
+        if (mActiveTask != null) {
+            SingleSubThreadUtil.showToast(context, "不可同时开启两个任务", Toast.LENGTH_LONG);
+            return;
+        }
+
+        mActiveTask = new LoadPageFeatureTask(new LoadPageFeatureTask.OnLoadPageFeatureFinishedListener() {
+            @Override
+            public void onLoadPageFeatureFinished() {
+                mActiveTask = null;
+                SharedPreferencesUtils.BOOLEAN_CACHE.WECHAT_ASSISTANT_INITED.put(true);
+            }
+        });
+
         SingleSubThreadUtil.showToast(context, "开始执行初始化微信助手任务", Toast.LENGTH_LONG);
     }
 

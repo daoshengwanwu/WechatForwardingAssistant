@@ -9,11 +9,18 @@ import com.daoshengwanwu.android.FloatWindowManager;
 
 
 public class LoadPageFeatureTask extends Task {
+    private final OnLoadPageFeatureFinishedListener mListener;
     private final FloatWindowManager mFloatWindowManager = FloatWindowManager.getInstance();
 
 
-    public LoadPageFeatureTask() {
+    public LoadPageFeatureTask(@NonNull final OnLoadPageFeatureFinishedListener listener) {
         super(TaskId.TASK_LOAD_PAGE_FEATURE);
+
+        if (listener == null) {
+            throw new RuntimeException("listener cannot be null");
+        }
+
+        mListener = listener;
     }
 
     @Override
