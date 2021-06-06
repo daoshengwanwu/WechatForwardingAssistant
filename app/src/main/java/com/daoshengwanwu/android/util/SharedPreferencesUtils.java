@@ -29,7 +29,14 @@ public class SharedPreferencesUtils {
 
 
     public enum STRING_CACHE {
-        ;
+        WECHAT_PAGE_FEATURE("wechat_page_feature"),
+        CONTACT_PAGE_FEATURE("contact_page_feature"),
+        EXPLORE_PAGE_FEATURE("explore_page_feature"),
+        CHAT_PAGE_FEATURE("chat_page_feature"),
+        FRIEND_PAGE_FEATURE("friend_page_feature"),
+        LABEL_MEMBERS_PAGE_FEATURE("label_members_page_feature"),
+        PERSONAL_INTRODUCTION_PAGE_FEATURE("personal_introduction_page_feature"),
+        SELECT_RECEIVER_PAGE_FEATURE("select_receiver_page");
 
 
         private String mFieldName;

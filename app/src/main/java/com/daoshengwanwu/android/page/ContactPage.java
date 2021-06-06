@@ -10,6 +10,7 @@ import com.daoshengwanwu.android.model.item.UserItem;
 import com.daoshengwanwu.android.util.ActionPerformer;
 import com.daoshengwanwu.android.util.CustomCollectionUtils;
 import com.daoshengwanwu.android.util.CustomTextUtils;
+import com.daoshengwanwu.android.util.SharedPreferencesUtils;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -24,19 +25,6 @@ public class ContactPage extends Page {
     private AccessibilityNodeInfo mListInfo;
     private List<AccessibilityNodeInfo> mContactInfos;
 
-
-    public static boolean isSelf(@NonNull AccessibilityNodeInfo rootInfo) {
-        // 左上角通讯录TextView
-        List<AccessibilityNodeInfo> rst = rootInfo.findAccessibilityNodeInfosByViewId("android:id/text1");
-        if (CustomCollectionUtils.isListEmpty(rst)) {
-            return false;
-        }
-
-        AccessibilityNodeInfo titleInfo = rst.get(0);
-        String title = ActionPerformer.getText(titleInfo, "ContactPage.isSelf::getTitle");
-
-        return title.startsWith("通讯录");
-    }
 
     public static ContactPage generateFrom(AccessibilityNodeInfo rootInfo) {
         ContactPage page = new ContactPage();
@@ -60,6 +48,11 @@ public class ContactPage extends Page {
         if (!CustomCollectionUtils.isListEmpty(rst)) {
             mListInfo = rst.get(0);
         }
+    }
+
+    @Override
+    protected SharedPreferencesUtils.STRING_CACHE getCacheEnumInstance() {
+        return SharedPreferencesUtils.STRING_CACHE.CONTACT_PAGE_FEATURE;
     }
 
     public boolean performForwardingScrollListView() {

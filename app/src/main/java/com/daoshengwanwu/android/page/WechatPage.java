@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 
 import com.daoshengwanwu.android.util.ActionPerformer;
 import com.daoshengwanwu.android.util.CustomCollectionUtils;
+import com.daoshengwanwu.android.util.SharedPreferencesUtils;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -14,27 +15,6 @@ import java.util.List;
 
 
 public class WechatPage extends Page {
-    private AccessibilityNodeInfo mContactTabInfo;
-
-
-    private WechatPage() {
-        super(PageId.PAGE_WECHAT, "消息列表");
-    }
-
-
-    public static boolean isSelf(@NonNull AccessibilityNodeInfo rootInfo) {
-        // 消息记录界面的左上角标题TextView
-        List<AccessibilityNodeInfo> rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/nk");
-        if (CustomCollectionUtils.isListEmpty(rst)) {
-            return false;
-        }
-
-        AccessibilityNodeInfo titleInfo = rst.get(0);
-        String title = ActionPerformer.getText(titleInfo, "WechatPage isSelf 中 getText()");
-
-        return title.startsWith("微信");
-    }
-
     @NonNull public static WechatPage generateFrom(@NonNull AccessibilityNodeInfo rootInfo) {
         WechatPage page = new WechatPage();
 
@@ -43,6 +23,13 @@ public class WechatPage extends Page {
         return page;
     }
 
+
+    private AccessibilityNodeInfo mContactTabInfo;
+
+
+    private WechatPage() {
+        super(PageId.PAGE_WECHAT, "消息列表");
+    }
 
     @Override
     public void bindData(@NotNull AccessibilityNodeInfo rootInfo) {
@@ -55,6 +42,11 @@ public class WechatPage extends Page {
         }
 
         mContactTabInfo = rst.get(1).getParent();
+    }
+
+    @Override
+    protected SharedPreferencesUtils.STRING_CACHE getCacheEnumInstance() {
+        return SharedPreferencesUtils.STRING_CACHE.WECHAT_PAGE_FEATURE;
     }
 
     public boolean switchToContactPage() {

@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 
 import com.daoshengwanwu.android.util.ActionPerformer;
 import com.daoshengwanwu.android.util.CustomCollectionUtils;
+import com.daoshengwanwu.android.util.SharedPreferencesUtils;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -16,19 +17,6 @@ import java.util.List;
 public class ExplorePage extends Page {
     private AccessibilityNodeInfo mContactTabInfo;
 
-
-    public static boolean isSelf(@NonNull AccessibilityNodeInfo rootInfo) {
-        // 发现页面左上角title的TextView
-        List<AccessibilityNodeInfo> rst = rootInfo.findAccessibilityNodeInfosByViewId("android:id/text1");
-        if (CustomCollectionUtils.isListEmpty(rst)) {
-            return false;
-        }
-
-        AccessibilityNodeInfo titleInfo = rst.get(0);
-        String title = ActionPerformer.getText(titleInfo, "发现界面获取title");
-
-        return title.startsWith("发现");
-    }
 
     public static ExplorePage generateFrom(AccessibilityNodeInfo rootInfo) {
         ExplorePage page = new ExplorePage();
@@ -53,6 +41,11 @@ public class ExplorePage extends Page {
         }
 
         mContactTabInfo = rst.get(1).getParent();
+    }
+
+    @Override
+    protected SharedPreferencesUtils.STRING_CACHE getCacheEnumInstance() {
+        return SharedPreferencesUtils.STRING_CACHE.EXPLORE_PAGE_FEATURE;
     }
 
     public boolean switchToContactPage() {

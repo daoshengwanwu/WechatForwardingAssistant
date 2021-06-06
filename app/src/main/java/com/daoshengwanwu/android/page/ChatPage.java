@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import com.daoshengwanwu.android.util.ActionPerformer;
 import com.daoshengwanwu.android.util.CustomCollectionUtils;
 import com.daoshengwanwu.android.util.CustomTextUtils;
+import com.daoshengwanwu.android.util.SharedPreferencesUtils;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -27,35 +28,6 @@ public class ChatPage extends Page {
     //================================================================================
     //============================= Common Start =====================================
     //================================================================================
-    public static boolean isSelf(@NonNull AccessibilityNodeInfo rootInfo) {
-        boolean firstJudgement;
-
-        //第一个有id的FrameLayout
-        List<AccessibilityNodeInfo> rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/iew");
-        if (CustomCollectionUtils.isListEmpty(rst)) {
-            firstJudgement = false;
-        } else {
-            AccessibilityNodeInfo desInfo = rst.get(0).getParent();
-            if (desInfo == null) {
-                firstJudgement = false;
-            } else {
-                String description = String.valueOf(desInfo.getContentDescription());
-                firstJudgement = description.startsWith("当前所在页面,与") && description.endsWith("的聊天");
-            }
-        }
-
-        boolean secondJudgement = false;
-        // 最多可选择99条信息dialog的textview
-        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/ffh");
-        if (!CustomCollectionUtils.isListEmpty(rst)) {
-            AccessibilityNodeInfo nodeInfo = rst.get(0);
-            secondJudgement = nodeInfo != null &&
-                    "最多可选择99条消息".equals(ActionPerformer.getText(nodeInfo, "获取最多选择99条信息弹框的文字"));
-        }
-
-        return firstJudgement || secondJudgement;
-    }
-
     public static ChatPage generateFrom(AccessibilityNodeInfo rootInfo) {
         ChatPage page = new ChatPage();
 
@@ -125,6 +97,11 @@ public class ChatPage extends Page {
         if (!CustomCollectionUtils.isListEmpty(rst)) {
             mMaxSelectDialogTextViewInfo = rst.get(0);
         }
+    }
+
+    @Override
+    protected SharedPreferencesUtils.STRING_CACHE getCacheEnumInstance() {
+        return SharedPreferencesUtils.STRING_CACHE.CHAT_PAGE_FEATURE;
     }
     //================================================================================
     //============================= Common End =======================================

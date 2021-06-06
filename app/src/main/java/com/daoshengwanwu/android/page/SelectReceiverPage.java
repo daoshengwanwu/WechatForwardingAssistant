@@ -10,6 +10,7 @@ import androidx.annotation.Nullable;
 import com.daoshengwanwu.android.model.UserGroup;
 import com.daoshengwanwu.android.util.ActionPerformer;
 import com.daoshengwanwu.android.util.CustomCollectionUtils;
+import com.daoshengwanwu.android.util.SharedPreferencesUtils;
 
 import java.util.List;
 
@@ -22,26 +23,6 @@ public class SelectReceiverPage extends Page {
     //================================================================================
     //============================= Common Start =====================================
     //================================================================================
-    public static boolean isSelf(@NonNull AccessibilityNodeInfo rootInfo) {
-        // 选择收信人TextView
-        List<AccessibilityNodeInfo> rst = rootInfo.findAccessibilityNodeInfosByViewId("android:id/text1");
-        if (CustomCollectionUtils.isListEmpty(rst)) {
-            return false;
-        }
-
-        if (!"选择收信人".equals(ActionPerformer.getText(rst.get(0), "获取Text"))) {
-            return false;
-        }
-
-        // 搜索EditText
-        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/fqx");
-        if (CustomCollectionUtils.isListEmpty(rst)) {
-            return false;
-        }
-
-        return "搜索".equals(rst.get(0).getText().toString());
-    }
-
     public static SelectReceiverPage generateFrom(@NonNull AccessibilityNodeInfo rootInfo) {
         SelectReceiverPage page = new SelectReceiverPage();
 
@@ -73,6 +54,11 @@ public class SelectReceiverPage extends Page {
             return;
         }
         mBackLinearLayout = infos.get(0);
+    }
+
+    @Override
+    protected SharedPreferencesUtils.STRING_CACHE getCacheEnumInstance() {
+        return SharedPreferencesUtils.STRING_CACHE.SELECT_RECEIVER_PAGE_FEATURE;
     }
 
     public void performUpScroll(@Nullable AccessibilityNodeInfo rootInfo) {

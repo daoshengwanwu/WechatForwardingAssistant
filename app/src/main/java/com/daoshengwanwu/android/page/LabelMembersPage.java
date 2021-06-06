@@ -10,6 +10,7 @@ import com.daoshengwanwu.android.model.item.UserItem;
 import com.daoshengwanwu.android.util.ActionPerformer;
 import com.daoshengwanwu.android.util.CustomCollectionUtils;
 import com.daoshengwanwu.android.util.CustomTextUtils;
+import com.daoshengwanwu.android.util.SharedPreferencesUtils;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -24,29 +25,6 @@ public class LabelMembersPage extends Page {
     private AccessibilityNodeInfo mLabelInfo;
     private List<AccessibilityNodeInfo> mTextInfos;
 
-
-    public static boolean isSelf(@NonNull AccessibilityNodeInfo rootInfo) {
-        // 编辑标签 TextView
-        List<AccessibilityNodeInfo> rst = rootInfo.findAccessibilityNodeInfosByViewId("android:id/text1");
-        if (CustomCollectionUtils.isListEmpty(rst)) {
-            return false;
-        }
-        AccessibilityNodeInfo titleInfo = rst.get(0);
-        String title = String.valueOf(ActionPerformer.getText(titleInfo, "标签界面获取title"));
-        if (!"编辑标签".equals(title)) {
-            return false;
-        }
-
-        // 保存按钮
-        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/d6");
-        if (CustomCollectionUtils.isListEmpty(rst)) {
-            return false;
-        }
-        AccessibilityNodeInfo saveBtnInfo = rst.get(0);
-        title = String.valueOf(ActionPerformer.getText(saveBtnInfo, "标签界面保存按钮获取title"));
-
-        return "保存".equals(title) && saveBtnInfo.isClickable();
-    }
 
     @NonNull public static LabelMembersPage generateFrom(@NonNull AccessibilityNodeInfo rootInfo) {
         LabelMembersPage page = new LabelMembersPage();
@@ -116,5 +94,10 @@ public class LabelMembersPage extends Page {
         // 每一个item图片下边的TextView
         rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/h8q");
         mTextInfos = rst;
+    }
+
+    @Override
+    protected SharedPreferencesUtils.STRING_CACHE getCacheEnumInstance() {
+        return SharedPreferencesUtils.STRING_CACHE.LABEL_MEMBERS_PAGE_FEATURE;
     }
 }

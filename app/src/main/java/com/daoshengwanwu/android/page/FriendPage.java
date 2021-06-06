@@ -1,13 +1,13 @@
 package com.daoshengwanwu.android.page;
 
 
-import android.text.TextUtils;
 import android.view.accessibility.AccessibilityNodeInfo;
 
 import androidx.annotation.NonNull;
 
 import com.daoshengwanwu.android.util.ActionPerformer;
 import com.daoshengwanwu.android.util.CustomCollectionUtils;
+import com.daoshengwanwu.android.util.SharedPreferencesUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,21 +19,6 @@ public class FriendPage extends Page {
     private AccessibilityNodeInfo mCommentInfo;
     private AccessibilityNodeInfo mYesInfo;
 
-
-    public static boolean isSelf(AccessibilityNodeInfo rootInfo) {
-        // 第一个有id的FrameLayout
-        List<AccessibilityNodeInfo> rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/iew");
-        if (CustomCollectionUtils.isListEmpty(rst)) {
-            return false;
-        }
-
-        String des = rst.get(0).getParent().getContentDescription() + "";
-        if (TextUtils.isEmpty(des) || "null".equals(des)) {
-            return false;
-        }
-
-        return "当前所在页面,朋友圈".equals(des);
-    }
 
     public static FriendPage generateFrom(AccessibilityNodeInfo rootInfo) {
         FriendPage page = new FriendPage();
@@ -86,6 +71,11 @@ public class FriendPage extends Page {
         } else {
             mCommentInfo = null;
         }
+    }
+
+    @Override
+    protected SharedPreferencesUtils.STRING_CACHE getCacheEnumInstance() {
+        return SharedPreferencesUtils.STRING_CACHE.FRIEND_PAGE_FEATURE;
     }
 
     public void performClickTDotIfNeed(AccessibilityNodeInfo rootInfo) {

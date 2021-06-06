@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import com.daoshengwanwu.android.model.item.UserItem;
 import com.daoshengwanwu.android.util.ActionPerformer;
 import com.daoshengwanwu.android.util.CustomCollectionUtils;
+import com.daoshengwanwu.android.util.SharedPreferencesUtils;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -22,32 +23,6 @@ public class PersonalIntroductionPage extends Page {
     private AccessibilityNodeInfo mSendMessageInfo;
     private AccessibilityNodeInfo mTitleInfo;
 
-
-    public static boolean isSelf(@NonNull AccessibilityNodeInfo rootInfo) {
-        //title,也就是显示备注或者昵称的View
-        List<AccessibilityNodeInfo> rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/bd2");
-        if (CustomCollectionUtils.isListEmpty(rst)) {
-            return false;
-        }
-
-        //头像ImageView
-        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/bcs");
-        if (CustomCollectionUtils.isListEmpty(rst)) {
-            return false;
-        }
-
-        //微信id TextView
-        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/bd_");
-        if (CustomCollectionUtils.isListEmpty(rst)) {
-            return false;
-        }
-        String wxidText = String.valueOf(rst.get(0).getText());
-        if (TextUtils.isEmpty(wxidText) || !wxidText.startsWith("微信号:")) {
-            return false;
-        }
-
-        return true;
-    }
 
     public static PersonalIntroductionPage generateFrom(AccessibilityNodeInfo rootInfo) {
         PersonalIntroductionPage personalIntroductionPage = new PersonalIntroductionPage();
@@ -88,6 +63,11 @@ public class PersonalIntroductionPage extends Page {
         if (!CustomCollectionUtils.isListEmpty(rst)) {
             mTitleInfo = rst.get(0);
         }
+    }
+
+    @Override
+    protected SharedPreferencesUtils.STRING_CACHE getCacheEnumInstance() {
+        return SharedPreferencesUtils.STRING_CACHE.PERSONAL_INTRODUCTION_PAGE_FEATURE;
     }
 
     public String getTitle() {
