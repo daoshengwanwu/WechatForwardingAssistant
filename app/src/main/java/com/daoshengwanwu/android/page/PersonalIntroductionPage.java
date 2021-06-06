@@ -32,7 +32,7 @@ public class PersonalIntroductionPage extends Page {
         return personalIntroductionPage;
     }
 
-    private PersonalIntroductionPage() {
+    public PersonalIntroductionPage() {
         super(PageId.PAGE_PERSONAL_INTRODUCTION, "个人简介");
     }
 

@@ -31,7 +31,7 @@ public class SelectReceiverPage extends Page {
         return page;
     }
 
-    protected SelectReceiverPage() {
+    public SelectReceiverPage() {
         super(PageId.PAGE_SELECT_RECEIVER, "选择接收人");
     }
 

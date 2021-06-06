@@ -27,7 +27,7 @@ public class WechatPage extends Page {
     private AccessibilityNodeInfo mContactTabInfo;
 
 
-    private WechatPage() {
+    public WechatPage() {
         super(PageId.PAGE_WECHAT, "消息列表");
     }
 

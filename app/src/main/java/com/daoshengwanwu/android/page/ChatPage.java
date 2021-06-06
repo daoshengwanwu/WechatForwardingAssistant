@@ -36,7 +36,7 @@ public class ChatPage extends Page {
         return page;
     }
 
-    private ChatPage() {
+    public ChatPage() {
         super(PageId.PAGE_CHAT, "聊天");
     }
 

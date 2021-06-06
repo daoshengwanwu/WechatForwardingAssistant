@@ -66,7 +66,7 @@ public class LabelMembersPage extends Page {
                 "标签界面点击后退按钮");
     }
 
-    private LabelMembersPage() {
+    public LabelMembersPage() {
         super(PageId.PAGE_LABEL_MEMBERS, "标签详情");
     }
 

@@ -34,7 +34,7 @@ public class ContactPage extends Page {
         return page;
     }
 
-    private ContactPage() {
+    public ContactPage() {
         super(PageId.PAGE_CONTACT, "通讯录");
     }
 

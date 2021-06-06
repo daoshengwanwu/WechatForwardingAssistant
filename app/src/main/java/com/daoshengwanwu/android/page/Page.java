@@ -11,76 +11,83 @@ import com.daoshengwanwu.android.util.PageUtils;
 import com.daoshengwanwu.android.util.SharedPreferencesUtils;
 import com.google.gson.Gson;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 
 public abstract class Page {
     private static final Gson GSON = new Gson();
-    private static final List<Page> ALL_PAGE_INSTANCE = new ArrayList<>();
+
+    private static volatile Map<PageId, Page> sAllPageMap;
 
 
-    @NonNull public static Page generateFrom(@NonNull AccessibilityNodeInfo rootInfo) {
-        switch (whichPage(rootInfo)) {
-            case PAGE_LABEL_MEMBERS: {
-                return LabelMembersPage.generateFrom(rootInfo);
-            }
-
-            case PAGE_CHAT: {
-                return ChatPage.generateFrom(rootInfo);
-            }
-
-            case PAGE_CONTACT: {
-                return ContactPage.generateFrom(rootInfo);
-            }
-
-            case PAGE_EXPLORE: {
-                return ExplorePage.generateFrom(rootInfo);
-            }
-
-            case PAGE_PERSONAL_INTRODUCTION: {
-                return PersonalIntroductionPage.generateFrom(rootInfo);
-            }
-
-            case PAGE_WECHAT: {
-                return WechatPage.generateFrom(rootInfo);
-            }
-
-            case PAGE_FRIEND: {
-                return FriendPage.generateFrom(rootInfo);
-            }
-
-            case PAGE_SELECT_RECEIVER: {
-                return SelectReceiverPage.generateFrom(rootInfo);
+    public static Map<PageId, Page> getAllPages() {
+        if (sAllPageMap == null) {
+            synchronized (Page.class) {
+                if (sAllPageMap == null) {
+                    sAllPageMap = newPageListInstanceLocked();
+                }
             }
         }
 
-        return UnknownPage.generateFrom(rootInfo);
+        return sAllPageMap;
+    }
+
+    public static boolean isAllPagesReady() {
+        final Collection<Page> allPages = getAllPages().values();
+        for (Page page : allPages) {
+            if (!page.isPageReady()) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    @Nullable
+    public static Page getPage(@NonNull final PageId pageId) {
+        return getAllPages().get(pageId);
     }
 
     @NonNull
-    private static PageId whichPage(@NonNull AccessibilityNodeInfo rootInfo) {
-        // TODO::
-        return PageId.PAGE_WECHAT;
-//        if (LabelMembersPage.isSelf(rootInfo)) {
-//            return PageId.PAGE_LABEL_MEMBERS;
-//        } else if (ChatPage.isSelf(rootInfo)) {
-//            return PageId.PAGE_CHAT;
-//        } else if (ContactPage.isSelf(rootInfo)) {
-//            return PageId.PAGE_CONTACT;
-//        } else if (ExplorePage.isSelf(rootInfo)) {
-//            return PageId.PAGE_EXPLORE;
-//        } else if (PersonalIntroductionPage.isSelf(rootInfo)) {
-//            return PageId.PAGE_PERSONAL_INTRODUCTION;
-//        } else if (WechatPage.isSelf(rootInfo)) {
-//            return PageId.PAGE_WECHAT;
-//        } else if (FriendPage.isSelf(rootInfo)) {
-//            return PageId.PAGE_FRIEND;
-//        } else if (SelectReceiverPage.isSelf(rootInfo)) {
-//            return PageId.PAGE_SELECT_RECEIVER;
-//        }
-//
-//        return PageId.PAGE_UNKNOWN;
+    public static Page generateFrom(@NonNull AccessibilityNodeInfo rootInfo) {
+        final Page page = whichPage(rootInfo);
+
+        if (page.getPageId() == PageId.PAGE_UNKNOWN) {
+            return page;
+        }
+
+        page.bindData(rootInfo);
+        return page;
+    }
+
+    private static Map<PageId, Page> newPageListInstanceLocked() {
+        final Map<PageId, Page> result = new HashMap<>();
+
+        result.put(PageId.PAGE_CHAT, new ChatPage().restoreFromSharedPreferences());
+        result.put(PageId.PAGE_CONTACT, new ContactPage().restoreFromSharedPreferences());
+        result.put(PageId.PAGE_EXPLORE, new ExplorePage().restoreFromSharedPreferences());
+        result.put(PageId.PAGE_FRIEND, new FriendPage().restoreFromSharedPreferences());
+        result.put(PageId.PAGE_LABEL_MEMBERS, new LabelMembersPage().restoreFromSharedPreferences());
+        result.put(PageId.PAGE_PERSONAL_INTRODUCTION, new PersonalIntroductionPage().restoreFromSharedPreferences());
+        result.put(PageId.PAGE_SELECT_RECEIVER, new SelectReceiverPage().restoreFromSharedPreferences());
+        result.put(PageId.PAGE_WECHAT, new WechatPage().restoreFromSharedPreferences());
+
+        return result;
+    }
+
+    @NonNull
+    private static Page whichPage(@NonNull AccessibilityNodeInfo rootInfo) {
+        final Map<PageId, Page> allPageMap = getAllPages();
+        for (Map.Entry<PageId, Page> entry : allPageMap.entrySet()) {
+            final Page page = entry.getValue();
+            if (page.isSelf(rootInfo)) {
+                return page;
+            }
+        }
+
+        return new UnknownPage();
     }
 
 
@@ -93,7 +100,7 @@ public abstract class Page {
     public abstract void bindData(@NonNull AccessibilityNodeInfo rootInfo);
     protected abstract SharedPreferencesUtils.STRING_CACHE getCacheEnumInstance();
 
-    protected void saveToSharedPreferences() {
+    public void saveToSharedPreferences() {
         if (mPageFeature == null) {
             return;
         }
@@ -102,7 +109,7 @@ public abstract class Page {
         getCacheEnumInstance().put(featureStr);
     }
 
-    protected void restoreFromSharedPreferences() {
+    public Page restoreFromSharedPreferences() {
         final String featureStr = getCacheEnumInstance().get("{}");
         PageFeature feature = null;
         try {
@@ -114,6 +121,8 @@ public abstract class Page {
         if (feature != null) {
             mPageFeature = feature;
         }
+
+        return this;
     }
 
     protected Page(@NonNull PageId pageId, @NonNull String pageName) {

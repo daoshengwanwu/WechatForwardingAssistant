@@ -26,7 +26,7 @@ public class ExplorePage extends Page {
         return page;
     }
 
-    private ExplorePage() {
+    public ExplorePage() {
         super(PageId.PAGE_EXPLORE, "发现");
     }
 

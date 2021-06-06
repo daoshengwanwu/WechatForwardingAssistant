@@ -24,7 +24,7 @@ public class UnknownPage extends Page {
     }
 
 
-    private UnknownPage() {
+    public UnknownPage() {
         super(PageId.PAGE_UNKNOWN, "未知");
     }
 }
