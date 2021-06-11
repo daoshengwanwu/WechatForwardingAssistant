@@ -10,6 +10,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 
 import com.daoshengwanwu.android.FloatWindowManager;
+import com.daoshengwanwu.android.R;
 import com.daoshengwanwu.android.model.PageFeature;
 import com.daoshengwanwu.android.page.Page;
 import com.daoshengwanwu.android.util.PageUtils;
@@ -44,6 +45,7 @@ public class LoadPageFeatureTask extends Task implements View.OnClickListener {
 
         mListener = listener;
         mFloatWindowManager.setButtonOnClickListener(this);
+        mFloatWindowManager.setNextButtonOnClickListener(this);
         mApplicationContext = context.getApplicationContext();
     }
 
@@ -89,6 +91,15 @@ public class LoadPageFeatureTask extends Task implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
+        final int id = v.getId();
+        if (id == R.id.tv_btn) {
+            onCaptureButtonClick();
+        } else if (id == R.id.tv_next) {
+            onNextButtonClick();
+        }
+    }
+
+    private void onCaptureButtonClick() {
         final AccessibilityNodeInfo lastNodeInfo = mLastRootInfo;
         if (lastNodeInfo == null) {
             SingleSubThreadUtil.showToast(mApplicationContext, "请到微信界面中再点击截取", Toast.LENGTH_LONG);
@@ -105,16 +116,18 @@ public class LoadPageFeatureTask extends Task implements View.OnClickListener {
             Log.d("abcdefg", "onClick: 截取到的feature为null");
             SingleSubThreadUtil.showToast(mApplicationContext, "截取到的feature为null", Toast.LENGTH_LONG);
         } else {
-            Log.d("abcdefg", "onClick: 截取特征成功：\n" + feature);
-            SingleSubThreadUtil.showToast(mApplicationContext, mCurGatherPage.getPageName() + "界面特征：\n" + feature, Toast.LENGTH_LONG);
-
-            mCurGatherPage.setPageFeautre(feature);
+            mCurGatherPage.mergePageFeature(feature);
             mCurGatherPage.saveToSharedPreferences();
 
-            mCurGatherPage = null;
+            Log.d("abcdefg", "onClick: 截取特征成功：\n" + mCurGatherPage);
 
-            execute(mLastRootInfo);
+            SingleSubThreadUtil.showToast(mApplicationContext,
+                    mCurGatherPage.getPageName() + "界面特征：\n" + mCurGatherPage, Toast.LENGTH_LONG);
         }
+    }
+
+    private void onNextButtonClick() {
+        mCurGatherPage = null;
     }
 
 

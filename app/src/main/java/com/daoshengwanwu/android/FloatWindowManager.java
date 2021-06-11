@@ -64,6 +64,7 @@ public class FloatWindowManager {
     private final RelativeLayout mFloatWindowContainer;
     private final TextView mOutputTextTV;
     private final TextView mInputButtonTV;
+    private final TextView mNextButtonTV;
 
     private final ViewTreeObserverUtils.OnComputeInternalInsetsListener mComputeInsetsListener;
 
@@ -85,6 +86,10 @@ public class FloatWindowManager {
 
     public void setButtonOnClickListener(@Nullable final View.OnClickListener listener) {
         mInputButtonTV.setOnClickListener(listener);
+    }
+
+    public void setNextButtonOnClickListener(@Nullable final View.OnClickListener listener) {
+        mNextButtonTV.setOnClickListener(listener);
     }
 
     public void setText(String text) {
@@ -199,6 +204,7 @@ public class FloatWindowManager {
         mFloatWindowContainer = mFloatWindowRootView.findViewById(R.id.rl_float_window_container);
         mOutputTextTV = mFloatWindowRootView.findViewById(R.id.tv_alert);
         mInputButtonTV = mFloatWindowRootView.findViewById(R.id.tv_btn);
+        mNextButtonTV = mFloatWindowRootView.findViewById(R.id.tv_next);
 
         mComputeInsetsListener = new ViewTreeObserverUtils.OnComputeInternalInsetsListener() {
             @Override

@@ -37,6 +37,19 @@ public class PageFeature {
         }
     }
 
+    public void addAllFeature(@NonNull final PageFeature feature) {
+        if (feature == null) {
+            return;
+        }
+
+        final Set<ViewFeature> viewFeatures = feature.viewFeatures;
+        if (viewFeatures == null) {
+            return;
+        }
+
+        this.viewFeatures.addAll(viewFeatures);
+    }
+
     public String getLastFeatureClassName() {
         return lastFeatureClassName;
     }
@@ -64,12 +77,35 @@ public class PageFeature {
     }
 
     public boolean equalsExt(@Nullable PageFeature target) {
+        if (target == null) {
+            return false;
+        }
+
         final Set<ViewFeature> targetFeatures = new LinkedHashSet<>(target.viewFeatures);
         for (ViewFeature feature : viewFeatures) {
             targetFeatures.remove(feature);
         }
 
         for (ViewFeature feature : targetFeatures) {
+            if (!feature.isWeak) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public boolean containsIn(@Nullable PageFeature target) {
+        if (target == null) {
+            return false;
+        }
+
+        final Set<ViewFeature> viewFeaturesClone = new LinkedHashSet<>(viewFeatures);
+        for (ViewFeature feature : target.viewFeatures) {
+            viewFeaturesClone.remove(feature);
+        }
+
+        for (ViewFeature feature : viewFeaturesClone) {
             if (!feature.isWeak) {
                 return false;
             }
