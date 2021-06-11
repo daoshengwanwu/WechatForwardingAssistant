@@ -21,7 +21,7 @@
             android:padding="16dp"
             android:gravity="center"
             android:textColor="#FFF"
-            android:text="请到消息列表界面点击截取按钮"/>
+            android:text="请到微信开始获取界面特征"/>
 
         <View
             android:id="@+id/view_split_line"

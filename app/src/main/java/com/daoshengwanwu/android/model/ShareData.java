@@ -75,7 +75,6 @@ public class ShareData {
             @Override
             public void onLoadPageFeatureFinished() {
                 mActiveTask = null;
-                SharedPreferencesUtils.BOOLEAN_CACHE.WECHAT_ASSISTANT_INITED.put(true);
             }
         });
 

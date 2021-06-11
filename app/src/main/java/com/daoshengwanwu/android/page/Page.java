@@ -148,7 +148,10 @@ public abstract class Page {
     }
 
     public boolean isPageReady() {
-        return mPageFeature != null;
+        return mPageFeature != null &&
+                mPageFeature.getViewFeatures() != null &&
+                !mPageFeature.getViewFeatures().isEmpty();
+
     }
 
     public boolean isSelf(@Nullable final AccessibilityNodeInfo rootInfo) {

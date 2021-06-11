@@ -11,8 +11,12 @@ import androidx.annotation.NonNull;
 
 import com.daoshengwanwu.android.FloatWindowManager;
 import com.daoshengwanwu.android.model.PageFeature;
+import com.daoshengwanwu.android.page.Page;
 import com.daoshengwanwu.android.util.PageUtils;
 import com.daoshengwanwu.android.util.SingleSubThreadUtil;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class LoadPageFeatureTask extends Task implements View.OnClickListener {
@@ -21,9 +25,12 @@ public class LoadPageFeatureTask extends Task implements View.OnClickListener {
 
     private final Context mApplicationContext;
     private final OnLoadPageFeatureFinishedListener mListener;
+    private final List<Page> mNotInitedPageList = new ArrayList<>(Page.getAllPages().values());
     private final FloatWindowManager mFloatWindowManager = FloatWindowManager.getInstance();
 
     private AccessibilityNodeInfo mLastRootInfo = null;
+    private Page mCurGatherPage = null;
+    private boolean mIsShowToast = false;
 
 
     public LoadPageFeatureTask(@NonNull final Context context,
@@ -47,6 +54,37 @@ public class LoadPageFeatureTask extends Task implements View.OnClickListener {
         }
 
         mLastRootInfo = rootInfo;
+
+        if (mCurGatherPage != null) {
+            mFloatWindowManager.setText("请到" + mCurGatherPage.getPageName() + "页面截取特征");
+            return;
+        }
+
+        if (!mNotInitedPageList.isEmpty()) {
+            mCurGatherPage = mNotInitedPageList.remove(0);
+            execute(rootInfo);
+            return;
+        }
+
+        if (!mIsShowToast) {
+            SingleSubThreadUtil.showToast(mApplicationContext, "所有界面特征截取完毕", Toast.LENGTH_LONG);
+            mFloatWindowManager.setText("所有界面特征已获取完毕");
+
+            mIsShowToast = true;
+        } else {
+            final PageFeature feature = PageUtils.gatherPageFeatures(rootInfo);
+            Log.d("abcdefg", "execute: feature: " + feature);
+
+            Page page = Page.generateFrom(rootInfo);
+            if (page.getPageId() == Page.PageId.PAGE_UNKNOWN) {
+                SingleSubThreadUtil.showToast(mApplicationContext, "无法判断当前是哪个界面", Toast.LENGTH_LONG);
+                mFloatWindowManager.setText("无法判断当前是哪个界面");
+
+                return;
+            }
+
+            mFloatWindowManager.setText("当前是" + page.getPageName() + "界面");
+        }
     }
 
     @Override
@@ -57,13 +95,25 @@ public class LoadPageFeatureTask extends Task implements View.OnClickListener {
             return;
         }
 
+        if (mCurGatherPage == null) {
+            SingleSubThreadUtil.showToast(mApplicationContext, "所有特征已截取完毕，无需再次截取", Toast.LENGTH_LONG);
+            return;
+        }
+
         final PageFeature feature = PageUtils.gatherPageFeatures(lastNodeInfo);
         if (feature == null) {
             Log.d("abcdefg", "onClick: 截取到的feature为null");
             SingleSubThreadUtil.showToast(mApplicationContext, "截取到的feature为null", Toast.LENGTH_LONG);
         } else {
             Log.d("abcdefg", "onClick: 截取特征成功：\n" + feature);
-            SingleSubThreadUtil.showToast(mApplicationContext, "当前界面特征：\n" + feature, Toast.LENGTH_LONG);
+            SingleSubThreadUtil.showToast(mApplicationContext, mCurGatherPage.getPageName() + "界面特征：\n" + feature, Toast.LENGTH_LONG);
+
+            mCurGatherPage.setPageFeautre(feature);
+            mCurGatherPage.saveToSharedPreferences();
+
+            mCurGatherPage = null;
+
+            execute(mLastRootInfo);
         }
     }
 

@@ -100,7 +100,7 @@ public class SharedPreferencesUtils {
     }
 
     public enum BOOLEAN_CACHE {
-        WECHAT_ASSISTANT_INITED("is_wechat_assistant_inited");
+        ;
 
 
         private String mFieldName;

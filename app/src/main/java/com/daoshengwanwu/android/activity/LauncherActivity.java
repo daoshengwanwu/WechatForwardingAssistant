@@ -13,6 +13,7 @@ import android.widget.Button;
 import com.daoshengwanwu.android.FloatWindowManager;
 import com.daoshengwanwu.android.R;
 import com.daoshengwanwu.android.model.ShareData;
+import com.daoshengwanwu.android.page.Page;
 import com.daoshengwanwu.android.service.AuxiliaryService;
 import com.daoshengwanwu.android.task.Task;
 import com.daoshengwanwu.android.util.SharedPreferencesUtils;
@@ -122,7 +123,7 @@ public class LauncherActivity extends AppCompatActivity {
     }
 
     private boolean isWechatAssistantInited() {
-        return SharedPreferencesUtils.BOOLEAN_CACHE.WECHAT_ASSISTANT_INITED.get(false);
+        return Page.isAllPagesReady();
     }
 
     private void hideAllContainer() {

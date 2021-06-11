@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.PixelFormat;
 import android.graphics.Region;
 import android.os.Build;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -84,6 +85,14 @@ public class FloatWindowManager {
 
     public void setButtonOnClickListener(@Nullable final View.OnClickListener listener) {
         mInputButtonTV.setOnClickListener(listener);
+    }
+
+    public void setText(String text) {
+        if (TextUtils.isEmpty(text)) {
+            mOutputTextTV.setText("");
+        } else {
+            mOutputTextTV.setText(text);
+        }
     }
 
     public void hide() {
