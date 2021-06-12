@@ -4,25 +4,30 @@ package com.daoshengwanwu.android.page;
 import android.text.TextUtils;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
 import com.daoshengwanwu.android.model.item.UserItem;
+import com.daoshengwanwu.android.service.AuxiliaryService;
 import com.daoshengwanwu.android.util.ActionPerformer;
 import com.daoshengwanwu.android.util.CustomCollectionUtils;
 import com.daoshengwanwu.android.util.CustomTextUtils;
 import com.daoshengwanwu.android.util.SharedPreferencesUtils;
+import com.daoshengwanwu.android.util.SingleSubThreadUtil;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
 
 
 public class ContactPage extends Page {
+    private String mListViewId;
+    private String mListViewItemId;
+
     private AccessibilityNodeInfo mListInfo;
     private List<AccessibilityNodeInfo> mContactInfos;
 
@@ -37,27 +42,80 @@ public class ContactPage extends Page {
 
     @Override
     public String getNextImportViewDescription() {
-        return null;
+        if (TextUtils.isEmpty(mListViewId)) {
+            return "联系人项";
+        }
+
+        if (TextUtils.isEmpty(mListViewItemId)) {
+            return "联系人项";
+        }
+
+        return "success";
     }
 
     @Override
     public boolean isImportViewResourceIdNameCaptured() {
-        return false;
+        return !TextUtils.isEmpty(mListViewId) &&
+                !TextUtils.isEmpty(mListViewItemId);
     }
 
     @Override
     public boolean captureImportViewResourceIdName(@NonNull AccessibilityEvent event) {
-        return false;
+        if (event == null || event.getEventType() != AccessibilityEvent.TYPE_VIEW_CLICKED) {
+            return false;
+        }
+
+        final AccessibilityNodeInfo info = event.getSource();
+        if (info == null) {
+            SingleSubThreadUtil.showToast(AuxiliaryService.getServiceInstance(), "请回到聊天界面再次点击截取", Toast.LENGTH_SHORT);
+            return false;
+        }
+
+        if (TextUtils.isEmpty(mListViewId)) {
+            AccessibilityNodeInfo i = findFirstParent(info, "android.widget.ListView");
+            if (i != null) {
+                mListViewId = i.getViewIdResourceName();
+
+                return mListViewId != null;
+            } else {
+                return false;
+            }
+        } else if (TextUtils.isEmpty(mListViewItemId)) {
+            AccessibilityNodeInfo i = findFirstChild(info, "android.widget.TextView");
+            if (i != null) {
+                mListViewItemId = i.getViewIdResourceName();
+
+                return mListViewItemId != null;
+            } else {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     @Override
     public void saveAllImportViewResourceIdName() {
-
+        final String idStr = TextUtils.join(",", new String[] {mListViewId, mListViewItemId});
+        SharedPreferencesUtils.STRING_CACHE.CONTACT_PAGE_VIEW_RESOURCE_ID_NAME.put(idStr);
     }
 
     @Override
     public void restoreImportViewResourceIdNameFromCache() {
+        final String idStr = SharedPreferencesUtils.STRING_CACHE.CONTACT_PAGE_VIEW_RESOURCE_ID_NAME.get("");
+        if (TextUtils.isEmpty(idStr)) {
+            return;
+        }
 
+        String[] splitStr = idStr.split(",");
+
+        if (splitStr.length >= 1) {
+            mListViewId = splitStr[0];
+        }
+
+        if (splitStr.length >= 2) {
+            mListViewItemId = splitStr[1];
+        }
     }
 
     public ContactPage() {

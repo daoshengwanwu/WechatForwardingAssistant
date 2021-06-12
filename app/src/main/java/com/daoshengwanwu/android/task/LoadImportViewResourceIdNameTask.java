@@ -99,6 +99,8 @@ public class LoadImportViewResourceIdNameTask extends Task implements View.OnCli
         }
 
         if (mCurLoadPage.captureImportViewResourceIdName(mLastLockViewClickEvent)) {
+            mCurLoadPage.saveAllImportViewResourceIdName();
+
             SingleSubThreadUtil.showToast(mApplicationContext, "捕获成功", Toast.LENGTH_SHORT);
             mLastLockViewClickEvent = null;
 

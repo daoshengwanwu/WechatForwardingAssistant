@@ -68,7 +68,7 @@ public abstract class Page {
         final Map<PageId, Page> result = new LinkedHashMap<>();
 
         result.put(PageId.PAGE_CHAT, new ChatPage().restoreFromSharedPreferences());
-//        result.put(PageId.PAGE_CONTACT, new ContactPage().restoreFromSharedPreferences());
+        result.put(PageId.PAGE_CONTACT, new ContactPage().restoreFromSharedPreferences());
 //        result.put(PageId.PAGE_EXPLORE, new ExplorePage().restoreFromSharedPreferences());
 //        result.put(PageId.PAGE_FRIEND, new FriendPage().restoreFromSharedPreferences());
 //        result.put(PageId.PAGE_LABEL_MEMBERS, new LabelMembersPage().restoreFromSharedPreferences());
@@ -155,6 +155,19 @@ public abstract class Page {
         }
 
         return null;
+    }
+
+    public AccessibilityNodeInfo findFirstParent(AccessibilityNodeInfo info, String className) {
+        if (info == null || TextUtils.isEmpty(className)) {
+            return null;
+        }
+
+        if (className.equals(info.getClassName() == null ? null : info.getClassName().toString())) {
+            return info;
+        }
+
+        AccessibilityNodeInfo parentInfo = info.getParent();
+        return findFirstParent(parentInfo, className);
     }
 
     public AccessibilityNodeInfo findFirstChild(AccessibilityNodeInfo info, String className) {

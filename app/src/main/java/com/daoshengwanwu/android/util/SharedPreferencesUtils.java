@@ -37,7 +37,8 @@ public class SharedPreferencesUtils {
         LABEL_MEMBERS_PAGE_FEATURE("label_members_page_feature"),
         PERSONAL_INTRODUCTION_PAGE_FEATURE("personal_introduction_page_feature"),
         SELECT_RECEIVER_PAGE_FEATURE("select_receiver_page"),
-        CHAT_PAGE_VIEW_RESOURCE_ID_NAME("chat_page_view_resource_id_name");
+        CHAT_PAGE_VIEW_RESOURCE_ID_NAME("chat_page_view_resource_id_name"),
+        CONTACT_PAGE_VIEW_RESOURCE_ID_NAME("contact_page_view_resource_id_name");
 
 
         private String mFieldName;
