@@ -1,7 +1,10 @@
 package com.daoshengwanwu.android.page;
 
 
+import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
+
+import androidx.annotation.NonNull;
 
 import com.daoshengwanwu.android.util.SharedPreferencesUtils;
 
@@ -21,6 +24,31 @@ public class UnknownPage extends Page {
 
     public static UnknownPage generateFrom(AccessibilityNodeInfo rootInfo) {
         return new UnknownPage();
+    }
+
+    @Override
+    public String getNextImportViewDescription() {
+        return "";
+    }
+
+    @Override
+    public boolean isImportViewResourceIdNameCaptured() {
+        return false;
+    }
+
+    @Override
+    public boolean captureImportViewResourceIdName(@NonNull AccessibilityEvent event) {
+        return false;
+    }
+
+    @Override
+    public void saveAllImportViewResourceIdName() {
+
+    }
+
+    @Override
+    public void restoreImportViewResourceIdNameFromCache() {
+
     }
 
 

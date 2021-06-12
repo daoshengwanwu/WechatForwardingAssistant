@@ -2,6 +2,7 @@ package com.daoshengwanwu.android.page;
 
 
 import android.os.SystemClock;
+import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 
 import androidx.annotation.NonNull;
@@ -29,6 +30,31 @@ public class SelectReceiverPage extends Page {
         page.bindData(rootInfo);
 
         return page;
+    }
+
+    @Override
+    public String getNextImportViewDescription() {
+        return null;
+    }
+
+    @Override
+    public boolean isImportViewResourceIdNameCaptured() {
+        return false;
+    }
+
+    @Override
+    public boolean captureImportViewResourceIdName(@NonNull AccessibilityEvent event) {
+        return false;
+    }
+
+    @Override
+    public void saveAllImportViewResourceIdName() {
+
+    }
+
+    @Override
+    public void restoreImportViewResourceIdNameFromCache() {
+
     }
 
     public SelectReceiverPage() {

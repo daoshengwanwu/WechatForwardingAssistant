@@ -23,6 +23,7 @@ public abstract class Task {
 
     public enum TaskId {
         NONE,
+        TASK_LOAD_IMPORT_VIEW_RESOURCE_ID,
         TASK_FORWARDING,
         TASK_LOAD_LABEL_USERS,
         TASK_CLEAN,

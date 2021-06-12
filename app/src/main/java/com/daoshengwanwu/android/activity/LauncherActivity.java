@@ -15,6 +15,7 @@ import com.daoshengwanwu.android.R;
 import com.daoshengwanwu.android.model.ShareData;
 import com.daoshengwanwu.android.page.Page;
 import com.daoshengwanwu.android.service.AuxiliaryService;
+import com.daoshengwanwu.android.task.LoadImportViewResourceIdNameTask;
 import com.daoshengwanwu.android.task.LoadPageFeatureTask;
 import com.daoshengwanwu.android.task.Task;
 import com.daoshengwanwu.android.util.SharedPreferencesUtils;
@@ -111,6 +112,21 @@ public class LauncherActivity extends AppCompatActivity {
                             ShareData.getInstance().clearData();
                             floatWindowManager.setNextButtonOnClickListener(null);
                             floatWindowManager.setButtonOnClickListener(null);
+
+                            ShareData.getInstance().activeLoadImportViewResourceIdNameTask(getApplicationContext(), new LoadImportViewResourceIdNameTask.OnLoadImportViewResourceIdFinishListener() {
+                                @Override
+                                public void onLoadImportViewResourceIdFinished() {
+                                    ShareData.getInstance().clearData();
+                                    floatWindowManager.setNextButtonOnClickListener(null);
+                                    floatWindowManager.setButtonOnClickListener(null);
+
+                                    if (Page.isAllPagesReady()) {
+                                        floatWindowManager.setText("初始化完成");
+                                        floatWindowManager.hide();
+                                        updateView();
+                                    }
+                                }
+                            });
                         }
                     });
 

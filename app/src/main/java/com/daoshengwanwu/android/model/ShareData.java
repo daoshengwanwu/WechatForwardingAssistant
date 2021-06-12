@@ -7,6 +7,7 @@ import android.widget.Toast;
 import com.daoshengwanwu.android.activity.ForwardingProcessActivity;
 import com.daoshengwanwu.android.task.CleanTask;
 import com.daoshengwanwu.android.task.ForwardingTask;
+import com.daoshengwanwu.android.task.LoadImportViewResourceIdNameTask;
 import com.daoshengwanwu.android.task.LoadLabelUsersTask;
 import com.daoshengwanwu.android.task.LoadPageFeatureTask;
 import com.daoshengwanwu.android.task.RegLoadUsersTask;
@@ -73,7 +74,18 @@ public class ShareData {
 
         mActiveTask = new LoadPageFeatureTask(context, listener);
 
-        SingleSubThreadUtil.showToast(context, "开始执行初始化微信助手任务", Toast.LENGTH_LONG);
+        SingleSubThreadUtil.showToast(context, "开始执行捕获界面特征任务", Toast.LENGTH_LONG);
+    }
+
+    public void activeLoadImportViewResourceIdNameTask(final Context context, final LoadImportViewResourceIdNameTask.OnLoadImportViewResourceIdFinishListener listener) {
+        if (mActiveTask != null) {
+            SingleSubThreadUtil.showToast(context, "不可同时开启两个任务", Toast.LENGTH_LONG);
+            return;
+        }
+
+        mActiveTask = new LoadImportViewResourceIdNameTask(context, listener);
+
+        SingleSubThreadUtil.showToast(context, "开始执行捕获视图ID任务", Toast.LENGTH_LONG);
     }
 
     public void activeYesTask() {

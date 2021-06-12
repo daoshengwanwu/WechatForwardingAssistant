@@ -3,7 +3,7 @@
 <accessibility-service xmlns:android="http://schemas.android.com/apk/res/android"
         android:description="@string/auxiliary_service_description"
         android:accessibilityEventTypes="typeAllMask"
-        android:accessibilityFlags="flagDefault|flagReportViewIds|flagIncludeNotImportantViews"
+        android:accessibilityFlags="flagDefault|flagReportViewIds|flagIncludeNotImportantViews|flagRetrieveInteractiveWindows"
         android:accessibilityFeedbackType="feedbackSpoken"
         android:notificationTimeout="100"
         android:canRetrieveWindowContent="true"

@@ -1,6 +1,7 @@
 package com.daoshengwanwu.android.page;
 
 
+import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 
 import androidx.annotation.NonNull;
@@ -21,6 +22,31 @@ public class WechatPage extends Page {
         page.bindData(rootInfo);
 
         return page;
+    }
+
+    @Override
+    public String getNextImportViewDescription() {
+        return null;
+    }
+
+    @Override
+    public boolean isImportViewResourceIdNameCaptured() {
+        return false;
+    }
+
+    @Override
+    public boolean captureImportViewResourceIdName(@NonNull AccessibilityEvent event) {
+        return false;
+    }
+
+    @Override
+    public void saveAllImportViewResourceIdName() {
+
+    }
+
+    @Override
+    public void restoreImportViewResourceIdNameFromCache() {
+
     }
 
 

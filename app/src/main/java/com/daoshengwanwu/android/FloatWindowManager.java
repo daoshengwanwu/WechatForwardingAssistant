@@ -100,6 +100,14 @@ public class FloatWindowManager {
         }
     }
 
+    public void setCaptureTVText(String text) {
+        mInputButtonTV.setText(text == null ? "" : text);
+    }
+
+    public void setNextTVText(String text) {
+        mNextButtonTV.setText(text == null ? "" : text);
+    }
+
     public String getText() {
         final CharSequence textSeq = mOutputTextTV.getText();
         if (textSeq == null) {

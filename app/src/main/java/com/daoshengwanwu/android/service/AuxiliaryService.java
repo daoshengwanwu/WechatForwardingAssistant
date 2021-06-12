@@ -2,6 +2,7 @@ package com.daoshengwanwu.android.service;
 
 
 import android.accessibilityservice.AccessibilityService;
+import android.accessibilityservice.AccessibilityServiceInfo;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
@@ -43,6 +44,16 @@ public class AuxiliaryService extends AccessibilityService {
         }
 
         return serviceInstance.mLastEvent;
+    }
+
+    @Nullable
+    public static AccessibilityEvent getLastViewClickEvent() {
+        final AuxiliaryService serviceInstance = getServiceInstance();
+        if (serviceInstance == null) {
+            return null;
+        }
+
+        return serviceInstance.mLastViewClickEvent;
     }
 
     public static boolean isAccessibilitySettingsOn(@NonNull final Context context) {
@@ -89,6 +100,7 @@ public class AuxiliaryService extends AccessibilityService {
 
 
     private volatile AccessibilityEvent mLastEvent = null;
+    private volatile AccessibilityEvent mLastViewClickEvent = null;
     private final Handler mMainHandler = new Handler(Looper.getMainLooper()) {
         @Override
         public void handleMessage(Message msg) {
@@ -159,6 +171,9 @@ public class AuxiliaryService extends AccessibilityService {
         }
 
         mLastEvent = AccessibilityEvent.obtain(event);
+        if (event.getEventType() == AccessibilityEvent.TYPE_VIEW_CLICKED) {
+            mLastViewClickEvent = AccessibilityEvent.obtain(event);
+        }
 
         final Task curActivatedTask = getCurActivatedTask();
         if (curActivatedTask == null) {

@@ -68,13 +68,13 @@ public abstract class Page {
         final Map<PageId, Page> result = new LinkedHashMap<>();
 
         result.put(PageId.PAGE_CHAT, new ChatPage().restoreFromSharedPreferences());
-        result.put(PageId.PAGE_CONTACT, new ContactPage().restoreFromSharedPreferences());
-        result.put(PageId.PAGE_EXPLORE, new ExplorePage().restoreFromSharedPreferences());
-        result.put(PageId.PAGE_FRIEND, new FriendPage().restoreFromSharedPreferences());
-        result.put(PageId.PAGE_LABEL_MEMBERS, new LabelMembersPage().restoreFromSharedPreferences());
-        result.put(PageId.PAGE_PERSONAL_INTRODUCTION, new PersonalIntroductionPage().restoreFromSharedPreferences());
-        result.put(PageId.PAGE_SELECT_RECEIVER, new SelectReceiverPage().restoreFromSharedPreferences());
-        result.put(PageId.PAGE_WECHAT, new WechatPage().restoreFromSharedPreferences());
+//        result.put(PageId.PAGE_CONTACT, new ContactPage().restoreFromSharedPreferences());
+//        result.put(PageId.PAGE_EXPLORE, new ExplorePage().restoreFromSharedPreferences());
+//        result.put(PageId.PAGE_FRIEND, new FriendPage().restoreFromSharedPreferences());
+//        result.put(PageId.PAGE_LABEL_MEMBERS, new LabelMembersPage().restoreFromSharedPreferences());
+//        result.put(PageId.PAGE_PERSONAL_INTRODUCTION, new PersonalIntroductionPage().restoreFromSharedPreferences());
+//        result.put(PageId.PAGE_SELECT_RECEIVER, new SelectReceiverPage().restoreFromSharedPreferences());
+//        result.put(PageId.PAGE_WECHAT, new WechatPage().restoreFromSharedPreferences());
 
         return result;
     }
@@ -101,7 +101,7 @@ public abstract class Page {
 
     public abstract String getNextImportViewDescription();
     public abstract boolean isImportViewResourceIdNameCaptured();
-    public abstract void captureImportViewResourceIdName(@NonNull final AccessibilityEvent event);
+    public abstract boolean captureImportViewResourceIdName(@NonNull final AccessibilityEvent event);
     public abstract void saveAllImportViewResourceIdName();
     public abstract void restoreImportViewResourceIdNameFromCache();
     public abstract void bindData(@NonNull AccessibilityNodeInfo rootInfo);
@@ -158,6 +158,10 @@ public abstract class Page {
     }
 
     public AccessibilityNodeInfo findFirstChild(AccessibilityNodeInfo info, String className) {
+        return findFirstChild(info, className, true);
+    }
+
+    public AccessibilityNodeInfo findFirstChild(AccessibilityNodeInfo info, String className, boolean isFirstInvoke) {
         if (info == null || TextUtils.isEmpty(className)) {
             return null;
         }
@@ -167,11 +171,18 @@ public abstract class Page {
         }
 
         int childSize = info.getChildCount();
-        for (int i = 0; i < childSize; i++) {
-            AccessibilityNodeInfo child = info.getChild(i);
-            AccessibilityNodeInfo iInfo = findFirstChild(child, className);
-            if (iInfo != null) {
-                return iInfo;
+        if (childSize <= 0) {
+            if (isFirstInvoke) {
+                final AccessibilityNodeInfo parentInfo = info.getParent();
+                return findFirstChild(parentInfo, className, false);
+            }
+        } else {
+            for (int i = 0; i < childSize; i++) {
+                AccessibilityNodeInfo child = info.getChild(i);
+                AccessibilityNodeInfo iInfo = findFirstChild(child, className, false);
+                if (iInfo != null) {
+                    return iInfo;
+                }
             }
         }
 

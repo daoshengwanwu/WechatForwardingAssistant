@@ -26,14 +26,14 @@ public class ChatPage extends Page {
     private String mTitleId;
     private String mEditTextId;
     private String mSendingBtnId;
-    private String mMaxSelectDialogTVId;
+//    private String mMaxSelectDialogTVId;
     private String mCheckBoxId;
 
     private AccessibilityNodeInfo mBackInfo;
     private AccessibilityNodeInfo mTitleInfo;
     private AccessibilityNodeInfo mEditTextInfo;
     private AccessibilityNodeInfo mSendingBtnInfo;
-    private AccessibilityNodeInfo mMaxSelectDialogTextViewInfo;
+//    private AccessibilityNodeInfo mMaxSelectDialogTextViewInfo;
     private List<AccessibilityNodeInfo> mCheckBoxInfos;
 
 
@@ -49,48 +49,74 @@ public class ChatPage extends Page {
     }
 
     @Override
-    public void captureImportViewResourceIdName(@NonNull AccessibilityEvent event) {
-        if (event == null || event.getAction() != AccessibilityEvent.TYPE_VIEW_CLICKED) {
-            return;
+    public boolean captureImportViewResourceIdName(@NonNull AccessibilityEvent event) {
+        if (event == null || event.getEventType() != AccessibilityEvent.TYPE_VIEW_CLICKED) {
+            return false;
         }
 
         final AccessibilityNodeInfo info = event.getSource();
         if (info == null) {
             SingleSubThreadUtil.showToast(AuxiliaryService.getServiceInstance(), "请回到聊天界面再次点击截取", Toast.LENGTH_SHORT);
-            return;
+            return false;
         }
 
         if (TextUtils.isEmpty(mBackId)) {
             AccessibilityNodeInfo i = findFirstClickable(info);
             if (i != null) {
                 mBackId = i.getViewIdResourceName();
+
+                return mBackId != null;
+            } else {
+                return false;
             }
         } else if (TextUtils.isEmpty(mTitleId)) {
             AccessibilityNodeInfo i = findFirstChild(info, "android.widget.TextView");
             if (i != null) {
                 mTitleId = i.getViewIdResourceName();
+
+                return mTitleId != null;
+            } else {
+                return false;
             }
         } else if (TextUtils.isEmpty(mEditTextId)) {
             AccessibilityNodeInfo i = findFirstChild(info, "android.widget.EditText");
             if (i != null) {
                 mEditTextId = i.getViewIdResourceName();
+
+                return mEditTextId != null;
+            } else {
+                return false;
             }
         } else if (TextUtils.isEmpty(mSendingBtnId)) {
             AccessibilityNodeInfo i = findFirstChild(info, "android.widget.Button");
             if (i != null) {
                 mSendingBtnId = i.getViewIdResourceName();
+
+                return mSendingBtnId != null;
+            } else {
+                return false;
             }
-        } else if (TextUtils.isEmpty(mMaxSelectDialogTVId)) {
-            AccessibilityNodeInfo i = findFirstChild(info, "android.widget.TextView");
-            if (i != null) {
-                mMaxSelectDialogTVId = i.getViewIdResourceName();
-            }
-        } else if (TextUtils.isEmpty(mCheckBoxId)) {
+        }
+//        else if (TextUtils.isEmpty(mMaxSelectDialogTVId)) {
+//            AccessibilityNodeInfo i = findFirstChild(info, "android.widget.TextView");
+//            if (i != null) {
+//                mMaxSelectDialogTVId = i.getViewIdResourceName();
+//
+//                return mMaxSelectDialogTVId != null;
+//            }
+//        }
+        else if (TextUtils.isEmpty(mCheckBoxId)) {
             AccessibilityNodeInfo i = findFirstChild(info, "android.widget.CheckBox");
             if (i != null) {
                 mCheckBoxId = i.getViewIdResourceName();
+
+                return mCheckBoxId != null;
+            } else {
+                return false;
             }
         }
+
+        return true;
     }
 
     @Override
@@ -111,9 +137,9 @@ public class ChatPage extends Page {
             return "发送按钮";
         }
 
-        if (TextUtils.isEmpty(mMaxSelectDialogTVId)) {
-            return "最大消息弹窗按钮";
-        }
+//        if (TextUtils.isEmpty(mMaxSelectDialogTVId)) {
+//            return "最大消息弹窗按钮";
+//        }
 
         if (TextUtils.isEmpty(mCheckBoxId)) {
             return "多选窗";
@@ -128,7 +154,7 @@ public class ChatPage extends Page {
                 !TextUtils.isEmpty(mTitleId) &&
                 !TextUtils.isEmpty(mEditTextId) &&
                 !TextUtils.isEmpty(mSendingBtnId) &&
-                !TextUtils.isEmpty(mMaxSelectDialogTVId) &&
+//                !TextUtils.isEmpty(mMaxSelectDialogTVId) &&
                 !TextUtils.isEmpty(mCheckBoxId);
     }
 
@@ -182,10 +208,10 @@ public class ChatPage extends Page {
         mCheckBoxInfos = rootInfo.findAccessibilityNodeInfosByViewId(mCheckBoxId);
 
         // 最多可选择99条信息dialog的textview
-        rst = rootInfo.findAccessibilityNodeInfosByViewId(mMaxSelectDialogTVId);
-        if (!CustomCollectionUtils.isListEmpty(rst)) {
-            mMaxSelectDialogTextViewInfo = rst.get(0);
-        }
+//        rst = rootInfo.findAccessibilityNodeInfosByViewId(mMaxSelectDialogTVId);
+//        if (!CustomCollectionUtils.isListEmpty(rst)) {
+//            mMaxSelectDialogTextViewInfo = rst.get(0);
+//        }
     }
 
     @Override
@@ -238,8 +264,9 @@ public class ChatPage extends Page {
     }
 
     public boolean isWithMaxCheckDialog() {
-        return mMaxSelectDialogTextViewInfo != null &&
-                "最多可选择99条消息".equals(ActionPerformer.getText(mMaxSelectDialogTextViewInfo, "获取最多选择99条信息弹框的文字"));
+//        return mMaxSelectDialogTextViewInfo != null &&
+//                "最多可选择99条消息".equals(ActionPerformer.getText(mMaxSelectDialogTextViewInfo, "获取最多选择99条信息弹框的文字"));
+        return false;
     }
 
     public String getTitle() {
