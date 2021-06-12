@@ -1,6 +1,7 @@
 package com.daoshengwanwu.android.page;
 
 
+import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 
 import androidx.annotation.NonNull;
@@ -97,10 +98,16 @@ public abstract class Page {
     @Nullable private PageFeature mPageFeature;
 
 
+    public abstract boolean isImportViewResourceIdNameCaptured();
+    public abstract void captureImportViewResourceIdName(@NonNull final AccessibilityEvent event);
+    public abstract void saveAllImportViewResourceIdName();
+    public abstract void restoreImportViewResourceIdNameFromCache();
     public abstract void bindData(@NonNull AccessibilityNodeInfo rootInfo);
     protected abstract SharedPreferencesUtils.STRING_CACHE getCacheEnumInstance();
 
     public void saveToSharedPreferences() {
+        saveAllImportViewResourceIdName();
+
         if (mPageFeature == null) {
             return;
         }
@@ -110,6 +117,8 @@ public abstract class Page {
     }
 
     public Page restoreFromSharedPreferences() {
+        restoreImportViewResourceIdNameFromCache();
+
         final String featureStr = getCacheEnumInstance().get("{}");
         PageFeature feature = null;
         try {
@@ -171,7 +180,8 @@ public abstract class Page {
     public boolean isPageReady() {
         return mPageFeature != null &&
                 mPageFeature.getViewFeatures() != null &&
-                !mPageFeature.getViewFeatures().isEmpty();
+                !mPageFeature.getViewFeatures().isEmpty() &&
+                isImportViewResourceIdNameCaptured();
 
     }
 
