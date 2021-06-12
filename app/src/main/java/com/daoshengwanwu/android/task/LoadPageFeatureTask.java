@@ -73,7 +73,11 @@ public class LoadPageFeatureTask extends Task implements View.OnClickListener {
             mFloatWindowManager.setText("所有界面特征已获取完毕");
 
             mIsShowToast = true;
-        } else {
+        }
+
+        mListener.onLoadPageFeatureFinished();
+        /*
+        else {
             final PageFeature feature = PageUtils.gatherPageFeatures(rootInfo);
             Log.d("abcdefg", "execute: feature: " + feature);
 
@@ -86,6 +90,7 @@ public class LoadPageFeatureTask extends Task implements View.OnClickListener {
 
             mFloatWindowManager.setText("当前是" + page.getPageName() + "界面");
         }
+         */
     }
 
     @Override

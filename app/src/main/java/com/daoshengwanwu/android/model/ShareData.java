@@ -65,18 +65,13 @@ public class ShareData {
         SingleSubThreadUtil.showToast(context, "激活选择收信人任务", Toast.LENGTH_LONG);
     }
 
-    public void activeLoadPageFeautresTask(final Context context) {
+    public void activeLoadPageFeautresTask(final Context context, final LoadPageFeatureTask.OnLoadPageFeatureFinishedListener listener) {
         if (mActiveTask != null) {
             SingleSubThreadUtil.showToast(context, "不可同时开启两个任务", Toast.LENGTH_LONG);
             return;
         }
 
-        mActiveTask = new LoadPageFeatureTask(context, new LoadPageFeatureTask.OnLoadPageFeatureFinishedListener() {
-            @Override
-            public void onLoadPageFeatureFinished() {
-                mActiveTask = null;
-            }
-        });
+        mActiveTask = new LoadPageFeatureTask(context, listener);
 
         SingleSubThreadUtil.showToast(context, "开始执行初始化微信助手任务", Toast.LENGTH_LONG);
     }

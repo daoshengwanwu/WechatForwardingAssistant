@@ -15,6 +15,7 @@ import com.daoshengwanwu.android.R;
 import com.daoshengwanwu.android.model.ShareData;
 import com.daoshengwanwu.android.page.Page;
 import com.daoshengwanwu.android.service.AuxiliaryService;
+import com.daoshengwanwu.android.task.LoadPageFeatureTask;
 import com.daoshengwanwu.android.task.Task;
 import com.daoshengwanwu.android.util.SharedPreferencesUtils;
 
@@ -103,7 +104,15 @@ public class LauncherActivity extends AppCompatActivity {
                         floatWindowManager.show();
                     }
 
-                    ShareData.getInstance().activeLoadPageFeautresTask(getApplicationContext());
+                    ShareData.getInstance().activeLoadPageFeautresTask(getApplicationContext(),
+                            new LoadPageFeatureTask.OnLoadPageFeatureFinishedListener() {
+                        @Override
+                        public void onLoadPageFeatureFinished() {
+                            ShareData.getInstance().clearData();
+                            floatWindowManager.setNextButtonOnClickListener(null);
+                            floatWindowManager.setButtonOnClickListener(null);
+                        }
+                    });
 
                 } else {
                     updateView();
