@@ -1,14 +1,18 @@
 package com.daoshengwanwu.android.page;
 
 
+import android.text.TextUtils;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
+import com.daoshengwanwu.android.service.AuxiliaryService;
 import com.daoshengwanwu.android.util.ActionPerformer;
 import com.daoshengwanwu.android.util.CustomCollectionUtils;
 import com.daoshengwanwu.android.util.SharedPreferencesUtils;
+import com.daoshengwanwu.android.util.SingleSubThreadUtil;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -16,6 +20,8 @@ import java.util.List;
 
 
 public class ExplorePage extends Page {
+    private String mContactTabId;
+
     private AccessibilityNodeInfo mContactTabInfo;
 
 
@@ -29,27 +35,62 @@ public class ExplorePage extends Page {
 
     @Override
     public String getNextImportViewDescription() {
-        return null;
+        if (TextUtils.isEmpty(mContactTabId)) {
+            return "通讯录Tab";
+        }
+
+        return "success";
     }
 
     @Override
     public boolean isImportViewResourceIdNameCaptured() {
-        return false;
+        return !TextUtils.isEmpty(mContactTabId);
     }
 
     @Override
     public boolean captureImportViewResourceIdName(@NonNull AccessibilityEvent event) {
-        return false;
+        if (event == null || event.getEventType() != AccessibilityEvent.TYPE_VIEW_CLICKED) {
+            return false;
+        }
+
+        final AccessibilityNodeInfo info = event.getSource();
+        if (info == null) {
+            SingleSubThreadUtil.showToast(AuxiliaryService.getServiceInstance(), "请回到发现界面再次点击截取", Toast.LENGTH_SHORT);
+            return false;
+        }
+
+        if (TextUtils.isEmpty(mContactTabId)) {
+            AccessibilityNodeInfo i = findFirstChild(info, "android.widget.ImageView");
+            if (i != null) {
+                mContactTabId = i.getViewIdResourceName();
+
+                return mContactTabId != null;
+            } else {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     @Override
     public void saveAllImportViewResourceIdName() {
-
+        final String idStr = TextUtils.join(",", new String[] {mContactTabId});
+        SharedPreferencesUtils.STRING_CACHE.EXPLORE_PAGE_VIEW_RESOURCE_ID_NAME.put(idStr);
     }
 
     @Override
     public void restoreImportViewResourceIdNameFromCache() {
+        final String idStr = SharedPreferencesUtils.STRING_CACHE.EXPLORE_PAGE_VIEW_RESOURCE_ID_NAME.get("");
+        if (TextUtils.isEmpty(idStr)) {
+            return;
+        }
 
+        String[] splitStr = idStr.split(",");
+
+        if (splitStr.length >= 1) {
+            mContactTabId = splitStr[0];
+        }
     }
 
     public ExplorePage() {
@@ -61,7 +102,7 @@ public class ExplorePage extends Page {
         List<AccessibilityNodeInfo> rst;
 
         // 导航栏的Item的ImageView
-        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/dtx");
+        rst = rootInfo.findAccessibilityNodeInfosByViewId(mContactTabId);
         if (CustomCollectionUtils.isListEmpty(rst) || rst.size() != 4) {
             return;
         }

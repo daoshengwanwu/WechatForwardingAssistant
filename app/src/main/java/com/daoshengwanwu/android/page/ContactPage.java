@@ -67,7 +67,7 @@ public class ContactPage extends Page {
 
         final AccessibilityNodeInfo info = event.getSource();
         if (info == null) {
-            SingleSubThreadUtil.showToast(AuxiliaryService.getServiceInstance(), "请回到聊天界面再次点击截取", Toast.LENGTH_SHORT);
+            SingleSubThreadUtil.showToast(AuxiliaryService.getServiceInstance(), "请回到通讯录界面再次点击截取", Toast.LENGTH_SHORT);
             return false;
         }
 
@@ -125,10 +125,10 @@ public class ContactPage extends Page {
     @Override
     public void bindData(@NotNull AccessibilityNodeInfo rootInfo) {
         // 每一个item的有字的View
-        mContactInfos = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/ft6");
+        mContactInfos = rootInfo.findAccessibilityNodeInfosByViewId(mListViewItemId);
 
         // ListView
-        List<AccessibilityNodeInfo> rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/h4");
+        List<AccessibilityNodeInfo> rst = rootInfo.findAccessibilityNodeInfosByViewId(mListViewId);
         if (!CustomCollectionUtils.isListEmpty(rst)) {
             mListInfo = rst.get(0);
         }
