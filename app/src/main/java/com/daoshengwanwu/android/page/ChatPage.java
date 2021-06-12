@@ -40,14 +40,6 @@ public class ChatPage extends Page {
     //================================================================================
     //============================= Common Start =====================================
     //================================================================================
-    public static ChatPage generateFrom(AccessibilityNodeInfo rootInfo) {
-        ChatPage page = new ChatPage();
-
-        page.bindData(rootInfo);
-
-        return page;
-    }
-
     @Override
     public boolean captureImportViewResourceIdName(@NonNull AccessibilityEvent event) {
         if (event == null || event.getEventType() != AccessibilityEvent.TYPE_VIEW_CLICKED) {

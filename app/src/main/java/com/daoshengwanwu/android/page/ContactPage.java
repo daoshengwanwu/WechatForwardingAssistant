@@ -32,14 +32,6 @@ public class ContactPage extends Page {
     private List<AccessibilityNodeInfo> mContactInfos;
 
 
-    public static ContactPage generateFrom(AccessibilityNodeInfo rootInfo) {
-        ContactPage page = new ContactPage();
-
-        page.bindData(rootInfo);
-
-        return page;
-    }
-
     @Override
     public String getNextImportViewDescription() {
         if (TextUtils.isEmpty(mListViewId)) {

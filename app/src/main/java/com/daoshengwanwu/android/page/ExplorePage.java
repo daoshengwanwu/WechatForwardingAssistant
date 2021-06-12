@@ -25,14 +25,6 @@ public class ExplorePage extends Page {
     private AccessibilityNodeInfo mContactTabInfo;
 
 
-    public static ExplorePage generateFrom(AccessibilityNodeInfo rootInfo) {
-        ExplorePage page = new ExplorePage();
-
-        page.bindData(rootInfo);
-
-        return page;
-    }
-
     @Override
     public String getNextImportViewDescription() {
         if (TextUtils.isEmpty(mContactTabId)) {

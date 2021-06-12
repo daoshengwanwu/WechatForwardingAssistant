@@ -21,14 +21,6 @@ public class FriendPage extends Page {
     private AccessibilityNodeInfo mYesInfo;
 
 
-    public static FriendPage generateFrom(AccessibilityNodeInfo rootInfo) {
-        FriendPage page = new FriendPage();
-
-        page.bindData(rootInfo);
-
-        return page;
-    }
-
     @Override
     public String getNextImportViewDescription() {
         return null;
