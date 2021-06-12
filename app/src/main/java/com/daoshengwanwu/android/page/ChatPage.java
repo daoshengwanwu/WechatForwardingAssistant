@@ -2,14 +2,19 @@ package com.daoshengwanwu.android.page;
 
 
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
+import com.daoshengwanwu.android.service.AuxiliaryService;
 import com.daoshengwanwu.android.util.ActionPerformer;
 import com.daoshengwanwu.android.util.CustomCollectionUtils;
 import com.daoshengwanwu.android.util.CustomTextUtils;
 import com.daoshengwanwu.android.util.SharedPreferencesUtils;
+import com.daoshengwanwu.android.util.SingleSubThreadUtil;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -17,6 +22,13 @@ import java.util.List;
 
 
 public class ChatPage extends Page {
+    private String mBackId;
+    private String mTitleId;
+    private String mEditTextId;
+    private String mSendingBtnId;
+    private String mMaxSelectDialogTVId;
+    private String mCheckBoxId;
+
     private AccessibilityNodeInfo mBackInfo;
     private AccessibilityNodeInfo mTitleInfo;
     private AccessibilityNodeInfo mEditTextInfo;
@@ -36,64 +48,141 @@ public class ChatPage extends Page {
         return page;
     }
 
+    @Override
+    public void captureImportViewResourceIdName(@NonNull AccessibilityEvent event) {
+        if (event == null || event.getAction() != AccessibilityEvent.TYPE_VIEW_CLICKED) {
+            return;
+        }
+
+        final AccessibilityNodeInfo info = event.getSource();
+        if (info == null) {
+            SingleSubThreadUtil.showToast(AuxiliaryService.getServiceInstance(), "请回到聊天界面再次点击截取", Toast.LENGTH_SHORT);
+            return;
+        }
+
+        if (TextUtils.isEmpty(mBackId)) {
+            AccessibilityNodeInfo i = findFirstClickable(info);
+            if (i != null) {
+                mBackId = i.getViewIdResourceName();
+            }
+        } else if (TextUtils.isEmpty(mTitleId)) {
+            AccessibilityNodeInfo i = findFirstChild(info, "android.widget.TextView");
+            if (i != null) {
+                mTitleId = i.getViewIdResourceName();
+            }
+        } else if (TextUtils.isEmpty(mEditTextId)) {
+            AccessibilityNodeInfo i = findFirstChild(info, "android.widget.EditText");
+            if (i != null) {
+                mEditTextId = i.getViewIdResourceName();
+            }
+        } else if (TextUtils.isEmpty(mSendingBtnId)) {
+            AccessibilityNodeInfo i = findFirstChild(info, "android.widget.Button");
+            if (i != null) {
+                mSendingBtnId = i.getViewIdResourceName();
+            }
+        } else if (TextUtils.isEmpty(mMaxSelectDialogTVId)) {
+            AccessibilityNodeInfo i = findFirstChild(info, "android.widget.TextView");
+            if (i != null) {
+                mMaxSelectDialogTVId = i.getViewIdResourceName();
+            }
+        } else if (TextUtils.isEmpty(mCheckBoxId)) {
+            AccessibilityNodeInfo i = findFirstChild(info, "android.widget.CheckBox");
+            if (i != null) {
+                mCheckBoxId = i.getViewIdResourceName();
+            }
+        }
+    }
+
+    @Override
+    public String getNextImportViewDescription() {
+        if (TextUtils.isEmpty(mBackId)) {
+            return "后退按钮";
+        }
+
+        if (TextUtils.isEmpty(mTitleId)) {
+            return "标题";
+        }
+
+        if (TextUtils.isEmpty(mEditTextId)) {
+            return "输入框";
+        }
+
+        if (TextUtils.isEmpty(mSendingBtnId)) {
+            return "发送按钮";
+        }
+
+        if (TextUtils.isEmpty(mMaxSelectDialogTVId)) {
+            return "最大消息弹窗按钮";
+        }
+
+        if (TextUtils.isEmpty(mCheckBoxId)) {
+            return "多选窗";
+        }
+
+        return "所有Id已捕获完毕";
+    }
+
+    @Override
+    public boolean isImportViewResourceIdNameCaptured() {
+        return !TextUtils.isEmpty(mBackId) &&
+                !TextUtils.isEmpty(mTitleId) &&
+                !TextUtils.isEmpty(mEditTextId) &&
+                !TextUtils.isEmpty(mSendingBtnId) &&
+                !TextUtils.isEmpty(mMaxSelectDialogTVId) &&
+                !TextUtils.isEmpty(mCheckBoxId);
+    }
+
+    @Override
+    public void saveAllImportViewResourceIdName() {
+
+    }
+
+    @Override
+    public void restoreImportViewResourceIdNameFromCache() {
+
+    }
+
     public ChatPage() {
         super(PageId.PAGE_CHAT, "聊天");
     }
 
     @Override
     public void bindData(@NotNull AccessibilityNodeInfo rootInfo) {
+        if (!isImportViewResourceIdNameCaptured()) {
+            return;
+        }
+
         List<AccessibilityNodeInfo> rst;
 
         // 后退LinearLayout
-        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/eh");
+        rst = rootInfo.findAccessibilityNodeInfosByViewId(mBackId);
         if (!CustomCollectionUtils.isListEmpty(rst)) {
             mBackInfo = rst.get(0);
         }
 
-        if (mBackInfo == null) {
-            rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/un");
-            if (!CustomCollectionUtils.isListEmpty(rst)) {
-                mBackInfo = rst.get(0);
-            }
-        }
-
         // 联系人名字TextView
-        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/ipt");
+        rst = rootInfo.findAccessibilityNodeInfosByViewId(mTitleId);
         if (!CustomCollectionUtils.isListEmpty(rst)) {
             mTitleInfo = rst.get(0);
         }
 
         // EditText
-        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/auj");
+        rst = rootInfo.findAccessibilityNodeInfosByViewId(mEditTextId);
         if (!CustomCollectionUtils.isListEmpty(rst)) {
             mEditTextInfo = rst.get(0);
         }
 
-        if (mEditTextInfo == null) {
-            rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/auj");
-            if (!CustomCollectionUtils.isListEmpty(rst)) {
-                mEditTextInfo = rst.get(0);
-            }
-        }
-
-        if (mEditTextInfo == null) {
-            rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/auj");
-            if (!CustomCollectionUtils.isListEmpty(rst)) {
-                mEditTextInfo = rst.get(0);
-            }
-        }
-
         // 发送按钮
-        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/ay5");
+        rst = rootInfo.findAccessibilityNodeInfosByViewId(mSendingBtnId);
         if (!CustomCollectionUtils.isListEmpty(rst)) {
             mSendingBtnInfo = rst.get(0);
         }
 
         // 多选之后的CheckBox
-        mCheckBoxInfos = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/aue");
+        mCheckBoxInfos = rootInfo.findAccessibilityNodeInfosByViewId(mCheckBoxId);
 
         // 最多可选择99条信息dialog的textview
-        rst = rootInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/ffh");
+        rst = rootInfo.findAccessibilityNodeInfosByViewId(mMaxSelectDialogTVId);
         if (!CustomCollectionUtils.isListEmpty(rst)) {
             mMaxSelectDialogTextViewInfo = rst.get(0);
         }

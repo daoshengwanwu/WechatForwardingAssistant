@@ -1,6 +1,7 @@
 package com.daoshengwanwu.android.page;
 
 
+import android.text.TextUtils;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 
@@ -98,6 +99,7 @@ public abstract class Page {
     @Nullable private PageFeature mPageFeature;
 
 
+    public abstract String getNextImportViewDescription();
     public abstract boolean isImportViewResourceIdNameCaptured();
     public abstract void captureImportViewResourceIdName(@NonNull final AccessibilityEvent event);
     public abstract void saveAllImportViewResourceIdName();
@@ -132,6 +134,48 @@ public abstract class Page {
         }
 
         return this;
+    }
+
+    public AccessibilityNodeInfo findFirstClickable(AccessibilityNodeInfo info) {
+        if (info == null) {
+            return null;
+        }
+
+        if (info.isClickable()) {
+            return info;
+        }
+
+        int childSize = info.getChildCount();
+        for (int i = 0; i < childSize; i++) {
+            AccessibilityNodeInfo child = info.getChild(i);
+            AccessibilityNodeInfo clickableInfo = findFirstClickable(child);
+            if (clickableInfo != null) {
+                return clickableInfo;
+            }
+        }
+
+        return null;
+    }
+
+    public AccessibilityNodeInfo findFirstChild(AccessibilityNodeInfo info, String className) {
+        if (info == null || TextUtils.isEmpty(className)) {
+            return null;
+        }
+
+        if (className.equals(info.getClassName() == null ? null : info.getClassName().toString())) {
+            return info;
+        }
+
+        int childSize = info.getChildCount();
+        for (int i = 0; i < childSize; i++) {
+            AccessibilityNodeInfo child = info.getChild(i);
+            AccessibilityNodeInfo iInfo = findFirstChild(child, className);
+            if (iInfo != null) {
+                return iInfo;
+            }
+        }
+
+        return null;
     }
 
     protected Page(@NonNull PageId pageId, @NonNull String pageName) {
