@@ -160,12 +160,38 @@ public class ChatPage extends Page {
 
     @Override
     public void saveAllImportViewResourceIdName() {
-
+        final String idStr = TextUtils.join(",", new String[] {mBackId, mTitleId, mEditTextId, mSendingBtnId, mCheckBoxId});
+        SharedPreferencesUtils.STRING_CACHE.CHAT_PAGE_VIEW_RESOURCE_ID_NAME.put(idStr);
     }
 
     @Override
     public void restoreImportViewResourceIdNameFromCache() {
+        final String idStr = SharedPreferencesUtils.STRING_CACHE.CHAT_PAGE_VIEW_RESOURCE_ID_NAME.get("");
+        if (TextUtils.isEmpty(idStr)) {
+            return;
+        }
 
+        String[] splitStr = idStr.split(",");
+
+        if (splitStr.length >= 1) {
+            mBackId = splitStr[0];
+        }
+
+        if (splitStr.length >= 2) {
+            mTitleId = splitStr[1];
+        }
+
+        if (splitStr.length >= 3) {
+            mEditTextId = splitStr[2];
+        }
+
+        if (splitStr.length >= 4) {
+            mSendingBtnId = splitStr[3];
+        }
+
+        if (splitStr.length >= 5) {
+            mCheckBoxId = splitStr[4];
+        }
     }
 
     public ChatPage() {
