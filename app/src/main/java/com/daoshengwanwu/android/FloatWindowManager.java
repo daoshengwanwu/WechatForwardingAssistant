@@ -100,6 +100,15 @@ public class FloatWindowManager {
         }
     }
 
+    public String getText() {
+        final CharSequence textSeq = mOutputTextTV.getText();
+        if (textSeq == null) {
+            return "";
+        }
+
+        return textSeq.toString();
+    }
+
     public void hide() {
         removeViewFloatWindowManagerRoot();
     }

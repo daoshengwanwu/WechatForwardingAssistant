@@ -101,17 +101,32 @@ public class PageFeature {
         }
 
         final Set<ViewFeature> viewFeaturesClone = new LinkedHashSet<>(viewFeatures);
+        final Set<ViewFeature> targetViewFeaturesClone = new LinkedHashSet<>(target.viewFeatures);
         for (ViewFeature feature : target.viewFeatures) {
-            viewFeaturesClone.remove(feature);
+            if (viewFeaturesClone.contains(feature)) {
+                viewFeaturesClone.remove(feature);
+                targetViewFeaturesClone.remove(feature);
+            }
         }
 
-        for (ViewFeature feature : viewFeaturesClone) {
-            if (!feature.isWeak) {
+        for (ViewFeature feature : targetViewFeaturesClone) {
+            if (feature.isFeatureNeedWithText()) {
                 return false;
             }
         }
 
-        return true;
+        int unmatchFeatureCount = 0;
+        for (ViewFeature feature : viewFeaturesClone) {
+            if (feature.isFeatureNeedWithText()) {
+                return false;
+            }
+
+            if (!feature.isWeak) {
+                unmatchFeatureCount++;
+            }
+        }
+
+        return unmatchFeatureCount == 1 || unmatchFeatureCount <= viewFeatures.size() / 7;
     }
 
     @Override

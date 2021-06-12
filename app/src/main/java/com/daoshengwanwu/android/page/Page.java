@@ -12,7 +12,7 @@ import com.daoshengwanwu.android.util.SharedPreferencesUtils;
 import com.google.gson.Gson;
 
 import java.util.Collection;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 
@@ -63,16 +63,16 @@ public abstract class Page {
     }
 
     private static Map<PageId, Page> newPageListInstanceLocked() {
-        final Map<PageId, Page> result = new HashMap<>();
+        final Map<PageId, Page> result = new LinkedHashMap<>();
 
-//        result.put(PageId.PAGE_CHAT, new ChatPage().restoreFromSharedPreferences());
-//        result.put(PageId.PAGE_CONTACT, new ContactPage().restoreFromSharedPreferences());
+        result.put(PageId.PAGE_CHAT, new ChatPage().restoreFromSharedPreferences());
+        result.put(PageId.PAGE_CONTACT, new ContactPage().restoreFromSharedPreferences());
         result.put(PageId.PAGE_EXPLORE, new ExplorePage().restoreFromSharedPreferences());
-//        result.put(PageId.PAGE_FRIEND, new FriendPage().restoreFromSharedPreferences());
-//        result.put(PageId.PAGE_LABEL_MEMBERS, new LabelMembersPage().restoreFromSharedPreferences());
-//        result.put(PageId.PAGE_PERSONAL_INTRODUCTION, new PersonalIntroductionPage().restoreFromSharedPreferences());
-//        result.put(PageId.PAGE_SELECT_RECEIVER, new SelectReceiverPage().restoreFromSharedPreferences());
-//        result.put(PageId.PAGE_WECHAT, new WechatPage().restoreFromSharedPreferences());
+        result.put(PageId.PAGE_FRIEND, new FriendPage().restoreFromSharedPreferences());
+        result.put(PageId.PAGE_LABEL_MEMBERS, new LabelMembersPage().restoreFromSharedPreferences());
+        result.put(PageId.PAGE_PERSONAL_INTRODUCTION, new PersonalIntroductionPage().restoreFromSharedPreferences());
+        result.put(PageId.PAGE_SELECT_RECEIVER, new SelectReceiverPage().restoreFromSharedPreferences());
+        result.put(PageId.PAGE_WECHAT, new WechatPage().restoreFromSharedPreferences());
 
         return result;
     }
@@ -158,6 +158,14 @@ public abstract class Page {
     @Nullable
     public PageFeature getPageFeature() {
         return mPageFeature;
+    }
+
+    public int featureCount() {
+        if (mPageFeature == null) {
+            return 0;
+        }
+
+        return mPageFeature.size();
     }
 
     public boolean isPageReady() {

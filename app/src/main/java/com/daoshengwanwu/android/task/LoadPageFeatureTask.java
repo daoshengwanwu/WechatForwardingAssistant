@@ -58,7 +58,7 @@ public class LoadPageFeatureTask extends Task implements View.OnClickListener {
         mLastRootInfo = rootInfo;
 
         if (mCurGatherPage != null) {
-            mFloatWindowManager.setText("请到" + mCurGatherPage.getPageName() + "页面截取特征");
+            mFloatWindowManager.setText("请到" + mCurGatherPage.getPageName() + "页面截取特征" + " (" + mCurGatherPage.featureCount() + ")");
             return;
         }
 
@@ -79,7 +79,6 @@ public class LoadPageFeatureTask extends Task implements View.OnClickListener {
 
             Page page = Page.generateFrom(rootInfo);
             if (page.getPageId() == Page.PageId.PAGE_UNKNOWN) {
-                SingleSubThreadUtil.showToast(mApplicationContext, "无法判断当前是哪个界面", Toast.LENGTH_LONG);
                 mFloatWindowManager.setText("无法判断当前是哪个界面");
 
                 return;
@@ -122,7 +121,10 @@ public class LoadPageFeatureTask extends Task implements View.OnClickListener {
             Log.d("abcdefg", "onClick: 截取特征成功：\n" + mCurGatherPage);
 
             SingleSubThreadUtil.showToast(mApplicationContext,
-                    mCurGatherPage.getPageName() + "界面特征：\n" + mCurGatherPage, Toast.LENGTH_LONG);
+                    mCurGatherPage.getPageName() + "界面特征：\n" + mCurGatherPage.getPageFeature(), Toast.LENGTH_SHORT);
+
+            final int curFeatureCount = mCurGatherPage.featureCount();
+            mFloatWindowManager.setText("请到" + mCurGatherPage.getPageName() + "页面截取特征" + " (" + curFeatureCount + ")");
         }
     }
 
