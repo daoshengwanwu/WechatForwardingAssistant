@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.daoshengwanwu.android.model.PageFeature;
+import com.daoshengwanwu.android.util.ActionPerformer;
 import com.daoshengwanwu.android.util.PageUtils;
 import com.daoshengwanwu.android.util.SharedPreferencesUtils;
 import com.google.gson.Gson;
@@ -134,6 +135,40 @@ public abstract class Page {
         }
 
         return this;
+    }
+
+    public AccessibilityNodeInfo findFromRootWithDesc(AccessibilityNodeInfo info, String desc) {
+        if (info == null) {
+            return null;
+        }
+
+        while (info.getParent() != null) {
+            info = info.getParent();
+        }
+
+        return findFirstChildWithDesc(info, desc);
+    }
+
+    public AccessibilityNodeInfo findFirstChildWithDesc(AccessibilityNodeInfo info, String desc) {
+        if (info == null || TextUtils.isEmpty(desc)) {
+            return null;
+        }
+
+        String infoDesc = info.getContentDescription() == null ? "" : info.getContentDescription().toString();
+        if (desc.equals(infoDesc)) {
+            return info;
+        }
+
+        int childCount = info.getChildCount();
+        for (int i = 0; i < childCount; i++) {
+            AccessibilityNodeInfo child = info.getChild(i);
+            AccessibilityNodeInfo iInfo = findFirstChildWithDesc(child, desc);
+            if (iInfo != null) {
+                return iInfo;
+            }
+        }
+
+        return null;
     }
 
     public AccessibilityNodeInfo findFirstClickable(AccessibilityNodeInfo info) {

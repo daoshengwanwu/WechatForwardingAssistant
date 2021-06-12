@@ -37,19 +37,19 @@ public class LabelMembersPage extends Page {
 
     @Override
     public String getNextImportViewDescription() {
-        if (TextUtils.isEmpty(mBackId)) {
-            return "返回按钮";
+        if (TextUtils.isEmpty(mBackId) || "null".equals(mBackId)) {
+            return "标签名编辑框";
         }
 
-        if (TextUtils.isEmpty(mListViewId)) {
+        if (TextUtils.isEmpty(mListViewId) || "null".equals(mListViewId)) {
             return "列表项";
         }
 
-        if (TextUtils.isEmpty(mLabelId)) {
+        if (TextUtils.isEmpty(mLabelId) || "null".equals(mLabelId)) {
             return "标签名";
         }
 
-        if (TextUtils.isEmpty(mTextId)) {
+        if (TextUtils.isEmpty(mTextId) || "null".equals(mTextId)) {
             return "列表项";
         }
 
@@ -70,22 +70,24 @@ public class LabelMembersPage extends Page {
             return false;
         }
 
+        if (TextUtils.isEmpty(mBackId) || "null".equals(mBackId)) {
+            AccessibilityNodeInfo i = findFromRootWithDesc(AuxiliaryService.getServiceInstance().getRootInActiveWindow(), "返回");
+            if (i != null) {
+                mBackId = i.getParent().getViewIdResourceName();
+
+                return mBackId != null;
+            } else {
+                return false;
+            }
+        }
+
         final AccessibilityNodeInfo info = event.getSource();
         if (info == null) {
             SingleSubThreadUtil.showToast(AuxiliaryService.getServiceInstance(), "请回到标签界面再次点击截取", Toast.LENGTH_SHORT);
             return false;
         }
 
-        if (TextUtils.isEmpty(mBackId)) {
-            AccessibilityNodeInfo i = findFirstClickable(info);
-            if (i != null) {
-                mBackId = i.getViewIdResourceName();
-
-                return mBackId != null;
-            } else {
-                return false;
-            }
-        } else if (TextUtils.isEmpty(mListViewId)) {
+        if (TextUtils.isEmpty(mListViewId) || "null".equals(mListViewId)) {
             AccessibilityNodeInfo i = findFirstParent(info, "android.widget.ListView");
             if (i != null) {
                 mListViewId = i.getViewIdResourceName();
@@ -94,7 +96,7 @@ public class LabelMembersPage extends Page {
             } else {
                 return false;
             }
-        } else if (TextUtils.isEmpty(mLabelId)) {
+        } else if (TextUtils.isEmpty(mLabelId) || "null".equals(mLabelId)) {
             AccessibilityNodeInfo i = findFirstChild(info, "android.widget.EditText");
             if (i != null) {
                 mLabelId = i.getViewIdResourceName();
@@ -103,7 +105,7 @@ public class LabelMembersPage extends Page {
             } else {
                 return false;
             }
-        } else if (TextUtils.isEmpty(mTextId)) {
+        } else if (TextUtils.isEmpty(mTextId) || "null".equals(mTextId)) {
             AccessibilityNodeInfo i = findFirstChild(info, "android.widget.TextView");
             if (i != null) {
                 mTextId = i.getViewIdResourceName();
@@ -145,7 +147,7 @@ public class LabelMembersPage extends Page {
         }
 
         if (splitStr.length >= 4) {
-            mLabelId = splitStr[3];
+            mTextId = splitStr[3];
         }
     }
 

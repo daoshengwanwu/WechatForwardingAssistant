@@ -6,5 +6,6 @@
         android:accessibilityFlags="flagDefault|flagReportViewIds|flagIncludeNotImportantViews|flagRetrieveInteractiveWindows"
         android:accessibilityFeedbackType="feedbackSpoken"
         android:notificationTimeout="100"
+        android:canRequestTouchExplorationMode="true"
         android:canRetrieveWindowContent="true"
         android:packageNames="com.tencent.mm" />
