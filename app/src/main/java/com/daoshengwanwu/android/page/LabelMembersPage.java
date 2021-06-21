@@ -58,10 +58,10 @@ public class LabelMembersPage extends Page {
 
     @Override
     public boolean isImportViewResourceIdNameCaptured() {
-        return !TextUtils.isEmpty(mBackId) &&
-                !TextUtils.isEmpty(mListViewId) &&
-                !TextUtils.isEmpty(mLabelId) &&
-                !TextUtils.isEmpty(mTextId);
+        return !TextUtils.isEmpty(mBackId) && !"null".equals(mBackId) &&
+                !TextUtils.isEmpty(mListViewId) && !"null".equals(mListViewId) &&
+                !TextUtils.isEmpty(mLabelId) && !"null".equals(mLabelId) &&
+                !TextUtils.isEmpty(mTextId) && !"null".equals(mTextId);
     }
 
     @Override

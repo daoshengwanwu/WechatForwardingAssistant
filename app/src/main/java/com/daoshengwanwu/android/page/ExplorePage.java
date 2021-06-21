@@ -27,7 +27,7 @@ public class ExplorePage extends Page {
 
     @Override
     public String getNextImportViewDescription() {
-        if (TextUtils.isEmpty(mContactTabId)) {
+        if (TextUtils.isEmpty(mContactTabId) || "null".equals(mContactTabId)) {
             return "通讯录Tab";
         }
 
@@ -36,7 +36,7 @@ public class ExplorePage extends Page {
 
     @Override
     public boolean isImportViewResourceIdNameCaptured() {
-        return !TextUtils.isEmpty(mContactTabId);
+        return !TextUtils.isEmpty(mContactTabId) && !"null".equals(mContactTabId);
     }
 
     @Override
@@ -51,7 +51,7 @@ public class ExplorePage extends Page {
             return false;
         }
 
-        if (TextUtils.isEmpty(mContactTabId)) {
+        if (TextUtils.isEmpty(mContactTabId) || "null".equals(mContactTabId)) {
             AccessibilityNodeInfo i = findFirstChild(info, "android.widget.ImageView");
             if (i != null) {
                 mContactTabId = i.getViewIdResourceName();

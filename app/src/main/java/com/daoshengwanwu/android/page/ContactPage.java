@@ -34,11 +34,11 @@ public class ContactPage extends Page {
 
     @Override
     public String getNextImportViewDescription() {
-        if (TextUtils.isEmpty(mListViewId)) {
+        if (TextUtils.isEmpty(mListViewId) || "null".equals(mListViewId)) {
             return "联系人项";
         }
 
-        if (TextUtils.isEmpty(mListViewItemId)) {
+        if (TextUtils.isEmpty(mListViewItemId) || "null".equals(mListViewItemId)) {
             return "联系人项";
         }
 
@@ -47,8 +47,8 @@ public class ContactPage extends Page {
 
     @Override
     public boolean isImportViewResourceIdNameCaptured() {
-        return !TextUtils.isEmpty(mListViewId) &&
-                !TextUtils.isEmpty(mListViewItemId);
+        return !TextUtils.isEmpty(mListViewId) && !"null".equals(mListViewId) &&
+                !TextUtils.isEmpty(mListViewItemId) && !"null".equals(mListViewItemId);
     }
 
     @Override
@@ -63,7 +63,7 @@ public class ContactPage extends Page {
             return false;
         }
 
-        if (TextUtils.isEmpty(mListViewId)) {
+        if (TextUtils.isEmpty(mListViewId) || "null".equals(mListViewId)) {
             AccessibilityNodeInfo i = findFirstParent(info, "android.widget.ListView");
             if (i != null) {
                 mListViewId = i.getViewIdResourceName();
@@ -72,7 +72,7 @@ public class ContactPage extends Page {
             } else {
                 return false;
             }
-        } else if (TextUtils.isEmpty(mListViewItemId)) {
+        } else if (TextUtils.isEmpty(mListViewItemId) || "null".equals(mListViewItemId)) {
             AccessibilityNodeInfo i = findFirstChild(info, "android.widget.TextView");
             if (i != null) {
                 mListViewItemId = i.getViewIdResourceName();

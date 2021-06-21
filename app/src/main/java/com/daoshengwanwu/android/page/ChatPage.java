@@ -52,7 +52,7 @@ public class ChatPage extends Page {
             return false;
         }
 
-        if (TextUtils.isEmpty(mBackId)) {
+        if (TextUtils.isEmpty(mBackId) || "null".equals(mBackId)) {
             AccessibilityNodeInfo i = findFirstClickable(info);
             if (i != null) {
                 mBackId = i.getViewIdResourceName();
@@ -61,7 +61,7 @@ public class ChatPage extends Page {
             } else {
                 return false;
             }
-        } else if (TextUtils.isEmpty(mTitleId)) {
+        } else if (TextUtils.isEmpty(mTitleId) || "null".equals(mTitleId)) {
             AccessibilityNodeInfo i = findFirstChild(info, "android.widget.TextView");
             if (i != null) {
                 mTitleId = i.getViewIdResourceName();
@@ -70,7 +70,7 @@ public class ChatPage extends Page {
             } else {
                 return false;
             }
-        } else if (TextUtils.isEmpty(mEditTextId)) {
+        } else if (TextUtils.isEmpty(mEditTextId) || "null".equals(mEditTextId)) {
             AccessibilityNodeInfo i = findFirstChild(info, "android.widget.EditText");
             if (i != null) {
                 mEditTextId = i.getViewIdResourceName();
@@ -79,7 +79,7 @@ public class ChatPage extends Page {
             } else {
                 return false;
             }
-        } else if (TextUtils.isEmpty(mSendingBtnId)) {
+        } else if (TextUtils.isEmpty(mSendingBtnId) || "null".equals(mSendingBtnId)) {
             AccessibilityNodeInfo i = findFirstChild(info, "android.widget.Button");
             if (i != null) {
                 mSendingBtnId = i.getViewIdResourceName();
@@ -97,7 +97,7 @@ public class ChatPage extends Page {
 //                return mMaxSelectDialogTVId != null;
 //            }
 //        }
-        else if (TextUtils.isEmpty(mCheckBoxId)) {
+        else if (TextUtils.isEmpty(mCheckBoxId) || "null".equals(mCheckBoxId)) {
             AccessibilityNodeInfo i = findFirstChild(info, "android.widget.CheckBox");
             if (i != null) {
                 mCheckBoxId = i.getViewIdResourceName();
@@ -113,19 +113,19 @@ public class ChatPage extends Page {
 
     @Override
     public String getNextImportViewDescription() {
-        if (TextUtils.isEmpty(mBackId)) {
+        if (TextUtils.isEmpty(mBackId) || "null".equals(mBackId)) {
             return "后退按钮";
         }
 
-        if (TextUtils.isEmpty(mTitleId)) {
+        if (TextUtils.isEmpty(mTitleId) || "null".equals(mTitleId)) {
             return "标题";
         }
 
-        if (TextUtils.isEmpty(mEditTextId)) {
+        if (TextUtils.isEmpty(mEditTextId) || "null".equals(mEditTextId)) {
             return "输入框";
         }
 
-        if (TextUtils.isEmpty(mSendingBtnId)) {
+        if (TextUtils.isEmpty(mSendingBtnId) || "null".equals(mSendingBtnId)) {
             return "发送按钮";
         }
 
@@ -133,7 +133,7 @@ public class ChatPage extends Page {
 //            return "最大消息弹窗按钮";
 //        }
 
-        if (TextUtils.isEmpty(mCheckBoxId)) {
+        if (TextUtils.isEmpty(mCheckBoxId) || "null".equals(mCheckBoxId)) {
             return "多选窗";
         }
 
@@ -142,12 +142,12 @@ public class ChatPage extends Page {
 
     @Override
     public boolean isImportViewResourceIdNameCaptured() {
-        return !TextUtils.isEmpty(mBackId) &&
-                !TextUtils.isEmpty(mTitleId) &&
-                !TextUtils.isEmpty(mEditTextId) &&
-                !TextUtils.isEmpty(mSendingBtnId) &&
+        return !TextUtils.isEmpty(mBackId) && !"null".equals(mBackId) &&
+                !TextUtils.isEmpty(mTitleId) && !"null".equals(mTitleId) &&
+                !TextUtils.isEmpty(mEditTextId) && !"null".equals(mEditTextId) &&
+                !TextUtils.isEmpty(mSendingBtnId) && !"null".equals(mSendingBtnId) &&
 //                !TextUtils.isEmpty(mMaxSelectDialogTVId) &&
-                !TextUtils.isEmpty(mCheckBoxId);
+                !TextUtils.isEmpty(mCheckBoxId) && !"null".equals(mCheckBoxId);
     }
 
     @Override

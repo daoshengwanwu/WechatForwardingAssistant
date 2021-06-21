@@ -50,7 +50,7 @@ public class WechatPage extends Page {
             return false;
         }
 
-        if (TextUtils.isEmpty(mContactId)) {
+        if (TextUtils.isEmpty(mContactId) || "null".equals(mContactId)) {
             AccessibilityNodeInfo i = findFirstChild(info, "android.widget.ImageView");
             if (i != null) {
                 mContactId = i.getViewIdResourceName();
