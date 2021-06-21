@@ -40,7 +40,8 @@ public class SharedPreferencesUtils {
         CHAT_PAGE_VIEW_RESOURCE_ID_NAME("chat_page_view_resource_id_name"),
         CONTACT_PAGE_VIEW_RESOURCE_ID_NAME("contact_page_view_resource_id_name"),
         EXPLORE_PAGE_VIEW_RESOURCE_ID_NAME("explore_page_view_resource_id_name"),
-        LABEL_PAGE_VIEW_RESOURCE_ID_NAME("label_page_view_resource_id_name");
+        LABEL_PAGE_VIEW_RESOURCE_ID_NAME("label_page_view_resource_id_name"),
+        PERSONAL_INTRODUCTION_PAGE_VIEW_RESOURCE_ID_NAME("personal_introduction_page_view_resource_id_name");
 
 
         private String mFieldName;

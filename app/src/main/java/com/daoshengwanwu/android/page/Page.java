@@ -73,7 +73,7 @@ public abstract class Page {
         result.put(PageId.PAGE_EXPLORE, new ExplorePage().restoreFromSharedPreferences());
 //        result.put(PageId.PAGE_FRIEND, new FriendPage().restoreFromSharedPreferences());
         result.put(PageId.PAGE_LABEL_MEMBERS, new LabelMembersPage().restoreFromSharedPreferences());
-//        result.put(PageId.PAGE_PERSONAL_INTRODUCTION, new PersonalIntroductionPage().restoreFromSharedPreferences());
+        result.put(PageId.PAGE_PERSONAL_INTRODUCTION, new PersonalIntroductionPage().restoreFromSharedPreferences());
 //        result.put(PageId.PAGE_SELECT_RECEIVER, new SelectReceiverPage().restoreFromSharedPreferences());
 //        result.put(PageId.PAGE_WECHAT, new WechatPage().restoreFromSharedPreferences());
 
@@ -147,6 +147,40 @@ public abstract class Page {
         }
 
         return findFirstChildWithDesc(info, desc);
+    }
+
+    public AccessibilityNodeInfo findFromRootWithText(AccessibilityNodeInfo info, String text) {
+        if (info == null) {
+            return null;
+        }
+
+        while (info.getParent() != null) {
+            info = info.getParent();
+        }
+
+        return findFirstChildWithText(info, text);
+    }
+
+    public AccessibilityNodeInfo findFirstChildWithText(AccessibilityNodeInfo info, String text) {
+        if (info == null || TextUtils.isEmpty(text)) {
+            return null;
+        }
+
+        String infoText = info.getText() == null ? "" : info.getText().toString();
+        if (text.equals(infoText)) {
+            return info;
+        }
+
+        int childCount = info.getChildCount();
+        for (int i = 0; i < childCount; i++) {
+            AccessibilityNodeInfo child = info.getChild(i);
+            AccessibilityNodeInfo iInfo = findFirstChildWithText(child, text);
+            if (iInfo != null) {
+                return iInfo;
+            }
+        }
+
+        return null;
     }
 
     public AccessibilityNodeInfo findFirstChildWithDesc(AccessibilityNodeInfo info, String desc) {
