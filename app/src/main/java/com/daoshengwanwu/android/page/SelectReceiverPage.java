@@ -24,14 +24,6 @@ public class SelectReceiverPage extends Page {
     //================================================================================
     //============================= Common Start =====================================
     //================================================================================
-    public static SelectReceiverPage generateFrom(@NonNull AccessibilityNodeInfo rootInfo) {
-        SelectReceiverPage page = new SelectReceiverPage();
-
-        page.bindData(rootInfo);
-
-        return page;
-    }
-
     @Override
     public String getNextImportViewDescription() {
         return null;

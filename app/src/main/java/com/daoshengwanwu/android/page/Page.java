@@ -75,7 +75,7 @@ public abstract class Page {
         result.put(PageId.PAGE_LABEL_MEMBERS, new LabelMembersPage().restoreFromSharedPreferences());
         result.put(PageId.PAGE_PERSONAL_INTRODUCTION, new PersonalIntroductionPage().restoreFromSharedPreferences());
 //        result.put(PageId.PAGE_SELECT_RECEIVER, new SelectReceiverPage().restoreFromSharedPreferences());
-//        result.put(PageId.PAGE_WECHAT, new WechatPage().restoreFromSharedPreferences());
+        result.put(PageId.PAGE_WECHAT, new WechatPage().restoreFromSharedPreferences());
 
         return result;
     }
