@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import com.daoshengwanwu.android.service.AuxiliaryService;
 import com.daoshengwanwu.android.util.ActionPerformer;
 import com.daoshengwanwu.android.util.CustomCollectionUtils;
+import com.daoshengwanwu.android.util.PageUtils;
 import com.daoshengwanwu.android.util.SharedPreferencesUtils;
 import com.daoshengwanwu.android.util.SingleSubThreadUtil;
 
@@ -98,7 +99,7 @@ public class WechatPage extends Page {
             return;
         }
 
-        mContactTabInfo = rst.get(1).getParent();
+        mContactTabInfo = PageUtils.findFirstClickableParent(rst.get(1));
     }
 
     @Override

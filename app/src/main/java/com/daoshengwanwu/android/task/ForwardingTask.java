@@ -20,6 +20,7 @@ import com.daoshengwanwu.android.page.ExplorePage;
 import com.daoshengwanwu.android.page.Page;
 import com.daoshengwanwu.android.page.PersonalIntroductionPage;
 import com.daoshengwanwu.android.page.WechatPage;
+import com.daoshengwanwu.android.service.AuxiliaryService;
 import com.daoshengwanwu.android.util.ActionPerformer;
 import com.daoshengwanwu.android.util.SingleSubThreadUtil;
 
@@ -97,7 +98,7 @@ public class ForwardingTask extends Task {
             SystemClock.sleep(3000);
 
             mIsForwrdingAlreadyStarted = true;
-            execute(rootInfo);
+            execute(AuxiliaryService.getServiceInstance().getRootInActiveWindow());
             return;
         }
 
@@ -168,7 +169,7 @@ public class ForwardingTask extends Task {
                 }
 
                 mCurScrollDirection = Direction.BACKWARD;
-                execute(rootInfo);
+                execute(AuxiliaryService.getServiceInstance().getRootInActiveWindow());
             } else {
                 if (contactPage.performBackwordScrollListView()) {
                     mSkipCountInCurrentPage = 0;
@@ -177,7 +178,7 @@ public class ForwardingTask extends Task {
                 }
 
                 mCurScrollDirection = Direction.FORWARD;
-                execute(rootInfo);
+                execute(AuxiliaryService.getServiceInstance().getRootInActiveWindow());
             }
 
             return;
@@ -187,6 +188,10 @@ public class ForwardingTask extends Task {
             PersonalIntroductionPage personalIntroductionPage = (PersonalIntroductionPage) page;
 
             final String pageLabel = personalIntroductionPage.getLabelText();
+
+            if (mCurSendingTarget == null) {
+                return;
+            }
 
             if (!pageLabel.contains(mCurSendingTarget.labelText) && !TextUtils.isEmpty(mCurSendingTarget.labelText)) {
                 removeUserItemByFullnickname(mCurSendingTarget.fullNickName);

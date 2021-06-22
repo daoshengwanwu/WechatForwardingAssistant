@@ -15,6 +15,65 @@ public class PageUtils {
     private static final int PAGE_FEATURE_IDENTITY_COUNT = Integer.MAX_VALUE;
 
 
+    public static AccessibilityNodeInfo findChild(AccessibilityNodeInfo info, String className, int index) {
+        FindChildResult result = findChildInner(info, className, index);
+        if (result != null && result.count == index) {
+            return result.info;
+        }
+
+        return null;
+    }
+
+    private static FindChildResult findChildInner(AccessibilityNodeInfo info, String className, int index) {
+        if (info == null || TextUtils.isEmpty(className) || index < 1) {
+            return new FindChildResult(null, 0);
+        }
+
+        int total = 0;
+        if (className.equals(info.getClassName() == null ? null : info.getClassName().toString())) {
+            if (index == 1) {
+                return new FindChildResult(info, 1);
+            } else {
+                total = 1;
+            }
+        }
+
+        int childSize = info.getChildCount();
+        if (childSize <= 0) {
+            return new FindChildResult(null, total);
+        }
+
+        for (int i = 0; i < childSize; i++) {
+            AccessibilityNodeInfo child = info.getChild(i);
+            FindChildResult result = findChildInner(child, className, index - total);
+
+            if (result == null) {
+                continue;
+            }
+
+            if (result.count == index - total) {
+                return new FindChildResult(result.info, index);
+            } else {
+                total += result.count;
+            }
+        }
+
+
+        return new FindChildResult(null, total);
+    }
+
+    public static AccessibilityNodeInfo findFirstClickableParent(@NonNull AccessibilityNodeInfo info) {
+        while (info != null) {
+            if (info.isClickable()) {
+                return info;
+            }
+
+            info = info.getParent();
+        }
+
+        return null;
+    }
+
     /**
      * 获取界面的特征，以List返回
      * @param rootInfo 界面的根AccessibilityInfo
@@ -67,6 +126,18 @@ public class PageUtils {
         for (int i = 0; i < childCount; i++) {
             final AccessibilityNodeInfo child = info.getChild(i);
             gatherPageFeaturesInner(child, feature);
+        }
+    }
+
+
+    private static class FindChildResult {
+        AccessibilityNodeInfo info;
+        int count;
+
+
+        FindChildResult(AccessibilityNodeInfo info, int count) {
+            this.info = info;
+            this.count = count;
         }
     }
 }

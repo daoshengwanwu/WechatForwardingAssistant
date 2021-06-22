@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import com.daoshengwanwu.android.service.AuxiliaryService;
 import com.daoshengwanwu.android.util.ActionPerformer;
 import com.daoshengwanwu.android.util.CustomCollectionUtils;
+import com.daoshengwanwu.android.util.PageUtils;
 import com.daoshengwanwu.android.util.SharedPreferencesUtils;
 import com.daoshengwanwu.android.util.SingleSubThreadUtil;
 
@@ -84,7 +85,7 @@ public class PersonalIntroductionPage extends Page {
         }
 
         if (TextUtils.isEmpty(mLabelId) || "null".equals(mLabelId)) {
-            AccessibilityNodeInfo i = findFirstChild(info, "android.widget.TextView");
+            AccessibilityNodeInfo i = PageUtils.findChild(info, "android.widget.TextView", 2);
             if (i != null) {
                 mLabelId = i.getViewIdResourceName();
 
@@ -148,7 +149,7 @@ public class PersonalIntroductionPage extends Page {
         // 发送消息TextView
         rst = rootInfo.findAccessibilityNodeInfosByViewId(mSendMessageId);
         if (!CustomCollectionUtils.isListEmpty(rst)) {
-            mSendMessageInfo = rst.get(0);
+            mSendMessageInfo = PageUtils.findFirstClickableParent(rst.get(0));
         }
     }
 

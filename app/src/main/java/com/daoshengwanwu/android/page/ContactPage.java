@@ -13,6 +13,7 @@ import com.daoshengwanwu.android.service.AuxiliaryService;
 import com.daoshengwanwu.android.util.ActionPerformer;
 import com.daoshengwanwu.android.util.CustomCollectionUtils;
 import com.daoshengwanwu.android.util.CustomTextUtils;
+import com.daoshengwanwu.android.util.PageUtils;
 import com.daoshengwanwu.android.util.SharedPreferencesUtils;
 import com.daoshengwanwu.android.util.SingleSubThreadUtil;
 
@@ -73,7 +74,7 @@ public class ContactPage extends Page {
                 return false;
             }
         } else if (TextUtils.isEmpty(mListViewItemId) || "null".equals(mListViewItemId)) {
-            AccessibilityNodeInfo i = findFirstChild(info, "android.widget.TextView");
+            AccessibilityNodeInfo i = findFirstChild(info, "android.view.View");
             if (i != null) {
                 mListViewItemId = i.getViewIdResourceName();
 
@@ -154,7 +155,7 @@ public class ContactPage extends Page {
             String title = ActionPerformer.getText(info, "ContactPage.findFirstInfoInSpecificSet.getTitle");
             UserItem item = getByInfoTitle(list, title);
             if (item != null) {
-                return new FindResult(info.getParent().getParent(), item);
+                return new FindResult(PageUtils.findFirstClickableParent(info), item);
             }
         }
 
@@ -195,7 +196,7 @@ public class ContactPage extends Page {
             item = getByInfoTitle(list, title);
 
             if (item != null) {
-                results.add(new FindResult(info.getParent().getParent(), item));
+                results.add(new FindResult(PageUtils.findFirstClickableParent(info), item));
             }
         }
 
