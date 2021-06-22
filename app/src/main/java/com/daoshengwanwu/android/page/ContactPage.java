@@ -2,6 +2,7 @@ package com.daoshengwanwu.android.page;
 
 
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.Toast;
@@ -196,6 +197,7 @@ public class ContactPage extends Page {
             item = getByInfoTitle(list, title);
 
             if (item != null) {
+                Log.d("abcdefg", "findAllInfo: info" + info.getText() + ", item: " + item.fullNickName);
                 results.add(new FindResult(PageUtils.findFirstClickableParent(info), item));
             }
         }
@@ -236,7 +238,7 @@ public class ContactPage extends Page {
     }
 
     private UserItem getByInfoTitle(List<UserItem> userItems, String title) {
-        if (userItems == null || title == null) {
+        if (userItems == null || TextUtils.isEmpty(title)) {
             return null;
         }
 
@@ -251,7 +253,7 @@ public class ContactPage extends Page {
                 fullMatch = item;
             }
 
-            if (fuzzyMatch == null && item.fullNickName.startsWith(title)) {
+            if (fuzzyMatch == null && item.fullNickName.startsWith(title) && item.fullNickName.length() > 12) {
                 fuzzyMatch = item;
             }
         }

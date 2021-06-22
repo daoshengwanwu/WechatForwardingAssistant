@@ -25,8 +25,10 @@ import com.daoshengwanwu.android.util.ActionPerformer;
 import com.daoshengwanwu.android.util.SingleSubThreadUtil;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 
@@ -50,7 +52,7 @@ public class ForwardingTask extends Task {
     private OnForwardingTaskFinishedListener mListener; // 监听群发进度的监听器
     private boolean mAlreadyPause; // 是否已经自动暂停过
     private long mLastForwardingTime; // 上一次发送消息的时间戳
-    private int mSkipCountInCurrentPage; // 当前通讯录页面需要跳过的用户数量
+    private Set<String> mSkipTitles = new HashSet<>();
 
 
     public ForwardingTask(
@@ -128,14 +130,12 @@ public class ForwardingTask extends Task {
 
             ContactPage.FindResult findResult = null;
             final List<ContactPage.FindResult> findResults = contactPage.findAllInfo(mToForwardingList);
-            int skipCount = 0;
             for (ContactPage.FindResult result : findResults) {
                 if (alreadySent(result)) {
                     continue;
                 }
 
-                if (skipCount < mSkipCountInCurrentPage) {
-                    skipCount++;
+                if (mSkipTitles.contains(result.item.fullNickName)) {
                     continue;
                 }
 
@@ -163,7 +163,7 @@ public class ForwardingTask extends Task {
 
             if (mCurScrollDirection == Direction.FORWARD) {
                 if (contactPage.performForwardingScrollListView()) {
-                    mSkipCountInCurrentPage = 0;
+                    mSkipTitles.clear();
                     SystemClock.sleep(80);
                     return;
                 }
@@ -172,7 +172,7 @@ public class ForwardingTask extends Task {
                 execute(AuxiliaryService.getServiceInstance().getRootInActiveWindow());
             } else {
                 if (contactPage.performBackwordScrollListView()) {
-                    mSkipCountInCurrentPage = 0;
+                    mSkipTitles.clear();
                     SystemClock.sleep(80);
                     return;
                 }
@@ -212,7 +212,7 @@ public class ForwardingTask extends Task {
 
             String title = chatPage.getTitle();
             if (mCurSendingTarget == null || !title.equals(mCurSendingTarget.fullNickName)) {
-                mSkipCountInCurrentPage++;
+                mSkipTitles.add(title);
                 chatPage.performBack();
                 return;
             }
