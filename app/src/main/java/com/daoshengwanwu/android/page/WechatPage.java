@@ -47,7 +47,7 @@ public class WechatPage extends Page {
 
         final AccessibilityNodeInfo info = event.getSource();
         if (info == null) {
-            SingleSubThreadUtil.showToast(AuxiliaryService.getServiceInstance(), "请回到信息列表界面再次点击截取", Toast.LENGTH_SHORT);
+            SingleSubThreadUtil.showToast(AuxiliaryService.getServiceInstance(), "请回到信息列表界面再次点击截取", Toast.LENGTH_LONG);
             return false;
         }
 

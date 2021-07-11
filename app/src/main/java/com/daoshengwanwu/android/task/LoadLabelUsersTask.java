@@ -59,7 +59,7 @@ public class LoadLabelUsersTask extends Task {
             String labelText = lPage.getLabelText();
             if (!mLabelTitle.equals(labelText)) {
                 SingleSubThreadUtil.showToast(mContext, "当前标签页面与群发指定的不符，请切换到：" +
-                        mLabelTitle + "：标签页面", Toast.LENGTH_SHORT);
+                        mLabelTitle + "：标签页面", Toast.LENGTH_LONG);
                 return;
             }
 

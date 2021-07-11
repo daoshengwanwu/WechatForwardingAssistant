@@ -72,7 +72,7 @@ public class GroupListActivity extends AppCompatActivity {
 
             case R.id.delete: {
                 if (mSelectedUserGroups.size() <= 0) {
-                    Toast.makeText(this, "请先选中群组", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "请先选中群组", Toast.LENGTH_LONG).show();
                     break;
                 }
 
@@ -101,7 +101,7 @@ public class GroupListActivity extends AppCompatActivity {
     private void setSelectedUserGroupsResultAndFinish() {
         final Set<UserGroup> selectedUserGroupSet = mSelectedUserGroups;
         if (selectedUserGroupSet == null || selectedUserGroupSet.isEmpty()) {
-            Toast.makeText(this, "请选中至少一个分组", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "请选中至少一个分组", Toast.LENGTH_LONG).show();
             return;
         }
         

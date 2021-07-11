@@ -83,7 +83,7 @@ public class LabelMembersPage extends Page {
 
         final AccessibilityNodeInfo info = event.getSource();
         if (info == null) {
-            SingleSubThreadUtil.showToast(AuxiliaryService.getServiceInstance(), "请回到标签界面再次点击截取", Toast.LENGTH_SHORT);
+            SingleSubThreadUtil.showToast(AuxiliaryService.getServiceInstance(), "请回到标签界面再次点击截取", Toast.LENGTH_LONG);
             return false;
         }
 
@@ -184,7 +184,7 @@ public class LabelMembersPage extends Page {
     }
 
     public LabelMembersPage() {
-        super(PageId.PAGE_LABEL_MEMBERS, "标签详情");
+        super(PageId.PAGE_LABEL_MEMBERS, "编辑标签");
     }
 
     @Override

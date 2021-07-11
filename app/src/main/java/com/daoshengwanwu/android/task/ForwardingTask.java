@@ -152,7 +152,7 @@ public class ForwardingTask extends Task {
             }
 
             if (mToForwardingList.isEmpty()) {
-                SingleSubThreadUtil.showToast(mContext, "群发任务完成", Toast.LENGTH_SHORT);
+                SingleSubThreadUtil.showToast(mContext, "群发任务完成", Toast.LENGTH_LONG);
                 mIsTaskFinished = true;
                 if (mListener != null) {
                     mListener.onForwardingTaskFinished();

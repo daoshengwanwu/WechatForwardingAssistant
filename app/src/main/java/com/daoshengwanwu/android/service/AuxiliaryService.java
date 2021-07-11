@@ -126,7 +126,7 @@ public class AuxiliaryService extends AccessibilityService {
         super.onServiceConnected();
 
         SingleSubThreadUtil.showToast(this, "成功启动 " +
-                getResources().getString(R.string.app_name) + ".", Toast.LENGTH_SHORT);
+                getResources().getString(R.string.app_name) + ".", Toast.LENGTH_LONG);
 
         // 暂时停止轮询
         // mMainHandler.sendEmptyMessageDelayed(WHAT_BREATH_INTERVAL, 500);
@@ -135,7 +135,7 @@ public class AuxiliaryService extends AccessibilityService {
     @Override
     public boolean onUnbind(Intent intent) {
         Toast.makeText(this, getResources().getString(R.string.app_name) +
-                "已关闭，如需再次使用请在设置中重新开启本插件.", Toast.LENGTH_SHORT).show();
+                "已关闭，如需再次使用请在设置中重新开启本插件.", Toast.LENGTH_LONG).show();
 
         mMainHandler.removeMessages(WHAT_BREATH_INTERVAL);
 

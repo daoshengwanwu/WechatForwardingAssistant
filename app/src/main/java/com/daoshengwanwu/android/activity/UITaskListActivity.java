@@ -36,7 +36,7 @@ public class UITaskListActivity extends AppCompatActivity {
         try {
             activity.startActivity(intent);
         } catch (Throwable e) {
-            Toast.makeText(activity, "启动点赞Activity失败", Toast.LENGTH_SHORT).show();
+            Toast.makeText(activity, "启动点赞Activity失败", Toast.LENGTH_LONG).show();
         }
     }
 

@@ -126,7 +126,7 @@ public class LoadPageFeatureTask extends Task implements View.OnClickListener {
             Log.d("abcdefg", "onClick: 截取特征成功：\n" + mCurGatherPage);
 
 //            SingleSubThreadUtil.showToast(mApplicationContext,
-//                    mCurGatherPage.getPageName() + "界面特征：\n" + mCurGatherPage.getPageFeature(), Toast.LENGTH_SHORT);
+//                    mCurGatherPage.getPageName() + "界面特征：\n" + mCurGatherPage.getPageFeature(), Toast.LENGTH_LONG);
 
             final int curFeatureCount = mCurGatherPage.featureCount();
             mFloatWindowManager.setText("请到" + mCurGatherPage.getPageName() + "页面截取特征" + " (" + curFeatureCount + ")");

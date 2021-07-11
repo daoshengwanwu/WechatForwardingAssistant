@@ -110,7 +110,7 @@ public class UITaskEditActivity extends AppCompatActivity {
 
                 } else {
                     Toast.makeText(UITaskEditActivity.this,
-                            "请指定群发内容和群发分组之后再开启群发", Toast.LENGTH_SHORT).show();
+                            "请指定群发内容和群发分组之后再开启群发", Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -271,7 +271,7 @@ public class UITaskEditActivity extends AppCompatActivity {
                 UIForwardingTaskLab.getInstance().putForwrdingTaskLab(this, mUIForwardingTask);
                 finish();
             } else {
-                Toast.makeText(this, "请不要保存空任务", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "请不要保存空任务", Toast.LENGTH_LONG).show();
             }
         }
     }

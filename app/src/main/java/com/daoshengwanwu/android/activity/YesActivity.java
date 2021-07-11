@@ -28,7 +28,7 @@ public class YesActivity extends AppCompatActivity {
         try {
             activity.startActivity(intent);
         } catch (Throwable e) {
-            Toast.makeText(activity, "启动点赞Activity失败", Toast.LENGTH_SHORT).show();
+            Toast.makeText(activity, "启动点赞Activity失败", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -50,14 +50,14 @@ public class YesActivity extends AppCompatActivity {
                 Task aTask = mShareData.getActiveTask();
                 if (aTask == null) {
                     mShareData.activeYesTask();
-                    Toast.makeText(YesActivity.this, "开启成功", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(YesActivity.this, "开启成功", Toast.LENGTH_LONG).show();
                     mButton.setText("关闭点赞");
                 } else if (aTask.getTaskId() == Task.TaskId.TASK_YES) {
                     mShareData.stopYesTask();
-                    Toast.makeText(YesActivity.this, "关闭成功", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(YesActivity.this, "关闭成功", Toast.LENGTH_LONG).show();
                     mButton.setText("激活点赞");
                 } else {
-                    Toast.makeText(YesActivity.this, "当前正在执行其他任务无法开启点赞任务", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(YesActivity.this, "当前正在执行其他任务无法开启点赞任务", Toast.LENGTH_LONG).show();
                 }
             }
         });

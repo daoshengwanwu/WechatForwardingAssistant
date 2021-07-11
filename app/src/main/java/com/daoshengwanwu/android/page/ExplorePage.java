@@ -47,7 +47,7 @@ public class ExplorePage extends Page {
 
         final AccessibilityNodeInfo info = event.getSource();
         if (info == null) {
-            SingleSubThreadUtil.showToast(AuxiliaryService.getServiceInstance(), "请回到发现界面再次点击截取", Toast.LENGTH_SHORT);
+            SingleSubThreadUtil.showToast(AuxiliaryService.getServiceInstance(), "请回到发现界面再次点击截取", Toast.LENGTH_LONG);
             return false;
         }
 

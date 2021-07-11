@@ -91,7 +91,7 @@ public class ForwardingProcessActivity extends AppCompatActivity {
 
         if (item.getItemId() == R.id.save_current_group) {
             saveCurrentUserGroup(null);
-            Toast.makeText(this, "保存当前群组成功", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "保存当前群组成功", Toast.LENGTH_LONG).show();
         }
 
         return true;
@@ -206,7 +206,7 @@ public class ForwardingProcessActivity extends AppCompatActivity {
                     alertDialog.dismiss();
                     updateView();
                 } catch (Throwable e) {
-                    SingleSubThreadUtil.showToast(ForwardingProcessActivity.this, "请检查正则表达式是否正确: " + e.getMessage(), Toast.LENGTH_SHORT);
+                    SingleSubThreadUtil.showToast(ForwardingProcessActivity.this, "请检查正则表达式是否正确: " + e.getMessage(), Toast.LENGTH_LONG);
                 }
             }
         });
@@ -251,7 +251,7 @@ public class ForwardingProcessActivity extends AppCompatActivity {
         mStatus = ForwardingStatus.PAUSED;
         updateView();
 
-        Toast.makeText(ForwardingProcessActivity.this, "已暂停", Toast.LENGTH_SHORT).show();
+        Toast.makeText(ForwardingProcessActivity.this, "已暂停", Toast.LENGTH_LONG).show();
     }
 
     public void resumeForwarding() {
@@ -259,7 +259,7 @@ public class ForwardingProcessActivity extends AppCompatActivity {
         mStatus = ForwardingStatus.PROCESSING;
         updateView();
 
-        Toast.makeText(ForwardingProcessActivity.this, "继续群发", Toast.LENGTH_SHORT).show();
+        Toast.makeText(ForwardingProcessActivity.this, "继续群发", Toast.LENGTH_LONG).show();
     }
 
     private void setupView() {
@@ -289,7 +289,7 @@ public class ForwardingProcessActivity extends AppCompatActivity {
                         mShareData.stopForwardingTask();
                         mStatus = ForwardingStatus.STOPED;
                         updateView();
-                        Toast.makeText(ForwardingProcessActivity.this, "已停止", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ForwardingProcessActivity.this, "已停止", Toast.LENGTH_LONG).show();
                     } break;
 
                     case FINISHED:
@@ -317,7 +317,7 @@ public class ForwardingProcessActivity extends AppCompatActivity {
 
                         mStatus = ForwardingStatus.PROCESSING;
                         updateView();
-                        Toast.makeText(ForwardingProcessActivity.this, "已激活群发", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ForwardingProcessActivity.this, "已激活群发", Toast.LENGTH_LONG).show();
                     } break;
                 }
             }

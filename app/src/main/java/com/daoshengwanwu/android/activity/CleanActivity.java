@@ -27,7 +27,7 @@ public class CleanActivity extends AppCompatActivity {
         try {
             activity.startActivity(intent);
         } catch (Throwable e) {
-            Toast.makeText(activity, "启动清理Activity失败", Toast.LENGTH_SHORT).show();
+            Toast.makeText(activity, "启动清理Activity失败", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -51,14 +51,14 @@ public class CleanActivity extends AppCompatActivity {
 
                 if (mIsStart) {
                     if (mShareData.getActiveTask() != null) {
-                        Toast.makeText(CleanActivity.this, "当前正在执行： " + mShareData.getActiveTask() + "无法开启新的任务", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(CleanActivity.this, "当前正在执行： " + mShareData.getActiveTask() + "无法开启新的任务", Toast.LENGTH_LONG).show();
                         mIsStart = false;
                         return;
                     }
 
                     mShareData.activeCleanTask();
                     mCleanBtn.setText("关闭自动选中复选框");
-                    Toast.makeText(CleanActivity.this, "成功开启", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(CleanActivity.this, "成功开启", Toast.LENGTH_LONG).show();
                 } else {
                     mShareData.stopCleanTask();
                     mCleanBtn.setText("开启自动选中复选框");

@@ -60,7 +60,9 @@ public class LoadImportViewResourceIdNameTask extends Task implements View.OnCli
             return;
         }
 
-        String toastText = "请到" + mCurLoadPage.getPageName() + "点击 " + mCurLoadPage.getNextImportViewDescription() + " 视图, 之后点击截取按钮";
+        String toastText = "请到 " + mCurLoadPage.getPageName() + " 界面点击 " +
+                mCurLoadPage.getNextImportViewDescription() + " 视图, 之后点击截取按钮";
+        
         mFloatWindowManager.setText(toastText);
     }
 
@@ -77,31 +79,31 @@ public class LoadImportViewResourceIdNameTask extends Task implements View.OnCli
     private void onCaptureButtonClick() {
         final AccessibilityEvent lastViewClickEvent = AuxiliaryService.getLastViewClickEvent();
         if (lastViewClickEvent == null) {
-            SingleSubThreadUtil.showToast(mApplicationContext, "无法锁定，请按提示点击视图后重试", Toast.LENGTH_SHORT);
+            SingleSubThreadUtil.showToast(mApplicationContext, "无法锁定，请按提示点击视图后重试", Toast.LENGTH_LONG);
             return;
         }
 
         mLastLockViewClickEvent = lastViewClickEvent;
         SingleSubThreadUtil.showToast(mApplicationContext, "锁定成功, 请确保当前处于" +
-                mCurLoadPage.getPageName() + "然后点击捕获", Toast.LENGTH_SHORT);
+                mCurLoadPage.getPageName() + "然后点击捕获", Toast.LENGTH_LONG);
 
     }
 
     private void onNextButtonClick() {
         if (mCurLoadPage == null) {
-            SingleSubThreadUtil.showToast(mApplicationContext, "已捕获所有页面的视图Id", Toast.LENGTH_SHORT);
+            SingleSubThreadUtil.showToast(mApplicationContext, "已捕获所有页面的视图Id", Toast.LENGTH_LONG);
             return;
         }
 
         if (mLastLockViewClickEvent == null) {
-            SingleSubThreadUtil.showToast(mApplicationContext, "清先锁定再点击捕获", Toast.LENGTH_SHORT);
+            SingleSubThreadUtil.showToast(mApplicationContext, "清先锁定再点击捕获", Toast.LENGTH_LONG);
             return;
         }
 
         if (mCurLoadPage.captureImportViewResourceIdName(mLastLockViewClickEvent)) {
             mCurLoadPage.saveAllImportViewResourceIdName();
 
-            SingleSubThreadUtil.showToast(mApplicationContext, "捕获成功", Toast.LENGTH_SHORT);
+            SingleSubThreadUtil.showToast(mApplicationContext, "捕获成功", Toast.LENGTH_LONG);
             mLastLockViewClickEvent = null;
 
             if (mCurLoadPage.isImportViewResourceIdNameCaptured()) {

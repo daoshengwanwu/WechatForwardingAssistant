@@ -84,7 +84,7 @@ public class GroupEditActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.enter_forwarding: {
                 if (TextUtils.isEmpty(mForwardingContent)) {
-                    Toast.makeText(this, "请点击星号编辑群发内容后再进入群发.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "请点击星号编辑群发内容后再进入群发.", Toast.LENGTH_LONG).show();
                     break;
                 }
 
@@ -105,7 +105,7 @@ public class GroupEditActivity extends AppCompatActivity {
                                 mForwardingContent = et.getText().toString();
                                 ForwardingContentLab.getInstance().putContent(GroupEditActivity.this, mUserGroup.getUUID(), mForwardingContent);
                                 if (!TextUtils.isEmpty(mForwardingContent)) {
-                                    Toast.makeText(GroupEditActivity.this, "成功", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(GroupEditActivity.this, "成功", Toast.LENGTH_LONG).show();
                                 }
                             }
                         }).
@@ -171,7 +171,7 @@ public class GroupEditActivity extends AppCompatActivity {
                 final String labelName = mLabelNameET.getText() + "";
 
                 if (TextUtils.isEmpty(labelName)) {
-                    Toast.makeText(GroupEditActivity.this, "请输入正确的标签名称", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(GroupEditActivity.this, "请输入正确的标签名称", Toast.LENGTH_LONG).show();
                     return;
                 }
 
@@ -192,11 +192,11 @@ public class GroupEditActivity extends AppCompatActivity {
                         mUserGroup.mergeUserItems(labelUsersInfo);
                         UserGroupLab.getInstance().putOrMergeUserItems(GroupEditActivity.this, mUserGroup);
                         updateView();
-                        Toast.makeText(GroupEditActivity.this, "导入联系人成功", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(GroupEditActivity.this, "导入联系人成功", Toast.LENGTH_LONG).show();
                     }
                 });
 
-                Toast.makeText(GroupEditActivity.this, "激活成功，现在请手动切换到微信的" + labelName + "标签页下", Toast.LENGTH_SHORT).show();
+                Toast.makeText(GroupEditActivity.this, "激活成功，现在请手动切换到微信的" + labelName + "标签页下", Toast.LENGTH_LONG).show();
             }
         });
 
@@ -206,7 +206,7 @@ public class GroupEditActivity extends AppCompatActivity {
                 final String regStr = mLabelNameET.getText() + "";
 
                 if (TextUtils.isEmpty(regStr)) {
-                    Toast.makeText(GroupEditActivity.this, "请输入正确的正则表达式", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(GroupEditActivity.this, "请输入正确的正则表达式", Toast.LENGTH_LONG).show();
                     return;
                 }
 
@@ -218,7 +218,7 @@ public class GroupEditActivity extends AppCompatActivity {
                 }
 
                 if (pattern == null) {
-                    Toast.makeText(GroupEditActivity.this, "请输入正确的正则表达式", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(GroupEditActivity.this, "请输入正确的正则表达式", Toast.LENGTH_LONG).show();
                     return;
                 }
 
@@ -238,11 +238,11 @@ public class GroupEditActivity extends AppCompatActivity {
                                 mUserGroup.mergeUserItems(labelUsersInfo);
                                 UserGroupLab.getInstance().putOrMergeUserItems(GroupEditActivity.this, mUserGroup);
                                 updateView();
-                                Toast.makeText(GroupEditActivity.this, "导入联系人成功", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(GroupEditActivity.this, "导入联系人成功", Toast.LENGTH_LONG).show();
                             }
                         });
 
-                Toast.makeText(GroupEditActivity.this, "激活成功，现在请手动切换到微信的通讯录页下", Toast.LENGTH_SHORT).show();
+                Toast.makeText(GroupEditActivity.this, "激活成功，现在请手动切换到微信的通讯录页下", Toast.LENGTH_LONG).show();
             }
         });
 
