@@ -46,7 +46,7 @@ public class LabelMembersPage extends Page {
         }
 
         if (TextUtils.isEmpty(mLabelId) || "null".equals(mLabelId)) {
-            return "标签名";
+            return "标签名编辑框";
         }
 
         if (TextUtils.isEmpty(mTextId) || "null".equals(mTextId)) {
