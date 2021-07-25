@@ -61,7 +61,7 @@ public class LoadImportViewResourceIdNameTask extends Task implements View.OnCli
         }
 
         String toastText = "请到 " + mCurLoadPage.getPageName() + " 界面点击 " +
-                mCurLoadPage.getNextImportViewDescription() + " 视图, 之后点击截取按钮";
+                mCurLoadPage.getNextImportViewDescription() + " 视图, 锁定之后点击捕获按钮";
         
         mFloatWindowManager.setText(toastText);
     }

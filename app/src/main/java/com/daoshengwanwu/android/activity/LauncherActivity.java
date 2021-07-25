@@ -9,6 +9,7 @@ import android.provider.Settings;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.daoshengwanwu.android.FloatWindowManager;
 import com.daoshengwanwu.android.R;
@@ -19,6 +20,7 @@ import com.daoshengwanwu.android.task.LoadImportViewResourceIdNameTask;
 import com.daoshengwanwu.android.task.LoadPageFeatureTask;
 import com.daoshengwanwu.android.task.Task;
 import com.daoshengwanwu.android.util.SharedPreferencesUtils;
+import com.daoshengwanwu.android.util.SingleSubThreadUtil;
 
 
 public class LauncherActivity extends AppCompatActivity {
@@ -124,6 +126,8 @@ public class LauncherActivity extends AppCompatActivity {
                                         floatWindowManager.setText("初始化完成");
                                         floatWindowManager.hide();
                                         updateView();
+
+                                        SingleSubThreadUtil.showToast(getApplicationContext(), "所有ViewId捕获完成。", Toast.LENGTH_LONG);
                                     }
                                 }
                             });

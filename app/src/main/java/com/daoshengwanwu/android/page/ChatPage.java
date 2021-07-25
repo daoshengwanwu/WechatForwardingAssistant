@@ -48,7 +48,7 @@ public class ChatPage extends Page {
 
         final AccessibilityNodeInfo info = event.getSource();
         if (info == null) {
-            SingleSubThreadUtil.showToast(AuxiliaryService.getServiceInstance(), "请回到聊天界面再次点击截取", Toast.LENGTH_LONG);
+            SingleSubThreadUtil.showToast(AuxiliaryService.getServiceInstance(), "请回到聊天界面再次点击捕获", Toast.LENGTH_LONG);
             return false;
         }
 

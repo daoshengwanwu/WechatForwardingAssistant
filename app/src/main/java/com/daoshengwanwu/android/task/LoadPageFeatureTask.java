@@ -58,7 +58,7 @@ public class LoadPageFeatureTask extends Task implements View.OnClickListener {
         mLastRootInfo = rootInfo;
 
         if (mCurGatherPage != null) {
-            mFloatWindowManager.setText("请到" + mCurGatherPage.getPageName() + "页面截取特征" + " (" + mCurGatherPage.featureCount() + ")");
+            mFloatWindowManager.setText("请到" + mCurGatherPage.getPageName() + "页面捕获特征" + " (" + mCurGatherPage.featureCount() + ")");
             return;
         }
 
@@ -69,7 +69,7 @@ public class LoadPageFeatureTask extends Task implements View.OnClickListener {
         }
 
         if (!mIsShowToast) {
-            SingleSubThreadUtil.showToast(mApplicationContext, "所有界面特征截取完毕", Toast.LENGTH_LONG);
+            SingleSubThreadUtil.showToast(mApplicationContext, "所有界面特征捕获完毕", Toast.LENGTH_LONG);
             mFloatWindowManager.setText("所有界面特征已获取完毕");
 
             mIsShowToast = true;
@@ -106,30 +106,30 @@ public class LoadPageFeatureTask extends Task implements View.OnClickListener {
     private void onCaptureButtonClick() {
         final AccessibilityNodeInfo lastNodeInfo = mLastRootInfo;
         if (lastNodeInfo == null) {
-            SingleSubThreadUtil.showToast(mApplicationContext, "请到微信界面中再点击截取", Toast.LENGTH_LONG);
+            SingleSubThreadUtil.showToast(mApplicationContext, "请到微信界面中再点击捕获", Toast.LENGTH_LONG);
             return;
         }
 
         if (mCurGatherPage == null) {
-            SingleSubThreadUtil.showToast(mApplicationContext, "所有特征已截取完毕，无需再次截取", Toast.LENGTH_LONG);
+            SingleSubThreadUtil.showToast(mApplicationContext, "所有特征已捕获完毕，无需再次捕获", Toast.LENGTH_LONG);
             return;
         }
 
         final PageFeature feature = PageUtils.gatherPageFeatures(lastNodeInfo);
         if (feature == null) {
-            Log.d("abcdefg", "onClick: 截取到的feature为null");
-            SingleSubThreadUtil.showToast(mApplicationContext, "截取到的feature为null", Toast.LENGTH_LONG);
+            Log.d("abcdefg", "onClick: 捕获到的feature为null");
+            SingleSubThreadUtil.showToast(mApplicationContext, "捕获到的feature为null", Toast.LENGTH_LONG);
         } else {
             mCurGatherPage.mergePageFeature(feature);
             mCurGatherPage.saveToSharedPreferences();
 
-            Log.d("abcdefg", "onClick: 截取特征成功：\n" + mCurGatherPage);
+            Log.d("abcdefg", "onClick: 捕获特征成功：\n" + mCurGatherPage);
 
 //            SingleSubThreadUtil.showToast(mApplicationContext,
 //                    mCurGatherPage.getPageName() + "界面特征：\n" + mCurGatherPage.getPageFeature(), Toast.LENGTH_LONG);
 
             final int curFeatureCount = mCurGatherPage.featureCount();
-            mFloatWindowManager.setText("请到" + mCurGatherPage.getPageName() + "页面截取特征" + " (" + curFeatureCount + ")");
+            mFloatWindowManager.setText("请到" + mCurGatherPage.getPageName() + "页面捕获特征" + " (" + curFeatureCount + ")");
         }
     }
 
