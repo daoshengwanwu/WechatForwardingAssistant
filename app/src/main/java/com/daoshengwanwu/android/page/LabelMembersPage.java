@@ -89,6 +89,10 @@ public class LabelMembersPage extends Page {
 
         if (TextUtils.isEmpty(mListViewId) || "null".equals(mListViewId)) {
             AccessibilityNodeInfo i = findFirstParent(info, "android.widget.ListView");
+            if (i == null) {
+                i = findFirstParent(info, "androidx.recyclerview.widget.RecyclerView");
+            }
+
             if (i != null) {
                 mListViewId = i.getViewIdResourceName();
 
