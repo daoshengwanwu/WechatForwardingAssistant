@@ -151,7 +151,7 @@ public class LauncherActivity extends AppCompatActivity {
 
             // TODO:: 暂时隐藏其他两项功能
             mYesButton.setVisibility(View.INVISIBLE);
-            mCleanButton.setVisibility(View.INVISIBLE);
+//            mCleanButton.setVisibility(View.INVISIBLE);
         }
     }
 

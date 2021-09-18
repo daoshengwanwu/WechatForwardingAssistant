@@ -274,9 +274,7 @@ public class ChatPage extends Page {
             bindData(rootInfo);
         }
 
-//         TODO:: 暂时不把消息发出去
          return ActionPerformer.performAction(mSendingBtnInfo, AccessibilityNodeInfo.ACTION_CLICK, "聊天界面点击发送按钮");
-//        return true;
     }
 
     public boolean isWithCheckBox() {
